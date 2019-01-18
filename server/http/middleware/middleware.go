@@ -2,7 +2,7 @@ package middleware
 
 import "rzd/app/usecase"
 
-type AppLayer struct{
+type AppLayer struct {
 	App usecase.Usecase
 }
 

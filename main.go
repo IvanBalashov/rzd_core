@@ -10,12 +10,13 @@ import (
 	"rzd/app/gateways/users_gateway"
 	"rzd/app/usecase"
 	"rzd/server/http"
+	"rzd/server/rabbitmq"
 )
 
 type Config struct {
-	HttpHost string
-	HttpPort string
-	PostgresUrl string
+	HttpHost     string
+	HttpPort     string
+	PostgresUrl  string
 	RabbitMQHost string
 	RabbitMQPort string
 }
@@ -73,7 +74,32 @@ func main() {
 	PGTrains := trains_gateway.NewPostgres(connect)
 	PGUsers := users_gateway.NewPostgres(connect)
 	app := usecase.NewApp(&PGTrains, &PGUsers, &CLI)
+	{
+		server, err := rabbitmq.NewServer(config.RabbitMQHost, &app)
+		if err != nil {
+			return
+		}
 
+		request := rabbitmq.NewRequestQueue(&server.Chanel,
+			"",
+			"",
+			false,
+			false,
+			false,
+			false,
+			nil)
+
+		response := rabbitmq.NewResponseQueue(&server.Chanel,
+			"",
+			"",
+			false,
+			false,
+			false,
+			false,
+			nil)
+
+		go server.Serve(request, response)
+	}
 	log.Printf("Succes.\nStarting web server on %s:%s", config.HttpHost, config.HttpPort)
 	server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
 	if err := server.ListenAndServe(); err != nil {

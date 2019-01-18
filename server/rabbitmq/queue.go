@@ -1,6 +1,8 @@
 package rabbitmq
 
-import "github.com/streadway/amqp"
+import (
+	"github.com/streadway/amqp"
+)
 
 type Queue struct {
 	Name       string
@@ -37,8 +39,20 @@ func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now
 	}
 }
 
-func (r *RequestQueue) Read() error {
-	return nil
+func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
+	messages, err := r.Channel.Consume(
+		r.Queue.Name,     // queue
+		r.Queue.Exchange, // consumer
+		true,             // auto-ack
+		false,            // exclusive
+		false,            // no-local
+		false,            // no-wait
+		nil,              // args
+	)
+	if err != nil {
+		return nil, err
+	}
+	return messages, nil
 }
 
 type ResponseQueue struct {
@@ -75,7 +89,8 @@ func (r *ResponseQueue) Send(data []byte) error {
 		amqp.Publishing{
 			ContentType: "text/plain",
 			Body:        data,
-		})
+		},
+	)
 	if err != nil {
 		return err
 	}
