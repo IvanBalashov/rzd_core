@@ -53,6 +53,8 @@ func GenConfig() Config {
 }
 
 func main() {
+	log.SetFlags(log.LstdFlags)
+
 	config := GenConfig()
 
 	log.Printf("Starting app.\n")
@@ -64,6 +66,7 @@ func main() {
 		5764,
 		5804,
 	)
+
 	log.Printf("Success.\nInit postgres CLIent.\n")
 	connect, err := sqlx.Connect("postgres", config.PostgresUrl)
 	if err != nil {
@@ -74,6 +77,8 @@ func main() {
 	PGTrains := trains_gateway.NewPostgres(connect)
 	PGUsers := users_gateway.NewPostgres(connect)
 	app := usecase.NewApp(&PGTrains, &PGUsers, &CLI)
+
+	// RabbitMQ Server
 	{
 		server, err := rabbitmq.NewServer(config.RabbitMQHost, &app)
 		if err != nil {
@@ -100,10 +105,13 @@ func main() {
 
 		go server.Serve(request, response)
 	}
-	log.Printf("Succes.\nStarting web server on %s:%s", config.HttpHost, config.HttpPort)
-	server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
-	if err := server.ListenAndServe(); err != nil {
-		log.Printf("error while serving - \n\t%s\n", err.Error())
-		return
+	// REST Server.
+	{
+		log.Printf("Succes.\nStarting web server on %s:%s", config.HttpHost, config.HttpPort)
+		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
+		if err := server.ListenAndServe(); err != nil {
+			log.Printf("error while serving - \n\t%s\n", err.Error())
+			return
+		}
 	}
 }
