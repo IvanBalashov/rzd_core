@@ -8,4 +8,3 @@ import (
 func (a *AppLayer) Test(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
-

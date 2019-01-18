@@ -7,7 +7,7 @@ import (
 
 /*
 This struct released only for example.
-I'm wana show how CA works with several data flows.
+I'm wanna show how CA works with several data flows.
 First - sql, second - another place, like remote service.
 DON'T USE THIS IN CODE!!!!
 */
