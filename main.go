@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"rzd/app/usecase"
 	"rzd/server/http"
 	"rzd/server/rabbitmq"
+	"time"
 )
 
 type Config struct {
@@ -23,37 +25,36 @@ type Config struct {
 func GenConfig() Config {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("Error while load .env file - %s\n", err.Error())
 	} else {
-		log.Println(".env loaded.")
+		log.Println("File .env loaded")
 	}
 	var conf = Config{}
 	if val, ok := os.LookupEnv("HTTP_HOST"); !ok {
-		log.Printf("HTTP_HOST env don't seted.\n")
+		log.Printf("HTTP_HOST env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.HttpHost = val
 	}
 	if val, ok := os.LookupEnv("HTTP_PORT"); !ok {
-		log.Printf("HTTP_PORT env don't seted.\n")
+		log.Printf("HTTP_PORT env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.HttpPort = val
 	}
 	if val, ok := os.LookupEnv("POSTGRES_URL"); !ok {
-		log.Printf("POSTGRES_URL env don't seted.\n")
+		log.Printf("POSTGRES_URL env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.PostgresUrl = val
 	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
-		log.Printf("POSTGRES_URL env don't seted.\n")
+		log.Printf("RABBITMQ_URL env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.RabbitMQUrl = val
 	}
 
-	// TODO: add check envs for rabbitmq.
 	return conf
 }
 
@@ -63,7 +64,7 @@ func main() {
 	config := GenConfig()
 
 	log.Printf("Starting app.\n")
-	log.Printf("Init rzd.ru api.\n")
+	log.Printf("Init rzd.ru REST api.\n")
 
 	CLI := route_gateway.NewRestAPIClient(
 		"https://pass.rzd.ru/timetable/public/ru",
@@ -72,10 +73,11 @@ func main() {
 		5804,
 	)
 
-	log.Printf("Success.\nInit postgres CLIent.\n")
+	log.Printf("Success.\n")
+	log.Printf("Init postgres client.\n")
 	connect, err := sqlx.Connect("postgres", config.PostgresUrl)
 	if err != nil {
-		log.Printf("error - %s\n", err)
+		log.Printf("Error while connect to PostgreSQL - %s\n", err)
 		return
 	}
 
@@ -87,35 +89,46 @@ func main() {
 	{
 		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app)
 		if err != nil {
-			return
+			log.Printf("Can't connect to rabbitmq on addr - %s\n", config.RabbitMQUrl)
+		} else {
+			request := rabbitmq.NewRequestQueue(&server.Chanel,
+				"test",
+				"",
+				false,
+				false,
+				false,
+				false,
+				nil)
+
+			response := rabbitmq.NewResponseQueue(&server.Chanel,
+				"test",
+				"",
+				false,
+				false,
+				false,
+				false,
+				nil)
+
+			go server.Serve(request, response)
+			msg := rabbitmq.Message{
+				Event: "Get",
+				Data:  "kek",
+			}
+			time.Sleep(time.Second)
+			data, _ := json.Marshal(msg)
+			err := response.Send(data)
+			if err != nil {
+				log.Printf("Error in test send - %s\n", err.Error())
+			}
 		}
-
-		request := rabbitmq.NewRequestQueue(&server.Chanel,
-			"",
-			"",
-			false,
-			false,
-			false,
-			false,
-			nil)
-
-		response := rabbitmq.NewResponseQueue(&server.Chanel,
-			"",
-			"",
-			false,
-			false,
-			false,
-			false,
-			nil)
-
-		go server.Serve(request, response)
 	}
 	// REST Server.
 	{
-		log.Printf("Succes.\nStarting web server on %s:%s", config.HttpHost, config.HttpPort)
+		log.Printf("Success\n")
+		log.Printf("Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
 		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
 		if err := server.ListenAndServe(); err != nil {
-			log.Printf("error while serving - \n\t%s\n", err.Error())
+			log.Printf("Error while serving - \n\t%s\n", err.Error())
 			return
 		}
 	}

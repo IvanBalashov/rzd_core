@@ -2,15 +2,16 @@ package rabbitmq
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/streadway/amqp"
+	"log"
 	"rzd/app/usecase"
+	"rzd/server/rabbitmq/middleware"
 )
 
 type RabbitServer struct {
-	App        usecase.Usecase
-	Connection amqp.Connection
-	Chanel     amqp.Channel
+	Middlewares middleware.EventLayer
+	Connection  amqp.Connection
+	Chanel      amqp.Channel
 }
 
 //Create new connection and chanel to rabbitmq.
@@ -27,7 +28,7 @@ func NewServer(uri string, app usecase.Usecase) (RabbitServer, error) {
 		return RabbitServer{}, err
 	}
 	server.Chanel = *ch
-	server.App = app
+	server.Middlewares = middleware.InitMiddleWares(app)
 	return *server, nil
 }
 
@@ -38,32 +39,40 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 	getedMessage := Message{}
 	messages, err := request.Read()
 	if err != nil {
+		log.Printf("RabbitMQ: Error while start reading - %s\n", err.Error())
 		return
 	}
-	// read messages
+	log.Printf("RabbitMQ: Start reading messages\n")
 	forever := make(chan bool)
-
+	// read messages
 	go func() {
 		for msg := range messages {
-			fmt.Printf("live%s\n", msg.Body)
+			log.Printf("DEBUG::RabbitMQ->MSG: %s\n", msg.Body)
 			err := json.Unmarshal(msg.Body, &getedMessage)
 			if err != nil {
-				fmt.Printf("err - %s\n", err)
+				log.Printf("RabbitMQ: err - %s\n", err)
 			}
 			switch getedMessage.Event {
+			// Here write call middlewares.
 			case "Get":
-				fmt.Printf("event.Get: body:%s\n", getedMessage.Data)
-				err := response.Send([]byte{})
+				log.Printf("DEBUG:: Event.Get: Body:%s\n", getedMessage.Data)
+				_, err := r.Middlewares.GetSeats(getedMessage.Data)
 				if err != nil {
-					fmt.Printf("%s\n", err.Error())
+					log.Printf("RabbitMQ: Error in GetSeats %s\n", err.Error())
 				}
+				// TODO: need create another queue for answers.
+				//		err := response.Send([]byte{})
+				//		if err != nil {
+				//			log.Printf("%s\n", err.Error())
+				//		}
 			case "Set":
-				fmt.Printf("event.Set: body:%s\n", getedMessage.Data)
-				err := response.Send([]byte{})
-				if err != nil {
-					fmt.Printf("%s\n", err.Error())
-				}
-
+				log.Printf("DEBUG::event.Set: body:%s\n", getedMessage.Data)
+				//		err := response.Send([]byte{})
+				//		if err != nil {
+				//			log.Printf("%s\n", err.Error())
+				//		}
+			case "Exit":
+				break
 			}
 		}
 	}()
