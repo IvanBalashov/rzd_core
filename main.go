@@ -14,11 +14,10 @@ import (
 )
 
 type Config struct {
-	HttpHost     string
-	HttpPort     string
-	PostgresUrl  string
-	RabbitMQHost string
-	RabbitMQPort string
+	HttpHost    string
+	HttpPort    string
+	PostgresUrl string
+	RabbitMQUrl string
 }
 
 func GenConfig() Config {
@@ -46,6 +45,12 @@ func GenConfig() Config {
 		os.Exit(2)
 	} else {
 		conf.PostgresUrl = val
+	}
+	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
+		log.Printf("POSTGRES_URL env don't seted.\n")
+		os.Exit(2)
+	} else {
+		conf.RabbitMQUrl = val
 	}
 
 	// TODO: add check envs for rabbitmq.
@@ -80,7 +85,7 @@ func main() {
 
 	// RabbitMQ Server
 	{
-		server, err := rabbitmq.NewServer(config.RabbitMQHost, &app)
+		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app)
 		if err != nil {
 			return
 		}
