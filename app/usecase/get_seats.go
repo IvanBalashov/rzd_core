@@ -33,7 +33,6 @@ func (a *App) GetSeats(args entity.RouteArgs) error {
 	return nil
 }
 
-
 func (a *App) saveTrains(route entity.Route) error {
 	for _, val := range route.Tp[0].List {
 		for _, j := range val.ServiceCategories {

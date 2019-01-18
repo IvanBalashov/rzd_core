@@ -5,6 +5,6 @@ import (
 	"net/http"
 )
 
-func (a *AppLayer)Health(ctx *gin.Context) {
+func (a *AppLayer) Health(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
