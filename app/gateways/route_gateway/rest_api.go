@@ -11,6 +11,7 @@ import (
 )
 
 // TODO: Create self APIClient for single user????
+// FIXME: Refactor variables name!!!
 type APIClient struct {
 	APIUrl string //http://pass.rzd.ru/timetable/public/ru
 	Code1  int    //?layer_id=5827
@@ -41,6 +42,7 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs) entity.Route {
 
 	args.Rid = strconv.FormatInt(rid.RID, 10)
 	// this sleep needed coz server need time to save rid.
+	// FIXME: lower w8ing time.
 	time.Sleep(time.Second * 1)
 
 	route := entity.Route{}
@@ -66,6 +68,8 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs) entity.Route {
 	return route
 }
 
+// Moved stucts here cos we use it only in rzd_api
+// TODO: Think about move this shit in another file.
 type Rid struct {
 	RID       int64  `json:"RID"`
 	Result    string `json:"result"`

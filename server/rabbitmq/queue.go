@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"github.com/streadway/amqp"
+	"log"
 )
 
 type Queue struct {
@@ -23,6 +24,7 @@ type RequestQueue struct {
 func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) RequestQueue {
 	q, err := ch.QueueDeclare(name, dur, del, exc, now, args)
 	if err != nil {
+		log.Printf("RabbitMQ->RequestQueue: Error while queue declare - %s\n", err)
 		return RequestQueue{}
 	}
 	return RequestQueue{
@@ -40,6 +42,7 @@ func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now
 }
 
 func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
+	// TODO: Rewrite args for consume!!!!
 	messages, err := r.Channel.Consume(
 		r.Queue.Name,     // queue
 		r.Queue.Exchange, // consumer
@@ -50,6 +53,7 @@ func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
 		nil,              // args
 	)
 	if err != nil {
+		log.Printf("RabbitMQ->RequestQueue: Error while consume messages - %s\n", err)
 		return nil, err
 	}
 	return messages, nil
@@ -62,8 +66,9 @@ type ResponseQueue struct {
 }
 
 func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) ResponseQueue {
-	q, err := ch.QueueDeclare(name, dur, del, exc, now, args)
+	declearedQueue, err := ch.QueueDeclare(name, dur, del, exc, now, args)
 	if err != nil {
+		log.Printf("RabbitMQ->ResponseQueue: Error while queue declare - %s\n", err)
 		return ResponseQueue{}
 	}
 	return ResponseQueue{
@@ -75,12 +80,13 @@ func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, no
 			Exclusive:  exc,
 			NoWait:     now,
 		},
-		MQueue:  &q,
+		MQueue:  &declearedQueue,
 		Channel: ch,
 	}
 }
 
 func (r *ResponseQueue) Send(data []byte) error {
+	// TODO: Rewrite args for publish!!!!
 	err := r.Channel.Publish(
 		r.Queue.Exchange, // target for messages
 		r.Queue.Name,
@@ -92,6 +98,7 @@ func (r *ResponseQueue) Send(data []byte) error {
 		},
 	)
 	if err != nil {
+		log.Printf("RabbitMQ->ResponseQueue: Error while publish messages - %s\n", err)
 		return err
 	}
 	return nil
