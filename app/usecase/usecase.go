@@ -3,5 +3,5 @@ package usecase
 import "rzd/app/entity"
 
 type Usecase interface {
-	GetSeats(ids []int) ([]entity.Train, error)
+	GetSeats(args entity.RouteArgs) ([]entity.Train, error)
 }

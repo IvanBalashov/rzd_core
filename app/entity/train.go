@@ -1,24 +1,5 @@
 package entity
 
-/* CREATE TABLE trains (
-id SERIAL PRIMARY KEY,
-number varchar(20),
-type varchar(20),
-brand varchar(20),
-route0 varchar(100),
-route1 varchar(100),
-trTime0 varchar(10),
-station varchar(100),
-station1 varchar(100),
-date0 varchar(50),
-time0 varchar(50),
-date1 varchar(50),
-time1 varchar(50),
-class varchar(50),
-seatsCount varchar(20),
-price varchar(20));
-*/
-
 type Train struct {
 	Type       string
 	Number     string
@@ -39,20 +20,25 @@ type Train struct {
 }
 
 //number, type, brand, route0, route1, trTime0, station, station1, date0, time0, date1, time1, class, seatsCount, price
-func (t *Train) GetArgs() []string {
-	fields := []string{}
-	fields = append(fields, t.Number)
-	fields = append(fields, t.Type)
-	fields = append(fields, t.Route0)
-	fields = append(fields, t.Route1)
-	fields = append(fields, t.TrDate0)
-	fields = append(fields, t.TrTime0)
-	fields = append(fields, t.Station)
-	fields = append(fields, t.Station1)
-	fields = append(fields, t.Date0)
-	fields = append(fields, t.Time0)
-	fields = append(fields, t.Class)
-	fields = append(fields, t.SeatsCount)
-	fields = append(fields, t.Price)
-	return fields
+func (t *Train) GetArgs() (string, string, string, string, string, string, string, string, string, string, string, string, string) {
+	return t.Type, t.Number, t.Brand, t.Route0, t.Route1, t.TrDate0, t.TrTime0, t.Station, t.Station1, t.Date0, t.Date1 ,t.Time1, t.SeatsCount
 }
+
+/* CREATE TABLE trains (
+id SERIAL PRIMARY KEY,
+number varchar(20),
+type varchar(20),
+brand varchar(20),
+route0 varchar(100),
+route1 varchar(100),
+trTime0 varchar(10),
+station varchar(100),
+station1 varchar(100),
+date0 varchar(50),
+time0 varchar(50),
+date1 varchar(50),
+time1 varchar(50),
+class varchar(50),
+seatsCount varchar(20),
+price varchar(20));
+*/

@@ -18,3 +18,4 @@ Now app can read environment variables from `.env` file. For fast start use foll
 ```text
 cp .env_example .env
 ```
+ 

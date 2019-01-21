@@ -80,6 +80,7 @@ func main() {
 		log.Printf("Error while connect to PostgreSQL - %s\n", err)
 		return
 	}
+	log.Printf("Success\n")
 
 	PGTrains := trains_gateway.NewPostgres(connect)
 	PGUsers := users_gateway.NewPostgres(connect)
@@ -91,6 +92,9 @@ func main() {
 		if err != nil {
 			log.Printf("Can't connect to rabbitmq on addr - %s\n", config.RabbitMQUrl)
 		} else {
+			// TODO: Remove after complete rabbitmq files.
+			// TODO: Think about call to another nodes about starting??
+			log.Printf("Success\n")
 			request := rabbitmq.NewRequestQueue(&server.Chanel,
 				"test",
 				"",
@@ -124,7 +128,6 @@ func main() {
 	}
 	// REST Server.
 	{
-		log.Printf("Success\n")
 		log.Printf("Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
 		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
 		if err := server.ListenAndServe(); err != nil {

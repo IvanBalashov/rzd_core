@@ -23,7 +23,7 @@ func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGatewa
 	}
 }
 
-/*func (a *App) GetSeats(args entity.RouteArgs) error {
+func (a *App) GetSeats(args entity.RouteArgs) error {
 	route := a.Routes.GetRoutes(args)
 	fmt.Printf("route - %s", route)
 	err := a.saveTrains(route)
@@ -31,10 +31,14 @@ func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGatewa
 		return err
 	}
 	return nil
-}*/
-func (a *App) GetSeats(ids []int) ([]entity.Train, error) {
-	return nil, nil
 }
+/*func (a *App) GetSeats(ids []int) ([]entity.Train, error) {
+	err := a.Trains.Create(entity.Train{})
+	if err != nil {
+		log.Printf("Gateways->Trains_Gateway->Create: error in db.Exec - %s\n", err)
+	}
+	return nil, nil
+}*/
 
 func (a *App) saveTrains(route entity.Route) error {
 	for _, val := range route.Tp[0].List {
