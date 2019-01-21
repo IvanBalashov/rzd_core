@@ -43,7 +43,7 @@ func GenConfig() Config {
 		conf.HttpPort = val
 	}
 	if val, ok := os.LookupEnv("POSTGRES_URL"); !ok {
-		log.Printf("POSTGRES_URL env don't seted\n")
+    log.Printf("POSTGRES_URL env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.PostgresUrl = val
@@ -54,7 +54,7 @@ func GenConfig() Config {
 	} else {
 		conf.RabbitMQUrl = val
 	}
-
+  
 	return conf
 }
 

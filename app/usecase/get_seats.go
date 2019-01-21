@@ -32,6 +32,7 @@ func (a *App) GetSeats(args entity.RouteArgs) error {
 	}
 	return nil
 }
+
 /*func (a *App) GetSeats(ids []int) ([]entity.Train, error) {
 	err := a.Trains.Create(entity.Train{})
 	if err != nil {
