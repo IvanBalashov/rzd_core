@@ -1,12 +1,12 @@
 package trains_gateway
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
-	"context"
 	"rzd/app/entity"
 	"time"
 )
@@ -15,7 +15,7 @@ import (
 Init ctx for every query, coz sometimes needed more waiting time.
 */
 type MongoTrains struct {
-	CLI   mongo.Client
+	CLI    mongo.Client
 	Trains mongo.Collection
 }
 

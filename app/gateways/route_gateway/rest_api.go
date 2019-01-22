@@ -1,35 +1,39 @@
 package route_gateway
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"gopkg.in/resty.v1"
+	"log"
 	"rzd/app/entity"
 	"strconv"
+	"strings"
 	"time"
 )
 
 // TODO: Create self APIClient for single user????
 // FIXME: Refactor variables name!!!
+// FIXME: rewrite all panic methods.
 type APIClient struct {
-	APIUrl string //http://pass.rzd.ru/timetable/public/ru
-	Code1  int    //?layer_id=5827
-	Code2  int    //?layer_id=5764
-	Code3  int    //?layer_id=5804
+	// OK, im hope what this url don't changes.
+	PassRzdUrl string //http://pass.rzd.ru/timetable/public/ru
+	RzdUrl     string //http://www.rzd.ru/
+	Code1      int    //?layer_id=5827
+	Code2      int    //?layer_id=5764
+	Code3      int    //?layer_id=5804
 }
 
 func NewRestAPIClient(url string, code1, code2, code3 int) APIClient {
 	return APIClient{
-		APIUrl: url,
-		Code1:  code1,
-		Code2:  code2,
-		Code3:  code3,
+		PassRzdUrl: url,
+		Code1:      code1,
+		Code2:      code2,
+		Code3:      code3,
 	}
 }
 
-func (a *APIClient) GetRoutes(args entity.RouteArgs) entity.Route {
-	rid := a.getRid(RidArgs{
+func (a *APIClient) GetRoutes(args entity.RouteArgs) (entity.Route, error) {
+	// im think is good practise to provide inner errors in app layer.
+	rid, err := a.getRid(RidArgs{
 		Dir:          args.Dir,
 		Tfl:          args.Tfl,
 		CheckSeats:   args.CheckSeats,
@@ -39,11 +43,14 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs) entity.Route {
 		WithOutSeats: args.WithOutSeats,
 		Version:      args.Version,
 	})
+	if err != nil {
+		return entity.Route{}, err
+	}
 
 	args.Rid = strconv.FormatInt(rid.RID, 10)
 	// this sleep needed coz server need time to save rid.
 	// FIXME: lower w8ing time.
-	time.Sleep(time.Second * 1)
+	time.Sleep(time.Second)
 
 	route := entity.Route{}
 
@@ -51,74 +58,66 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs) entity.Route {
 		SetHeader("Accept", "application/json").
 		SetFormData(args.ToMap()).
 		SetQueryParam("layer_id", "5827").
-		Post(a.APIUrl)
+		Post(a.PassRzdUrl)
 	if err != nil {
-		panic(err)
+		log.Printf("Gateways->Rzd_Gateway->GetRoutes: Error in request to RZD Api - %s\n", err)
+		return entity.Route{}, err
 	}
-
-	body := resp.Body()
-	str := bytes.NewBuffer(body).String()
-	fmt.Printf("%s\n", str)
 
 	err = json.Unmarshal(resp.Body(), &route)
 	if err != nil {
-		panic(err)
+		log.Printf("Gateways->Rzd_Gateway->GetRoutes: Error in unmarshal anwer from RZD Api - %s\n", err)
+		return entity.Route{}, err
 	}
 
-	return route
+	return route, nil
 }
 
-// Moved stucts here cos we use it only in rzd_api
-// TODO: Think about move this shit in another file.
-type Rid struct {
-	RID       int64  `json:"RID"`
-	Result    string `json:"result"`
-	Timestamp string `json:"timestamp"`
-}
-
-type RidArgs struct {
-	Dir          string `json:"dir"`
-	Tfl          string `json:"tfl"`
-	CheckSeats   string `json:"checkSeats"`
-	Code0        string `json:"code0"`
-	Code1        string `json:"code1"`
-	Dt0          string `json:"dt0"`
-	WithOutSeats string `json:"withoutSeats"`
-	Version      string `json:"version"`
-}
-
-func (r *RidArgs) ToMap() map[string]string {
-	return map[string]string{
-		"dir":          r.Dir,
-		"tfl":          r.Tfl,
-		"code0":        r.Code0,
-		"code1":        r.Code1,
-		"dt0":          r.Dt0,
-		"checkSeats":   r.CheckSeats,
-		"withoutSeats": r.WithOutSeats,
-		"version":      r.Version,
-	}
-}
-
-func (a *APIClient) getRid(args RidArgs) Rid {
+func (a *APIClient) getRid(args RidArgs) (Rid, error) {
 	rid := Rid{}
 
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
 		SetFormData(args.ToMap()).
 		SetQueryParam("layer_id", "5827").
-		Post(a.APIUrl)
+		Post(a.PassRzdUrl)
 	if err != nil {
-		panic(err)
+		log.Printf("Gateways->Rzd_Gateway->getRid: Error in request to RZD Api - %s\n", err)
+		return Rid{}, err
 	}
 
 	body := resp.Body()
-	str := bytes.NewBuffer(body).String()
-	fmt.Printf("%s\n", str)
+	// need clear first 10 symbols coz answer from rzd api have "\n" 5 symbols to move cursor down.
 	err = json.Unmarshal(body[10:], &rid)
 	if err != nil {
-		panic(err)
+		log.Printf("Gateways->Rzd_Gateway->getRid: Error in unmarshal anwer from RZD Api - %s\n", err)
+		return Rid{}, err
 	}
 
-	return rid
+	return rid, nil
+}
+
+//Coz all rzd rest api distributed on two entry points - pass.rzd.ru and rzd.ru.
+func (a *APIClient) GetDirectionsCode(source string) (int, error) {
+	answer := []Codes{}
+	resp, err := resty.R().
+		SetHeader("Accept", "application/json").
+		SetQueryParam("", "").
+		Get(a.RzdUrl)
+	if err != nil {
+		log.Printf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in request to RZD Api - %s\n", err)
+		return 0, err
+	}
+
+	err = json.Unmarshal(resp.Body(), &answer)
+	if err != nil {
+		log.Printf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in unmarshal anwer from RZD Api - %s\n", err)
+		return 0, err
+	}
+	for i := range answer {
+		if strings.ToLower(answer[i].Name) == strings.ToLower(source) {
+			return answer[i].Code, nil
+		}
+	}
+	return 0, nil
 }

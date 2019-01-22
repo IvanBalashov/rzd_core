@@ -10,6 +10,7 @@ import (
 	"rzd/app/entity"
 	"time"
 )
+
 /*
 Init ctx for every query, coz sometimes needed more waiting time.
 */

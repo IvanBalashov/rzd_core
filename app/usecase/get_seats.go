@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// TODO: Think about how correct work with error messages.
 type App struct {
 	Trains trains_gateway.TrainsGateway
 	Users  users_gateway.UsersGateway
@@ -24,21 +25,16 @@ func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGatewa
 }
 
 func (a *App) GetSeats(args entity.RouteArgs) error {
-	route := a.Routes.GetRoutes(args)
-	fmt.Printf("route - %s", route)
-	err := a.saveTrains(route)
+	route, err := a.Routes.GetRoutes(args)
+	if err != nil {
+		return err
+	}
+	err = a.saveTrains(route)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-/*func (a *App) GetSeats(ids []int) ([]entity.Train, error) {
-	err := a.Trains.Create(entity.Train{})
-	if err != nil {
-		log.Printf("Gateways->Trains_Gateway->Create: error in db.Exec - %s\n", err)
-	}
-	return nil, nil
-}*/
 
 func (a *App) saveTrains(route entity.Route) error {
 	for _, val := range route.Tp[0].List {

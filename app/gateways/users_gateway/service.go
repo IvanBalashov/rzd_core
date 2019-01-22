@@ -29,7 +29,7 @@ func (s *ServiceUsers) ReadOne() (entity.User, error) {
 	return entity.User{}, nil
 }
 
-func(s *ServiceUsers) ReadMany(ids []int) ([]entity.User, error){
+func (s *ServiceUsers) ReadMany(ids []int) ([]entity.User, error) {
 	panic("Service:Gateways->Trains_Gateway->ReadMany: Not implemented method")
 	return nil, nil
 }

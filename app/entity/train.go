@@ -21,7 +21,7 @@ type Train struct {
 
 //number, type, brand, route0, route1, trTime0, station, station1, date0, time0, date1, time1, class, seatsCount, price
 func (t *Train) GetArgs() (string, string, string, string, string, string, string, string, string, string, string, string, string) {
-	return t.Type, t.Number, t.Brand, t.Route0, t.Route1, t.TrDate0, t.TrTime0, t.Station, t.Station1, t.Date0, t.Date1 ,t.Time1, t.SeatsCount
+	return t.Type, t.Number, t.Brand, t.Route0, t.Route1, t.TrDate0, t.TrTime0, t.Station, t.Station1, t.Date0, t.Date1, t.Time1, t.SeatsCount
 }
 
 /* CREATE TABLE trains (

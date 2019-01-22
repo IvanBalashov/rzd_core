@@ -122,4 +122,3 @@ func (t *PgTrains) Delete(train entity.Train) error {
 		return nil
 	}
 }
-

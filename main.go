@@ -1,9 +1,10 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
-	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
+	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"os"
 	"rzd/app/gateways/route_gateway"
@@ -20,6 +21,7 @@ type Config struct {
 	HttpPort    string
 	PostgresUrl string
 	RabbitMQUrl string
+	MongoDBUrl  string
 }
 
 func GenConfig() Config {
@@ -55,6 +57,13 @@ func GenConfig() Config {
 		conf.RabbitMQUrl = val
 	}
 
+	if val, ok := os.LookupEnv("MONGODB_URL"); !ok {
+		log.Printf("RABBITMQ_URL env don't seted\n")
+		os.Exit(2)
+	} else {
+		conf.MongoDBUrl = val
+	}
+
 	return conf
 }
 
@@ -73,18 +82,35 @@ func main() {
 		5804,
 	)
 
+	/*	log.Printf("Success.\n")
+		log.Printf("Init postgres client.\n")
+		connect, err := sqlx.Connect("postgres", config.PostgresUrl)
+		if err != nil {
+			log.Printf("Error while connect to PostgreSQL - %s\n", err)
+			return
+		}
+		log.Printf("Success\n")
+	*/
 	log.Printf("Success.\n")
-	log.Printf("Init postgres client.\n")
-	connect, err := sqlx.Connect("postgres", config.PostgresUrl)
+	log.Printf("Init MongoDB client.\n")
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(ctx, config.MongoDBUrl)
+
+	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
 	if err != nil {
-		log.Printf("Error while connect to PostgreSQL - %s\n", err)
+		log.Printf("Main: Can't connect to Mongodb - %s\n", err)
 		return
 	}
-	log.Printf("Success\n")
+	MDDBUsers, err := users_gateway.NewMongoUsers(client)
+	if err != nil {
+		log.Printf("Main: Can't connect to Mongodb - %s\n", err)
+		return
+	}
+	log.Printf("Success.\n")
 
-	PGTrains := trains_gateway.NewPostgres(connect)
-	PGUsers := users_gateway.NewPostgres(connect)
-	app := usecase.NewApp(&PGTrains, &PGUsers, &CLI)
+	//PGTrains := trains_gateway.NewPostgres(connect)
+	//PGUsers := users_gateway.NewPostgres(connect)
+	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI)
 
 	// RabbitMQ Server
 	{
