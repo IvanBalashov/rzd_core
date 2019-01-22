@@ -36,5 +36,5 @@ type List struct {
 type ServiceCategories struct {
 	TypeLoc   string `json:"typeLoc"`
 	FreeSeats int    `json:"freeSeats"`
-	Price     int    `json:"tarif"`
+	Price     int    `json:"tariff"`
 }
