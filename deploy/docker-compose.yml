@@ -1,0 +1,37 @@
+version: '1'
+services:
+
+  rabbitmq:
+    image: rabbitmq
+    networks:
+      - outside
+    hostname: rabbitmq
+
+  node1:
+    image: app
+    networks:
+      - outside
+    hostname: node1
+    ports:
+      - 8080:8080
+
+  node2:
+    image: app
+    networks:
+      - outside
+    hostname: node2
+    ports:
+      - 8080:8080
+
+  node3:
+    image: app
+    networks:
+      - outside
+    hostname: node3
+    ports:
+      - 8080:8080
+
+networks:
+  outside:
+    external:
+      name: user-bridge

@@ -11,6 +11,7 @@ func init() {
 	gin.SetMode(gin.ReleaseMode)
 }
 
+// TODO: New middleware for gin logging.
 func NewHandler(app *usecase.App) http.Handler {
 	handler := gin.Default()
 
@@ -18,7 +19,7 @@ func NewHandler(app *usecase.App) http.Handler {
 	api := handler.Group("/api/v1")
 	api.GET("health", middlewares.Health)
 
-	api.GET("test", middlewares.Test)
+	api.GET("test", middlewares.GetSeats)
 
 	return handler
 }
