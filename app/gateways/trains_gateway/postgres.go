@@ -37,7 +37,7 @@ func (t *PgTrains) Create(train entity.Train) error {
 			"class",
 			"seatsCount",
 			"price").
-		Values(train.GetArgs()).
+		Values(train).
 		PlaceholderFormat(sq.Dollar)
 	query, args, err := insert.ToSql()
 	res, err := t.DB.Exec(query, args...)

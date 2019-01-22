@@ -1,4 +1,4 @@
-package route_gateway
+package rzd_gateway
 
 import "rzd/app/entity"
 

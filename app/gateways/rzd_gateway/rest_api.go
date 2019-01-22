@@ -1,4 +1,4 @@
-package route_gateway
+package rzd_gateway
 
 import (
 	"encoding/json"
@@ -97,7 +97,7 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 		return 0, err
 	}
 	for i := range answer {
-		if strings.ToLower(answer[i].Name) == strings.ToLower(source) {
+		if strings.Contains(strings.ToLower(answer[i].Name), strings.ToLower(source)) {
 			return answer[i].Code, nil
 		}
 	}

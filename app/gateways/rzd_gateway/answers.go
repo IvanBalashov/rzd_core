@@ -1,4 +1,4 @@
-package route_gateway
+package rzd_gateway
 
 type Rid struct {
 	RID       int64  `json:"RID"`

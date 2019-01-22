@@ -7,7 +7,7 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"os"
-	"rzd/app/gateways/route_gateway"
+	"rzd/app/gateways/rzd_gateway"
 	"rzd/app/gateways/trains_gateway"
 	"rzd/app/gateways/users_gateway"
 	"rzd/app/usecase"
@@ -27,38 +27,37 @@ type Config struct {
 func GenConfig() Config {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Error while load .env file - %s\n", err.Error())
+		log.Println("Main->GenConfig: Error while load .env file - %s\n", err.Error())
 	} else {
-		log.Println("File .env loaded")
+		log.Println("Main->GenConfig: File .env loaded")
 	}
 	var conf = Config{}
 	if val, ok := os.LookupEnv("HTTP_HOST"); !ok {
-		log.Printf("HTTP_HOST env don't seted\n")
+		log.Printf("Main->GenConfig: HTTP_HOST env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.HttpHost = val
 	}
 	if val, ok := os.LookupEnv("HTTP_PORT"); !ok {
-		log.Printf("HTTP_PORT env don't seted\n")
+		log.Printf("Main->GenConfig: HTTP_PORT env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.HttpPort = val
 	}
 	if val, ok := os.LookupEnv("POSTGRES_URL"); !ok {
-		log.Printf("POSTGRES_URL env don't seted\n")
+		log.Printf("Main->GenConfig: POSTGRES_URL env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.PostgresUrl = val
 	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
-		log.Printf("RABBITMQ_URL env don't seted\n")
+		log.Printf("Main->GenConfig: RABBITMQ_URL env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.RabbitMQUrl = val
 	}
-
 	if val, ok := os.LookupEnv("MONGODB_URL"); !ok {
-		log.Printf("RABBITMQ_URL env don't seted\n")
+		log.Printf("Main->GenConfig: MONGODB_URL env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.MongoDBUrl = val
@@ -75,7 +74,7 @@ func main() {
 	log.Printf("Main: Starting app.\n")
 	log.Printf("Main: Init rzd.ru REST api.\n")
 
-	CLI := route_gateway.NewRestAPIClient(
+	CLI := rzd_gateway.NewRestAPIClient(
 		"https://pass.rzd.ru/timetable/public/ru",
 		"http://www.rzd.ru/suggester",
 		5827,
@@ -88,20 +87,23 @@ func main() {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
 
-	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
+	err = client.Ping(ctx, nil)
 	if err != nil {
 		log.Printf("Main: Can't connect to Mongodb - %s\n", err)
+	}
+
+	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
+	if err != nil {
+		log.Printf("Main: Can't connect to train collections - %s\n", err)
 		return
 	}
 	MDDBUsers, err := users_gateway.NewMongoUsers(client)
 	if err != nil {
-		log.Printf("Main: Can't connect to Mongodb - %s\n", err)
+		log.Printf("Main: Can't connect to users collections - %s\n", err)
 		return
 	}
 	log.Printf("Main: Success.\n")
 
-	//PGTrains := trains_gateway.NewPostgres(connect)
-	//PGUsers := users_gateway.NewPostgres(connect)
 	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI)
 
 	// RabbitMQ Server

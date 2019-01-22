@@ -28,6 +28,7 @@ func (m *MongoTrains) Create(train entity.Train) error {
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 	result, err := m.Trains.InsertOne(ctx, train)
 	if err != nil {
+		log.Printf("MDB:Gateways->Trains_Gateway->Create: Error in mgdb.InsertOne - %s\n", err)
 		return err
 	}
 	if result.InsertedID == nil {
