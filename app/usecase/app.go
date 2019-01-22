@@ -37,6 +37,7 @@ func (a *App) GetSeats(args entity.RouteArgs) error {
 }
 
 func (a *App) saveTrains(route entity.Route) error {
+	fmt.Printf("route.TP[0].List %s\n", route.Tp[0].List)
 	for _, val := range route.Tp[0].List {
 		for _, j := range val.ServiceCategories {
 			err := a.Trains.Create(entity.Train{
@@ -62,4 +63,17 @@ func (a *App) saveTrains(route entity.Route) error {
 		}
 	}
 	return nil
+}
+
+// TODO: can be parallel.
+func (a *App) GetCodes(target, source string) (int, int, error) {
+	code1, err := a.Routes.GetDirectionsCode(target)
+	if err != nil {
+		return 0, 0, err
+	}
+	code2, err := a.Routes.GetDirectionsCode(source)
+	if err != nil {
+		return 0, 0, err
+	}
+	return code1, code2, nil
 }

@@ -72,27 +72,19 @@ func main() {
 
 	config := GenConfig()
 
-	log.Printf("Starting app.\n")
-	log.Printf("Init rzd.ru REST api.\n")
+	log.Printf("Main: Starting app.\n")
+	log.Printf("Main: Init rzd.ru REST api.\n")
 
 	CLI := route_gateway.NewRestAPIClient(
 		"https://pass.rzd.ru/timetable/public/ru",
+		"http://www.rzd.ru/suggester",
 		5827,
 		5764,
 		5804,
 	)
 
-	/*	log.Printf("Success.\n")
-		log.Printf("Init postgres client.\n")
-		connect, err := sqlx.Connect("postgres", config.PostgresUrl)
-		if err != nil {
-			log.Printf("Error while connect to PostgreSQL - %s\n", err)
-			return
-		}
-		log.Printf("Success\n")
-	*/
-	log.Printf("Success.\n")
-	log.Printf("Init MongoDB client.\n")
+	log.Printf("Main: Success.\n")
+	log.Printf("Main: Init MongoDB client.\n")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
 
@@ -106,7 +98,7 @@ func main() {
 		log.Printf("Main: Can't connect to Mongodb - %s\n", err)
 		return
 	}
-	log.Printf("Success.\n")
+	log.Printf("Main: Success.\n")
 
 	//PGTrains := trains_gateway.NewPostgres(connect)
 	//PGUsers := users_gateway.NewPostgres(connect)
@@ -116,11 +108,11 @@ func main() {
 	{
 		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app)
 		if err != nil {
-			log.Printf("Can't connect to rabbitmq on addr - %s\n", config.RabbitMQUrl)
+			log.Printf("Main: Can't connect to rabbitmq on addr - %s\n", config.RabbitMQUrl)
 		} else {
 			// TODO: Remove after complete rabbitmq files.
 			// TODO: Think about call to another nodes about starting??
-			log.Printf("Success\n")
+			log.Printf("Main: Success\n")
 			request := rabbitmq.NewRequestQueue(&server.Chanel,
 				"test",
 				"",
@@ -148,16 +140,16 @@ func main() {
 			data, _ := json.Marshal(msg)
 			err := response.Send(data)
 			if err != nil {
-				log.Printf("Error in test send - %s\n", err.Error())
+				log.Printf("Main: Error in test send - %s\n", err.Error())
 			}
 		}
 	}
 	// REST Server.
 	{
-		log.Printf("Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
+		log.Printf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
 		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
 		if err := server.ListenAndServe(); err != nil {
-			log.Printf("Error while serving - \n\t%s\n", err.Error())
+			log.Printf("Main: Error while serving - \n\t%s\n", err.Error())
 			return
 		}
 	}

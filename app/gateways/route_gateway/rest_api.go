@@ -22,9 +22,10 @@ type APIClient struct {
 	Code3      int    //?layer_id=5804
 }
 
-func NewRestAPIClient(url string, code1, code2, code3 int) APIClient {
+func NewRestAPIClient(passUrl, rzdUrl string, code1, code2, code3 int) APIClient {
 	return APIClient{
-		PassRzdUrl: url,
+		PassRzdUrl: passUrl,
+		RzdUrl:     rzdUrl,
 		Code1:      code1,
 		Code2:      code2,
 		Code3:      code3,
@@ -102,7 +103,10 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 	answer := []Codes{}
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
-		SetQueryParam("", "").
+		SetQueryParam("stationNamePart", strings.ToUpper(source[:4])).
+		SetQueryParam("lang", "ru").
+		SetQueryParam("lat", "0").
+		SetQueryParam("compactMode", "y").
 		Get(a.RzdUrl)
 	if err != nil {
 		log.Printf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in request to RZD Api - %s\n", err)
