@@ -43,6 +43,7 @@ func (a *AppLayer) GetSeats(ctx *gin.Context) {
 			StartDate: val.Date0 + "_" + val.Time0,
 			Seats:     seats,
 		})
+		seats = []Seats{}
 	}
 	ctx.JSON(http.StatusOK, trains)
 }
