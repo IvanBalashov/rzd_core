@@ -26,11 +26,13 @@ func (s *ServiceTrains) Create(train entity.Train) error {
 
 func (s *ServiceTrains) ReadOne() (entity.Train, error) {
 	panic("Service:Gateways->Trains_Gateway->ReadOne: Not implemented method")
+
 	return entity.Train{}, nil
 }
 
 func (s *ServiceTrains) ReadMany(ids []int) ([]entity.Train, error) {
 	panic("Service:Gateways->Trains_Gateway->ReadMany: Not implemented method")
+
 	return nil, nil
 }
 
