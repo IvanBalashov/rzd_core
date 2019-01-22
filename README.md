@@ -12,6 +12,7 @@ HTTP_HOST - host where app running. Must be set.
 HTTP_PORT - port where app running. Must be set.
 POSTGRES_URL - url for connection to postgres. Must be set.
 RABBITMQ_URL - url for connection to rabbitMQ. Must be set.
+MONGODB_URL - url for connection to MongoDB. Must be set.
 ```
 
 Now app can read environment variables from `.env` file. For fast start use follow command.
