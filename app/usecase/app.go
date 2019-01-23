@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+	"fmt"
 	"rzd/app/entity"
 	"rzd/app/gateways/rzd_gateway"
 	"rzd/app/gateways/trains_gateway"
@@ -15,6 +17,7 @@ type App struct {
 	Users   users_gateway.UsersGateway
 	Routes  rzd_gateway.RzdGateway
 	LogChan chan string
+	Rid     string
 }
 
 func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway, logChan chan string) App {
@@ -23,6 +26,7 @@ func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGatewa
 		Users:   users,
 		Routes:  routes,
 		LogChan: logChan,
+		Rid:     "",
 	}
 }
 
@@ -38,24 +42,22 @@ func (a *App) GetSeats(args entity.RouteArgs) ([]entity.Train, error) {
 		WithOutSeats: args.WithOutSeats,
 		Version:      args.Version,
 	}
-
-	// cache for rid.
 	rid, err := a.Routes.GetRid(ridArgs)
 	if err != nil {
 		a.LogChan <- err.Error()
 		return nil, err
 	}
-	args.Rid = strconv.FormatInt(rid.RID, 10)
+	a.Rid = strconv.FormatInt(rid.RID, 10)
 
-	time.Sleep(time.Second)
-
+	time.Sleep(500 * time.Millisecond)
+	args.Rid = a.Rid
 	route, err := a.Routes.GetRoutes(args)
 	if err != nil {
 		a.LogChan <- err.Error()
 		return nil, err
 	}
 
-	trains, err := a.saveTrains(route)
+	trains, err := a.GenerateTrainsList(route)
 	if err != nil {
 		a.LogChan <- err.Error()
 		return nil, err
@@ -64,16 +66,19 @@ func (a *App) GetSeats(args entity.RouteArgs) ([]entity.Train, error) {
 	return trains, nil
 }
 
-func (a *App) saveTrains(route entity.Route) ([]entity.Train, error) {
+func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 	trains := []entity.Train{}
 	newTrain := entity.Train{}
+	if len(route.Tp) == 0 {
+		return nil, errors.New(fmt.Sprintf("App->GenerateTrainsList: Got empty route array"))
+	}
 	for _, val := range route.Tp[0].List {
 		seats := []entity.Seats{}
-		for _, j := range val.ServiceCategories {
+		for _, seatsInfo := range val.ServiceCategories {
 			seats = append(seats, entity.Seats{
-				SeatsCount: j.FreeSeats,
-				Price:      j.Price,
-				SeatsName:  j.TypeLoc,
+				SeatsCount: seatsInfo.FreeSeats,
+				Price:      seatsInfo.Price,
+				SeatsName:  seatsInfo.TypeLoc,
 			})
 		}
 		newTrain = entity.Train{
@@ -93,31 +98,51 @@ func (a *App) saveTrains(route entity.Route) ([]entity.Train, error) {
 			Seats:    seats,
 		}
 
-		// now not needed save trains in db.
-		err := a.Trains.Create(newTrain)
 		trains = append(trains, newTrain)
-		if err != nil {
-			a.LogChan <- err.Error()
-			return nil, err
-		}
 	}
 	return trains, nil
 }
 
-// TODO: can be parallel.
 func (a *App) GetCodes(target, source string) (int, int, error) {
-	var code1, code2 int
-	code1, err := a.Routes.GetDirectionsCode(target)
-	if err != nil {
-		a.LogChan <- err.Error()
-		return 0, 0, err
+	var code1 = make(chan GoroutineAnswer)
+	var answers = map[string]int{}
+	go func() {
+		data, err := a.Routes.GetDirectionsCode(target)
+		if err != nil {
+			a.LogChan <- err.Error()
+		}
+		code1 <- GoroutineAnswer{
+			Code: data,
+			Station: "target",
+		}
+	}()
+	go func() {
+		data, err := a.Routes.GetDirectionsCode(source)
+		if err != nil {
+			a.LogChan <- err.Error()
+		}
+		code1 <- GoroutineAnswer{
+			Code: data,
+			Station: "source",
+		}
+	}()
+	for{
+		select {
+		case val, _ := <- code1:
+			if val.Station == "target" {
+				answers["target"] = val.Code
+			} else {
+				answers["source"] = val.Code
+			}
+		}
+		if len(answers) == 2 {
+			break
+		}
 	}
+	return answers["target"], answers["source"], nil
+}
 
-	code2, err = a.Routes.GetDirectionsCode(source)
-	if err != nil {
-		a.LogChan <- err.Error()
-		return 0, 0, err
-	}
-
-	return code1, code2, nil
+type GoroutineAnswer struct {
+	Code int
+	Station string
 }
