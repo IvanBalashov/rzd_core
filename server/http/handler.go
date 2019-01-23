@@ -14,7 +14,7 @@ func init() {
 // TODO: New middleware for gin logging.
 func NewHandler(app *usecase.App) http.Handler {
 	handler := gin.New()
-	handler.Use(Logger())
+	handler.Use(Logger(app.LogChan))
 
 	middlewares := middleware.InitMiddleWares(app)
 	api := handler.Group("/api/v1")

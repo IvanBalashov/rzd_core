@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
@@ -11,12 +12,14 @@ import (
 	"rzd/app/gateways/trains_gateway"
 	"rzd/app/gateways/users_gateway"
 	"rzd/app/usecase"
+	"rzd/reporting"
 	"rzd/server/http"
 	"rzd/server/rabbitmq"
 	"time"
 )
 
 type Config struct {
+	AppName     string
 	HttpHost    string
 	HttpPort    string
 	PostgresUrl string
@@ -26,12 +29,19 @@ type Config struct {
 
 func GenConfig() Config {
 	err := godotenv.Load()
+
 	if err != nil {
 		log.Println("Main->GenConfig: Error while load .env file - %s\n", err.Error())
 	} else {
 		log.Println("Main->GenConfig: File .env loaded")
 	}
 	var conf = Config{}
+	if val, ok := os.LookupEnv("APP_NAME"); !ok {
+		log.Printf("Main->GenConfig: APP_NAME env don't seted\n")
+		os.Exit(2)
+	} else {
+		conf.AppName = val
+	}
 	if val, ok := os.LookupEnv("HTTP_HOST"); !ok {
 		log.Printf("Main->GenConfig: HTTP_HOST env don't seted\n")
 		os.Exit(2)
@@ -67,12 +77,14 @@ func GenConfig() Config {
 }
 
 func main() {
-	log.SetFlags(log.LstdFlags)
-
 	config := GenConfig()
 
-	log.Printf("Main: Starting app.\n")
-	log.Printf("Main: Init rzd.ru REST api.\n")
+	logs := make(chan string)
+	logger := reporting.NewLogger(logs, config.AppName)
+	logger.Start()
+
+	logger.Write("Main: Starting app.")
+	logger.Write("Main: Init rzd.ru REST api.")
 
 	CLI := rzd_gateway.NewRestAPIClient(
 		"https://pass.rzd.ru/timetable/public/ru",
@@ -82,39 +94,39 @@ func main() {
 		5804,
 	)
 
-	log.Printf("Main: Success.\n")
-	log.Printf("Main: Init MongoDB client.\n")
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	logger.Write("Main: Success.")
+	logger.Write("Main: Init MongoDB client.")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Printf("Main: Can't connect to Mongodb - %s\n", err)
+		logger.Write(fmt.Sprintf("Main: Can't connect to Mongodb - %s", err.Error()))
 	}
 
 	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
 	if err != nil {
-		log.Printf("Main: Can't connect to train collections - %s\n", err)
+		logger.Write(fmt.Sprintf("Main: Can't connect to train collections - %s", err.Error()))
 		return
 	}
 	MDDBUsers, err := users_gateway.NewMongoUsers(client)
 	if err != nil {
-		log.Printf("Main: Can't connect to users collections - %s\n", err)
+		logger.Write(fmt.Sprintf("Main: Can't connect to users collections - %s", err.Error()))
 		return
 	}
-	log.Printf("Main: Success.\n")
+	logger.Write("Main: Success.")
 
-	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI)
+	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, logs)
 
 	// RabbitMQ Server
 	{
 		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app)
 		if err != nil {
-			log.Printf("Main: Can't connect to rabbitmq on addr - %s\n", config.RabbitMQUrl)
+			logger.Write(fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s", config.RabbitMQUrl))
 		} else {
 			// TODO: Remove after complete rabbitmq files.
 			// TODO: Think about call to another nodes about starting??
-			log.Printf("Main: Success\n")
+			logger.Write("Main: Success")
 			request := rabbitmq.NewRequestQueue(&server.Chanel,
 				"test",
 				"",
@@ -142,16 +154,16 @@ func main() {
 			data, _ := json.Marshal(msg)
 			err := response.Send(data)
 			if err != nil {
-				log.Printf("Main: Error in test send - %s\n", err.Error())
+				logger.Write(fmt.Sprintf("Main: Error in test send - %s", err.Error()))
 			}
 		}
 	}
 	// REST Server.
 	{
-		log.Printf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
+		logger.Write(fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort))
 		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
 		if err := server.ListenAndServe(); err != nil {
-			log.Printf("Main: Error while serving - \n\t%s\n", err.Error())
+			logger.Write(fmt.Sprintf("Main: Error while serving - \n\t%s", err.Error()))
 			return
 		}
 	}

@@ -1,12 +1,12 @@
 package http
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"time"
 )
 
-func Logger() gin.HandlerFunc {
+func Logger(logChan chan string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 		c.Next()
@@ -14,6 +14,6 @@ func Logger() gin.HandlerFunc {
 		status := c.Writer.Status()
 		url := c.Request.URL
 		host := c.Request.Host
-		log.Printf("GIN: |Status - %v |Latency - %v |Host - %v |Url - %v |\n", status, latency, host, url)
+		logChan <- fmt.Sprintf("GIN: Status - %v |Latency - %v |Host - %v |Url - %v ", status, latency, host, url)
 	}
 }

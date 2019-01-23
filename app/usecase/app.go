@@ -11,16 +11,18 @@ import (
 
 // TODO: Think about how correct work with error messages.
 type App struct {
-	Trains trains_gateway.TrainsGateway
-	Users  users_gateway.UsersGateway
-	Routes rzd_gateway.RzdGateway
+	Trains  trains_gateway.TrainsGateway
+	Users   users_gateway.UsersGateway
+	Routes  rzd_gateway.RzdGateway
+	LogChan chan string
 }
 
-func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway) App {
+func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway, logChan chan string) App {
 	return App{
-		Trains: trains,
-		Users:  users,
-		Routes: routes,
+		Trains:  trains,
+		Users:   users,
+		Routes:  routes,
+		LogChan: logChan,
 	}
 }
 
@@ -34,12 +36,13 @@ func (a *App) GetSeats(args entity.RouteArgs) ([]entity.Train, error) {
 		Code1:        args.Code1,
 		Dt0:          args.Dt0,
 		WithOutSeats: args.WithOutSeats,
-		Version:      "v.2018", // FIXME: Now hardcoded, in future move this param in envs.
+		Version:      args.Version,
 	}
 
 	// cache for rid.
 	rid, err := a.Routes.GetRid(ridArgs)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return nil, err
 	}
 	args.Rid = strconv.FormatInt(rid.RID, 10)
@@ -48,11 +51,13 @@ func (a *App) GetSeats(args entity.RouteArgs) ([]entity.Train, error) {
 
 	route, err := a.Routes.GetRoutes(args)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return nil, err
 	}
 
 	trains, err := a.saveTrains(route)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return nil, err
 	}
 
@@ -88,9 +93,11 @@ func (a *App) saveTrains(route entity.Route) ([]entity.Train, error) {
 			Seats:    seats,
 		}
 
+		// now not needed save trains in db.
 		err := a.Trains.Create(newTrain)
 		trains = append(trains, newTrain)
 		if err != nil {
+			a.LogChan <- err.Error()
 			return nil, err
 		}
 	}
@@ -102,11 +109,13 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 	var code1, code2 int
 	code1, err := a.Routes.GetDirectionsCode(target)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return 0, 0, err
 	}
 
 	code2, err = a.Routes.GetDirectionsCode(source)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return 0, 0, err
 	}
 
