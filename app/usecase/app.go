@@ -26,7 +26,6 @@ func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGatewa
 		Users:   users,
 		Routes:  routes,
 		LogChan: logChan,
-		Rid:     "",
 	}
 }
 
@@ -47,10 +46,9 @@ func (a *App) GetSeats(args entity.RouteArgs) ([]entity.Train, error) {
 		a.LogChan <- err.Error()
 		return nil, err
 	}
-	a.Rid = strconv.FormatInt(rid.RID, 10)
+	time.Sleep(750 * time.Millisecond)
 
-	time.Sleep(500 * time.Millisecond)
-	args.Rid = a.Rid
+	args.Rid = strconv.FormatInt(rid.RID, 10)
 	route, err := a.Routes.GetRoutes(args)
 	if err != nil {
 		a.LogChan <- err.Error()
