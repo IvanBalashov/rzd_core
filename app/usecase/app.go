@@ -95,10 +95,14 @@ func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 			Time1:    val.Time1,
 			Seats:    seats,
 		}
-
 		trains = append(trains, newTrain)
 	}
 	return trains, nil
+}
+
+type GoroutineAnswer struct {
+	Code    int
+	Station string
 }
 
 func (a *App) GetCodes(target, source string) (int, int, error) {
@@ -109,20 +113,22 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 		if err != nil {
 			a.LogChan <- err.Error()
 		}
-		code1 <- GoroutineAnswer{
+		answer := GoroutineAnswer{
 			Code:    data,
 			Station: "target",
 		}
+		code1 <- answer
 	}()
 	go func() {
 		data, err := a.Routes.GetDirectionsCode(source)
 		if err != nil {
 			a.LogChan <- err.Error()
 		}
-		code1 <- GoroutineAnswer{
+		answer := GoroutineAnswer{
 			Code:    data,
 			Station: "source",
 		}
+		code1 <- answer
 	}()
 	for {
 		select {
@@ -140,7 +146,6 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 	return answers["target"], answers["source"], nil
 }
 
-type GoroutineAnswer struct {
-	Code    int
-	Station string
+func (a *App) SaveTrain() {
+
 }

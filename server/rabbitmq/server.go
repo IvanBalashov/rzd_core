@@ -1,6 +1,7 @@
 package rabbitmq
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/streadway/amqp"
@@ -49,25 +50,24 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 	// read messages
 	go func() {
 		for msg := range messages {
-			r.LogChanel <- fmt.Sprintf("DEBUG:: RabbitMQ->MSG: %s", msg.Body)
+			r.LogChanel <- fmt.Sprintf("RabbitMQ->Sever: Got message - %s", msg.Body)
 			err := json.Unmarshal(msg.Body, &getedMessage)
 			if err != nil {
-				r.LogChanel <- fmt.Sprintf("RabbitMQ: err - %s", err)
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error while parse message - %s", err)
 			}
 			switch getedMessage.Event {
 			// Here write call middlewares.
-			case "Get":
-				r.LogChanel <- fmt.Sprintf("DEBUG:: Event.Get: Body:%s", getedMessage.Data)
-				_, err := r.Middlewares.GetSeats(getedMessage.Data)
+			case "Trains_list":
+				data, err := r.Middlewares.GetSeats(getedMessage.Data, "Trains_list_answer")
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ: Error in GetSeats %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetSeats %s", err.Error())
 				}
-				// TODO: need create another queue for answers.
-				//		err := response.Send([]byte{})
-				//		if err != nil {
-				//			log.Printf("%s\n", err.Error())
-				//		}
-			case "Set":
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %s", bytes.NewBuffer(data).String())
+				err = response.Send(data)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
+				}
+			case "Save_one_train":
 				r.LogChanel <- fmt.Sprintf("DEBUG:: event.Set: body:%s", getedMessage.Data)
 				//		err := response.Send([]byte{})
 				//		if err != nil {

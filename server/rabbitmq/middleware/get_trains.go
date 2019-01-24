@@ -1,29 +1,16 @@
 package middleware
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"rzd/app/entity"
 	"strconv"
 )
 
-type Trains struct {
-	MainRoute string  `json:"main_route"`
-	Segment   string  `json:"segment"`
-	StartDate string  `json:"start_date"`
-	Seats     []Seats `json:"seats"`
-}
-
-type Seats struct {
-	Name  string `json:"name"`
-	Count int    `json:"count"`
-	Price int    `json:"price"`
-}
-
-func (m *EventLayer) GetSeats(query Data) ([]byte, error) {
+func (m *EventLayer) GetSeats(query Data, eventName string) ([]byte, error) {
+	event := GetAllTrainsEvent{}
+	event.Event = eventName
 	seats := []Seats{}
-	trains := []Trains{}
 	code1, code2, err := m.App.GetCodes(query.Target, query.Source)
 	if err != nil {
 		m.LogChanel <- fmt.Sprintf("RabbitMQ->GetSeats: Error in GetCodes - %s", err)
@@ -50,7 +37,7 @@ func (m *EventLayer) GetSeats(query Data) ([]byte, error) {
 				Price: val.Seats[i].Price,
 			})
 		}
-		trains = append(trains, Trains{
+		event.Data = append(event.Data, Trains{
 			MainRoute: val.Route0 + " - " + val.Route0,
 			Segment:   val.Station + " - " + val.Station1,
 			StartDate: val.Date0 + "_" + val.Time0,
@@ -58,11 +45,10 @@ func (m *EventLayer) GetSeats(query Data) ([]byte, error) {
 		})
 		seats = []Seats{}
 	}
-	data, err := json.Marshal(trains)
+	data, err := json.Marshal(event)
 	if err != nil {
 		m.LogChanel <- fmt.Sprintf("RabbitMQ->GetSeats: Error in GetCodes - %s", err)
 		return nil, err
 	}
-	fmt.Printf("%s\n", bytes.NewBuffer(data).String())
 	return data, nil
 }

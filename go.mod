@@ -2,6 +2,7 @@ module rzd
 
 require (
 	github.com/Masterminds/squirrel v1.1.0
+	github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-stack/stack v1.8.0 // indirect
