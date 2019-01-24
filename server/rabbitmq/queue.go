@@ -93,7 +93,7 @@ func (r *ResponseQueue) Send(data []byte) error {
 		false,
 		false,
 		amqp.Publishing{
-			ContentType: "text/plain",
+			ContentType: "application/json",
 			Body:        data,
 		},
 	)

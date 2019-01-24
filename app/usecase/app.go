@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+	"fmt"
 	"rzd/app/entity"
 	"rzd/app/gateways/rzd_gateway"
 	"rzd/app/gateways/trains_gateway"
@@ -11,16 +13,19 @@ import (
 
 // TODO: Think about how correct work with error messages.
 type App struct {
-	Trains trains_gateway.TrainsGateway
-	Users  users_gateway.UsersGateway
-	Routes rzd_gateway.RzdGateway
+	Trains  trains_gateway.TrainsGateway
+	Users   users_gateway.UsersGateway
+	Routes  rzd_gateway.RzdGateway
+	LogChan chan string
+	Rid     string
 }
 
-func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway) App {
+func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway, logChan chan string) App {
 	return App{
-		Trains: trains,
-		Users:  users,
-		Routes: routes,
+		Trains:  trains,
+		Users:   users,
+		Routes:  routes,
+		LogChan: logChan,
 	}
 }
 
@@ -34,41 +39,44 @@ func (a *App) GetSeats(args entity.RouteArgs) ([]entity.Train, error) {
 		Code1:        args.Code1,
 		Dt0:          args.Dt0,
 		WithOutSeats: args.WithOutSeats,
-		Version:      "v.2018", // FIXME: Now hardcoded, in future move this param in envs.
+		Version:      args.Version,
 	}
-
-	// cache for rid.
 	rid, err := a.Routes.GetRid(ridArgs)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return nil, err
 	}
+	time.Sleep(750 * time.Millisecond)
+
 	args.Rid = strconv.FormatInt(rid.RID, 10)
-
-	time.Sleep(time.Second)
-
 	route, err := a.Routes.GetRoutes(args)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return nil, err
 	}
 
-	trains, err := a.saveTrains(route)
+	trains, err := a.GenerateTrainsList(route)
 	if err != nil {
+		a.LogChan <- err.Error()
 		return nil, err
 	}
 
 	return trains, nil
 }
 
-func (a *App) saveTrains(route entity.Route) ([]entity.Train, error) {
+func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 	trains := []entity.Train{}
 	newTrain := entity.Train{}
+	if len(route.Tp) == 0 {
+		return nil, errors.New(fmt.Sprintf("App->GenerateTrainsList: Got empty route array"))
+	}
 	for _, val := range route.Tp[0].List {
 		seats := []entity.Seats{}
-		for _, j := range val.ServiceCategories {
+		for _, seatsInfo := range val.ServiceCategories {
 			seats = append(seats, entity.Seats{
-				SeatsCount: j.FreeSeats,
-				Price:      j.Price,
-				SeatsName:  j.TypeLoc,
+				SeatsCount: seatsInfo.FreeSeats,
+				Price:      seatsInfo.Price,
+				SeatsName:  seatsInfo.TypeLoc,
 			})
 		}
 		newTrain = entity.Train{
@@ -88,27 +96,51 @@ func (a *App) saveTrains(route entity.Route) ([]entity.Train, error) {
 			Seats:    seats,
 		}
 
-		err := a.Trains.Create(newTrain)
 		trains = append(trains, newTrain)
-		if err != nil {
-			return nil, err
-		}
 	}
 	return trains, nil
 }
 
-// TODO: can be parallel.
 func (a *App) GetCodes(target, source string) (int, int, error) {
-	var code1, code2 int
-	code1, err := a.Routes.GetDirectionsCode(target)
-	if err != nil {
-		return 0, 0, err
+	var code1 = make(chan GoroutineAnswer)
+	var answers = map[string]int{}
+	go func() {
+		data, err := a.Routes.GetDirectionsCode(target)
+		if err != nil {
+			a.LogChan <- err.Error()
+		}
+		code1 <- GoroutineAnswer{
+			Code:    data,
+			Station: "target",
+		}
+	}()
+	go func() {
+		data, err := a.Routes.GetDirectionsCode(source)
+		if err != nil {
+			a.LogChan <- err.Error()
+		}
+		code1 <- GoroutineAnswer{
+			Code:    data,
+			Station: "source",
+		}
+	}()
+	for {
+		select {
+		case val, _ := <-code1:
+			if val.Station == "target" {
+				answers["target"] = val.Code
+			} else {
+				answers["source"] = val.Code
+			}
+		}
+		if len(answers) == 2 {
+			break
+		}
 	}
+	return answers["target"], answers["source"], nil
+}
 
-	code2, err = a.Routes.GetDirectionsCode(source)
-	if err != nil {
-		return 0, 0, err
-	}
-
-	return code1, code2, nil
+type GoroutineAnswer struct {
+	Code    int
+	Station string
 }

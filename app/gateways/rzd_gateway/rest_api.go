@@ -2,15 +2,15 @@ package rzd_gateway
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"gopkg.in/resty.v1"
-	"log"
 	"rzd/app/entity"
 	"strings"
 )
 
 // TODO: Create self APIClient for single user????
 // FIXME: Refactor variables name!!!
-// FIXME: rewrite all panic methods.
 type APIClient struct {
 	// OK, im hope what this url don't changes.
 	PassRzdUrl string //http://pass.rzd.ru/timetable/public/ru
@@ -39,14 +39,14 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs) (entity.Route, error) {
 		SetQueryParam("layer_id", "5827").
 		Post(a.PassRzdUrl)
 	if err != nil {
-		log.Printf("Gateways->Rzd_Gateway->GetRoutes: Error in request to RZD Api - %s\n", err)
-		return entity.Route{}, err
+		return entity.Route{},
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in request to RZD Api - %s", err))
 	}
 
 	err = json.Unmarshal(resp.Body(), &route)
 	if err != nil {
-		log.Printf("Gateways->Rzd_Gateway->GetRoutes: Error in unmarshal anwer from RZD Api - %s\n", err)
-		return entity.Route{}, err
+		return entity.Route{},
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in unmarshal anwer from RZD Api - %s", err))
 	}
 
 	return route, nil
@@ -61,16 +61,16 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, error) {
 		SetQueryParam("layer_id", "5827").
 		Post(a.PassRzdUrl)
 	if err != nil {
-		log.Printf("Gateways->Rzd_Gateway->getRid: Error in request to RZD Api - %s\n", err)
-		return entity.Rid{}, err
+		return entity.Rid{},
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in request to RZD Api - %s", err))
 	}
 
 	body := resp.Body()
 	// need clear first 10 symbols coz answer from rzd api have "\n" 5 symbols to move cursor down.
 	err = json.Unmarshal(body[10:], &rid)
 	if err != nil {
-		log.Printf("Gateways->Rzd_Gateway->getRid: Error in unmarshal anwer from RZD Api - %s\n", err)
-		return entity.Rid{}, err
+		return entity.Rid{},
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in unmarshal anwer from RZD Api - %s\n", err))
 	}
 
 	return rid, nil
@@ -87,14 +87,14 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 		SetQueryParam("compactMode", "y").
 		Get(a.RzdUrl)
 	if err != nil {
-		log.Printf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in request to RZD Api - %s\n", err)
-		return 0, err
+		return 0,
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in request to RZD Api - %s", err))
 	}
 
 	err = json.Unmarshal(resp.Body(), &answer)
 	if err != nil {
-		log.Printf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in unmarshal anwer from RZD Api - %s\n", err)
-		return 0, err
+		return 0,
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in unmarshal anwer from RZD Api - %s", err))
 	}
 	for i := range answer {
 		if strings.Contains(strings.ToLower(answer[i].Name), strings.ToLower(source)) {
