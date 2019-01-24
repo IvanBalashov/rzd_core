@@ -110,7 +110,7 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 			a.LogChan <- err.Error()
 		}
 		code1 <- GoroutineAnswer{
-			Code: data,
+			Code:    data,
 			Station: "target",
 		}
 	}()
@@ -120,13 +120,13 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 			a.LogChan <- err.Error()
 		}
 		code1 <- GoroutineAnswer{
-			Code: data,
+			Code:    data,
 			Station: "source",
 		}
 	}()
-	for{
+	for {
 		select {
-		case val, _ := <- code1:
+		case val, _ := <-code1:
 			if val.Station == "target" {
 				answers["target"] = val.Code
 			} else {
@@ -141,6 +141,6 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 }
 
 type GoroutineAnswer struct {
-	Code int
+	Code    int
 	Station string
 }

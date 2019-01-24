@@ -24,7 +24,7 @@ type SeatsArgs struct {
 	Direction string `form:"dir" binding:"required"`
 	Target    string `form:"target" binding:"required"`
 	Source    string `form:"source" binding:"required"`
-	Data      string `form:"data" binding:"required"`
+	Date      string `form:"date" binding:"required"`
 }
 
 func (a *AppLayer) GetSeats(ctx *gin.Context) {
@@ -48,7 +48,7 @@ func (a *AppLayer) GetSeats(ctx *gin.Context) {
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
 		Code1:        strconv.Itoa(code2),
-		Dt0:          query.Data,
+		Dt0:          query.Date,
 		CheckSeats:   "0",
 		WithOutSeats: "y",
 		Version:      "v.2018",

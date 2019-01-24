@@ -15,7 +15,7 @@ func NewLogger(log chan string, name string) Logger {
 }
 
 func (l *Logger) Start() {
-	log.SetFlags(log.LstdFlags)
+	//log.SetFlags(log.LstdFlags)
 	log.Printf("%s_%s\n", l.AppName, "Logger: Start logging")
 	go func() {
 		for {
@@ -24,6 +24,7 @@ func (l *Logger) Start() {
 				if !ok {
 					break
 				}
+				//add logic here if wana smth more, like sentry
 				log.Printf("%s_%s\n", l.AppName, val)
 			}
 		}
