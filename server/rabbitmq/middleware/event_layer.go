@@ -7,7 +7,7 @@ type EventLayer struct {
 	LogChanel chan string
 }
 
-func InitMiddleWares(app usecase.Usecase, logChan chan string) EventLayer {
+func NewEventLayer(app usecase.Usecase, logChan chan string) EventLayer {
 	return EventLayer{
 		App:       app,
 		LogChanel: logChan,

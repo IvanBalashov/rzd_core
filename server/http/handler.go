@@ -16,11 +16,11 @@ func NewHandler(app *usecase.App) http.Handler {
 	handler := gin.New()
 	handler.Use(Logger(app.LogChan))
 
-	middlewares := middleware.InitMiddleWares(app)
+	eventLayer := middleware.NewEventLayer(app)
 	api := handler.Group("/api/v1")
-	api.GET("health", middlewares.Health)
+	api.GET("health", eventLayer.Health)
 
-	api.GET("test", middlewares.GetSeats)
+	api.GET("test", eventLayer.GetAllTrains)
 
 	return handler
 }

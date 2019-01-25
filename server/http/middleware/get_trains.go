@@ -7,19 +7,6 @@ import (
 	"strconv"
 )
 
-type Trains struct {
-	MainRoute string  `json:"main_route"`
-	Segment   string  `json:"segment"`
-	StartDate string  `json:"start_date"`
-	Seats     []Seats `json:"seats"`
-}
-
-type Seats struct {
-	Name  string `json:"name"`
-	Count int    `json:"count"`
-	Price int    `json:"price"`
-}
-
 type SeatsArgs struct {
 	Direction string `form:"dir" binding:"required"`
 	Target    string `form:"target" binding:"required"`
@@ -27,7 +14,7 @@ type SeatsArgs struct {
 	Date      string `form:"date" binding:"required"`
 }
 
-func (a *AppLayer) GetSeats(ctx *gin.Context) {
+func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 	query := SeatsArgs{}
 	trains := []Trains{}
 	seats := []Seats{}

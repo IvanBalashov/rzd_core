@@ -138,9 +138,9 @@ func main() {
 		} else {
 			// TODO: Remove after complete rabbitmq files.
 			// TODO: Think about call to another nodes about starting??
-			logs <- fmt.Sprintf("Main: Success")
-			trainsRequest := rabbitmq.NewRequestQueue(&server.Chanel,
-				"trains_request",
+			logs <- fmt.Sprintf("Main: Success.")
+			trainsRequest := rabbitmq.NewRequestQueue(server.Chanel,
+				"Get_all_trains",
 				"",
 				false,
 				false,
@@ -148,8 +148,8 @@ func main() {
 				false,
 				nil)
 
-			trainsResponse := rabbitmq.NewResponseQueue(&server.Chanel,
-				"trains_response",
+			trainsResponse := rabbitmq.NewResponseQueue(server.Chanel,
+				"Send_all_trains",
 				"",
 				false,
 				false,
@@ -157,8 +157,8 @@ func main() {
 				false,
 				nil)
 			// only for testing
-			testResponse := rabbitmq.NewResponseQueue(&server.Chanel,
-				"trains_request",
+			testResponse := rabbitmq.NewResponseQueue(server.Chanel,
+				"Get_all_trains",
 				"",
 				false,
 				false,
@@ -167,9 +167,10 @@ func main() {
 				nil)
 
 			go server.Serve(trainsRequest, trainsResponse)
-			msg := middleware.Message{
+			msg := rabbitmq.MessageRabbitMQ{
+				ID:    1,
 				Event: "Trains_list",
-				Data: middleware.Data{
+				Data: middleware.AllTrainsRequest{
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",

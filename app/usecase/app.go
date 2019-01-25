@@ -149,3 +149,7 @@ func (a *App) GetCodes(target, source string) (int, int, error) {
 func (a *App) SaveTrain() {
 
 }
+
+func (a *App) Run() {
+
+}

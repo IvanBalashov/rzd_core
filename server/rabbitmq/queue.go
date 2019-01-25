@@ -27,6 +27,7 @@ func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now
 		log.Printf("RabbitMQ->RequestQueue: Error while queue declare - %s\n", err)
 		return RequestQueue{}
 	}
+
 	return RequestQueue{
 		Queue: Queue{
 			Name:       name,
@@ -56,6 +57,7 @@ func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
 		log.Printf("RabbitMQ->RequestQueue: Error while consume messages - %s\n", err)
 		return nil, err
 	}
+
 	return messages, nil
 }
 
@@ -71,6 +73,7 @@ func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, no
 		log.Printf("RabbitMQ->ResponseQueue: Error while queue declare - %s\n", err)
 		return ResponseQueue{}
 	}
+
 	return ResponseQueue{
 		Queue: Queue{
 			Name:       name,
@@ -101,5 +104,6 @@ func (r *ResponseQueue) Send(data []byte) error {
 		log.Printf("RabbitMQ->ResponseQueue: Error while publish messages - %s\n", err)
 		return err
 	}
+
 	return nil
 }
