@@ -26,36 +26,45 @@ func NewMongoUsers(cli *mongo.Client) (MongoUsers, error) {
 
 func (m *MongoUsers) Create(user entity.User) error {
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+
 	result, err := m.Users.InsertOne(ctx, user)
 	if err != nil {
 		return err
 	}
+
 	if result.InsertedID == nil {
 		return errors.New(fmt.Sprintf(fmt.Sprintf("Gateway->Users_Gateway->Create: Got empty result - %s", result.InsertedID)))
 	}
+
 	return nil
 }
 
 func (m *MongoUsers) ReadOne() (entity.User, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 	result := entity.User{}
 	filter := bson.M{}
+
+	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+
 	err := m.Users.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		return entity.User{}, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadOne: Error in mgdb.FindOne - %s", err))
 	}
+
 	return result, nil
 }
 
 func (m *MongoUsers) ReadMany(ids []int) ([]entity.User, error) {
 	users := []entity.User{}
 	user := entity.User{}
+
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+
 	cur, err := m.Users.Find(ctx, nil) // FIXME: add filter
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadMany: Error in mgdb.Find - %s", err))
 	}
 	defer cur.Close(ctx)
+
 	for cur.Next(ctx) {
 		err := cur.Decode(&user)
 		if err != nil {
@@ -66,27 +75,34 @@ func (m *MongoUsers) ReadMany(ids []int) ([]entity.User, error) {
 	if err := cur.Err(); err != nil {
 		return nil, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadMany: Error in cursour.Err - %s", err))
 	}
+
 	return users, nil
 }
 
 func (m *MongoUsers) Update(user entity.User) error {
 	result := entity.User{}
-	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 	filter := bson.M{} // FIXME: add filter
+
+	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+
 	err := m.Users.FindOneAndUpdate(ctx, filter, user).Decode(&result)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadOne: Error in mgdb.FindOne - %s", err))
 	}
+
 	return nil
 }
 
 func (m *MongoUsers) Delete(user entity.User) error {
 	result := entity.User{}
-	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 	filter := bson.M{} // FIXME: add filter
+
+	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+
 	err := m.Users.FindOneAndDelete(ctx, filter).Decode(&result)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadOne: Error in mgdb.FindOne - %s", err))
 	}
+
 	return nil
 }

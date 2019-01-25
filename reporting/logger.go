@@ -14,9 +14,9 @@ func NewLogger(log chan string, name string) Logger {
 	}
 }
 
+// idk how this will be work on load, but, think this is good practise coz one entry point for all logs
 func (l *Logger) Start() {
-	//log.SetFlags(log.LstdFlags)
-	log.Printf("%s_%s\n", l.AppName, "Logger: Start logging")
+	log.Printf("%s__%s\n", l.AppName, "Logger: Start logging")
 	go func() {
 		for {
 			select {
@@ -25,12 +25,8 @@ func (l *Logger) Start() {
 					break
 				}
 				//add logic here if wana smth more, like sentry
-				log.Printf("%s_%s\n", l.AppName, val)
+				log.Printf("%s__%s\n", l.AppName, val)
 			}
 		}
 	}()
-}
-
-func (l *Logger) Write(logline string) {
-	log.Printf("%s_%s\n", l.AppName, logline)
 }

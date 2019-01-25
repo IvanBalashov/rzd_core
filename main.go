@@ -37,44 +37,44 @@ func GenConfig() Config {
 	var appName string
 
 	if err != nil {
-		log.Printf("%s_Main->GenConfig: Error while load .env file - %s\n", os.Getenv("APP_NAME"), err.Error())
+		log.Printf("%s__Main->GenConfig: Error while load .env file - %s\n", os.Getenv("APP_NAME"), err.Error())
 	} else {
-		log.Printf("%s_Main->GenConfig: File .env loaded\n", os.Getenv("APP_NAME"))
+		log.Printf("%s__Main->GenConfig: File .env loaded\n", os.Getenv("APP_NAME"))
 	}
 	var conf = Config{}
 	if val, ok := os.LookupEnv("APP_NAME"); !ok {
-		log.Printf("(Can't get app name)_Main->GenConfig: APP_NAME env don't seted\n")
+		log.Printf("(Can't get app name)__Main->GenConfig: APP_NAME env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.AppName = val
 		appName = val
 	}
 	if val, ok := os.LookupEnv("HTTP_HOST"); !ok {
-		log.Printf("%s_Main->GenConfig: HTTP_HOST env don't seted\n", appName)
+		log.Printf("%s__Main->GenConfig: HTTP_HOST env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.HttpHost = val
 	}
 	if val, ok := os.LookupEnv("HTTP_PORT"); !ok {
-		log.Printf("%s_Main->GenConfig: HTTP_PORT env don't seted\n", appName)
+		log.Printf("%s__Main->GenConfig: HTTP_PORT env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.HttpPort = val
 	}
 	if val, ok := os.LookupEnv("POSTGRES_URL"); !ok {
-		log.Printf("%s_Main->GenConfig: POSTGRES_URL env don't seted\n", appName)
+		log.Printf("%s__Main->GenConfig: POSTGRES_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.PostgresUrl = val
 	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
-		log.Printf("%s_Main->GenConfig: RABBITMQ_URL env don't seted\n", appName)
+		log.Printf("%s__Main->GenConfig: RABBITMQ_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.RabbitMQUrl = val
 	}
 	if val, ok := os.LookupEnv("MONGODB_URL"); !ok {
-		log.Printf("%s_Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.MongoDBUrl = val
@@ -88,6 +88,7 @@ func main() {
 
 	logs := make(chan string)
 	defer close(logs)
+
 	logger := reporting.NewLogger(logs, config.AppName)
 	logger.Start()
 
@@ -103,9 +104,9 @@ func main() {
 		5764,
 		5804,
 	)
-
 	logs <- fmt.Sprintf("Main: Success.")
-	logs <- fmt.Sprintf("Main: Init MongoDB client.")
+
+	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBUrl)
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
 
@@ -130,16 +131,16 @@ func main() {
 
 	// RabbitMQ Server
 	{
-		logs <- fmt.Sprintf("Main: Starting rabbitMQ on addr - %s", config.RabbitMQUrl)
+		logs <- fmt.Sprintf("Main: Connecting to rabbitMQ on addr - %s", config.RabbitMQUrl)
 		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app, logs)
 		if err != nil {
 			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s", config.RabbitMQUrl)
 		} else {
 			// TODO: Remove after complete rabbitmq files.
 			// TODO: Think about call to another nodes about starting??
-			logs <- fmt.Sprintf("Main: Success")
-			request := rabbitmq.NewRequestQueue(&server.Chanel,
-				"test",
+			logs <- fmt.Sprintf("Main: Success.")
+			trainsRequest := rabbitmq.NewRequestQueue(server.Chanel,
+				"Get_all_trains",
 				"",
 				false,
 				false,
@@ -147,8 +148,17 @@ func main() {
 				false,
 				nil)
 
-			response := rabbitmq.NewResponseQueue(&server.Chanel,
-				"test",
+			trainsResponse := rabbitmq.NewResponseQueue(server.Chanel,
+				"Send_all_trains",
+				"",
+				false,
+				false,
+				false,
+				false,
+				nil)
+			// only for testing
+			testResponse := rabbitmq.NewResponseQueue(server.Chanel,
+				"Get_all_trains",
 				"",
 				false,
 				false,
@@ -156,10 +166,11 @@ func main() {
 				false,
 				nil)
 
-			go server.Serve(request, response)
-			msg := middleware.Message{
-				Event: "Get",
-				Data: middleware.Data{
+			go server.Serve(trainsRequest, trainsResponse)
+			msg := rabbitmq.MessageRabbitMQ{
+				ID:    1,
+				Event: "Trains_list",
+				Data: middleware.AllTrainsRequest{
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
@@ -168,7 +179,7 @@ func main() {
 			}
 			time.Sleep(time.Second)
 			data, _ := json.Marshal(msg)
-			err := response.Send(data)
+			err := testResponse.Send(data)
 			if err != nil {
 				logs <- fmt.Sprintf("Main: Error in test send - %s", err.Error())
 			}

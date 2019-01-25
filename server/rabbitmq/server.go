@@ -8,78 +8,123 @@ import (
 	"rzd/server/rabbitmq/middleware"
 )
 
+type MessageRabbitMQ struct {
+	ID    int         `json:"id"`
+	Event string      `json:"event"`
+	Data  interface{} `json:"data"`
+}
+
 type RabbitServer struct {
-	Middlewares middleware.EventLayer
-	Connection  amqp.Connection
-	Chanel      amqp.Channel
-	LogChanel   chan string
+	EventLayer middleware.EventLayer
+	Connection *amqp.Connection
+	Chanel     *amqp.Channel
+	LogChanel  chan string
 }
 
 //Create new connection and chanel to rabbitmq.
 // FIXME: Don't forgot close channel.
 func NewServer(uri string, app usecase.Usecase, logChanel chan string) (RabbitServer, error) {
-	var server = &RabbitServer{}
 	connection, err := amqp.Dial(uri)
 	if err != nil {
 		return RabbitServer{}, err
 	}
 
-	server.Connection = *connection
 	ch, err := connection.Channel()
 	if err != nil {
 		return RabbitServer{}, err
 	}
-	server.LogChanel = logChanel
-	server.Chanel = *ch
-	server.Middlewares = middleware.InitMiddleWares(app, logChanel)
-	return *server, nil
+
+	return RabbitServer{
+		Connection: connection,
+		LogChanel:  logChanel,
+		Chanel:     ch,
+		EventLayer: middleware.NewEventLayer(app, logChanel),
+	}, nil
 }
 
-// all works wirh rabbitmq now released like in man, need upgrade
 func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
-	// listen msgs, call middlewares.
-	getedMessage := middleware.Message{}
-	messages, err := request.Read()
+	msg := MessageRabbitMQ{}
+	resp := MessageRabbitMQ{}
+	forever := make(chan bool) // FIXME: add exit statement
+
+	requests, err := request.Read()
 	if err != nil {
-		r.LogChanel <- fmt.Sprintf("RabbitMQ: Error while start reading - %s", err.Error())
+		r.LogChanel <- fmt.Sprintf("RabbitMQ: Start reading error - %s", err.Error())
 		return
 	}
+
 	r.LogChanel <- fmt.Sprintf("RabbitMQ: Start reading messages")
-	forever := make(chan bool)
-	// read messages
 	go func() {
-		for msg := range messages {
-			r.LogChanel <- fmt.Sprintf("DEBUG:: RabbitMQ->MSG: %s", msg.Body)
-			err := json.Unmarshal(msg.Body, &getedMessage)
+		for request := range requests {
+			r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got message - %s", request.Body)
+
+			err := json.Unmarshal(request.Body, &msg)
 			if err != nil {
-				r.LogChanel <- fmt.Sprintf("RabbitMQ: err - %s", err)
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error while parse message - %s", err)
 			}
-			switch getedMessage.Event {
-			// Here write call middlewares.
-			case "Get":
-				r.LogChanel <- fmt.Sprintf("DEBUG:: Event.Get: Body:%s", getedMessage.Data)
-				_, err := r.Middlewares.GetSeats(getedMessage.Data)
+
+			switch msg.Event {
+			case "Trains_list":
+				answer, err := r.EventLayer.GetAllTrains(msg.Data)
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ: Error in GetSeats %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
 				}
-				// TODO: need create another queue for answers.
-				//		err := response.Send([]byte{})
-				//		if err != nil {
-				//			log.Printf("%s\n", err.Error())
-				//		}
-			case "Set":
-				r.LogChanel <- fmt.Sprintf("DEBUG:: event.Set: body:%s", getedMessage.Data)
-				//		err := response.Send([]byte{})
-				//		if err != nil {
-				//			log.Printf("%s\n", err.Error())
-				//		}
+
+				resp = MessageRabbitMQ{
+					ID:    msg.ID,
+					Event: "Trains_list_answer",
+					Data:  answer,
+				}
+
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %+v", resp)
+
+				data, err := json.Marshal(resp)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while parse answer - %s", err.Error())
+				}
+
+				err = response.Send(data)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
+				}
+			case "Save_one_train":
+				answer, err := r.EventLayer.SaveInfoAboutTrain(msg.Data)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
+				}
+
+				resp = MessageRabbitMQ{
+					ID:    msg.ID,
+					Event: "Save_one_train_answer",
+					Data:  answer,
+				}
+
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %+v", resp)
+
+				data, err := json.Marshal(resp)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while parse answer - %s", err.Error())
+				}
+
+				err = response.Send(data)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
+				}
 			case "Exit":
+				close(forever)
 				break
 			}
 		}
 	}()
-
-	<-forever
-	// need call this method after readed data
-	//response.Send()
+	for {
+		select {
+		case _, ok := <-forever:
+			if !ok {
+				if err := request.Channel.Close(); err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Can't close request channel - %s", err.Error())
+				}
+				return
+			}
+		}
+	}
 }
