@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/joho/godotenv"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"os"
+	"rzd/app/gateways/cache_gateway"
 	"rzd/app/gateways/rzd_gateway"
 	"rzd/app/gateways/trains_gateway"
 	"rzd/app/gateways/users_gateway"
@@ -26,6 +28,7 @@ type Config struct {
 	PostgresUrl string
 	RabbitMQUrl string
 	MongoDBUrl  string
+	MemcacheUrl string
 }
 
 func init() {
@@ -79,6 +82,12 @@ func GenConfig() Config {
 	} else {
 		conf.MongoDBUrl = val
 	}
+	if val, ok := os.LookupEnv("MEMCACHE_URL"); !ok {
+		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		os.Exit(2)
+	} else {
+		conf.MemcacheUrl = val
+	}
 
 	return conf
 }
@@ -127,7 +136,14 @@ func main() {
 	}
 	logs <- fmt.Sprintf("Main: Success.")
 
-	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, logs)
+	logs <- fmt.Sprintf("Main: Connecting to Memcache on addr - %s", config.MemcacheUrl)
+
+	cacheCLI := memcache.New(config.MemcacheUrl)
+	cache := cache_gateway.NewMemcache(*cacheCLI, 60)
+
+	logs <- fmt.Sprintf("Main: Success.")
+
+	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, &cache, logs)
 
 	// RabbitMQ Server
 	{
@@ -174,7 +190,7 @@ func main() {
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "25.01.2019",
+					Date:      "26.01.2019",
 				},
 			}
 			time.Sleep(time.Second)

@@ -53,7 +53,7 @@ func (m *MongoUsers) ReadOne() (entity.User, error) {
 	return result, nil
 }
 
-func (m *MongoUsers) ReadMany(ids []int) ([]entity.User, error) {
+func (m *MongoUsers) ReadMany() ([]entity.User, error) {
 	users := []entity.User{}
 	user := entity.User{}
 

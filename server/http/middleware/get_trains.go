@@ -54,6 +54,7 @@ func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 			})
 		}
 		trains = append(trains, Trains{
+			TrainID:   val.ID,
 			MainRoute: val.Route0 + " - " + val.Route1,
 			Segment:   val.Station + " - " + val.Station1,
 			StartDate: val.Date0 + "_" + val.Time0,

@@ -47,6 +47,7 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 			})
 		}
 		response = append(response, Trains{
+			TrainID:   val.ID,
 			MainRoute: val.Route0 + " - " + val.Route0,
 			Segment:   val.Station + " - " + val.Station1,
 			StartDate: val.Date0 + "_" + val.Time0,

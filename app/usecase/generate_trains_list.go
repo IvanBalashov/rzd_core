@@ -1,6 +1,9 @@
 package usecase
 
 import (
+	"bytes"
+	"crypto/md5"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"rzd/app/entity"
@@ -24,6 +27,7 @@ func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 				SeatsName:  seatsInfo.TypeLoc,
 			})
 		}
+
 		newTrain = entity.Train{
 			Number:   val.Number,
 			Type:     strconv.Itoa(val.Type),
@@ -40,6 +44,21 @@ func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 			Time1:    val.Time1,
 			Seats:    seats,
 		}
+
+		data, _ := json.Marshal(newTrain)
+
+		compiledKey := bytes.NewBufferString(val.Number + "_" + val.Route0 + "_" + val.Route1).Bytes()
+
+		hash := md5.New()
+		bytesKey := hash.Sum(compiledKey)
+		key := bytes.NewBuffer(bytesKey).String()
+
+		//FIXME: fix this shit
+		err := a.Cache.Set(fmt.Sprintf("%x", key), data)
+		if err != nil {
+			return nil, err
+		}
+		newTrain.ID = fmt.Sprintf("%x", key)
 		trains = append(trains, newTrain)
 	}
 

@@ -52,7 +52,7 @@ func (m *MongoTrains) ReadOne() (entity.Train, error) {
 	return result, nil
 }
 
-func (m *MongoTrains) ReadMany(ids []int) ([]entity.Train, error) {
+func (m *MongoTrains) ReadMany() ([]entity.Train, error) {
 	trains := []entity.Train{}
 	train := entity.Train{}
 
