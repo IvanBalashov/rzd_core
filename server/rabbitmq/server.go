@@ -67,7 +67,7 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 			case "Trains_list":
 				answer, err := r.EventLayer.GetAllTrains(msg.Data)
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetSeats %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
 				}
 
 				resp = MessageRabbitMQ{
@@ -88,9 +88,9 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
 				}
 			case "Save_one_train":
-				answer, err := r.EventLayer.SaveTrain(msg.Data)
+				answer, err := r.EventLayer.SaveInfoAboutTrain(msg.Data)
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetSeats %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
 				}
 
 				resp = MessageRabbitMQ{

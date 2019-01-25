@@ -3,8 +3,8 @@ package usecase
 import "rzd/app/entity"
 
 type Usecase interface {
-	GetSeats(args entity.RouteArgs) ([]entity.Train, error)
-	GetCodes(target, source string) (int, int, error)
-	SaveTrain()
+	GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error)
+	GetStationCodes(target, source string) (int, int, error)
+	SaveInfoAboutTrain() error
 	Run()
 }

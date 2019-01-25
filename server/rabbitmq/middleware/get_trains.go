@@ -21,13 +21,13 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 		}
 	}
 
-	code1, code2, err := m.App.GetCodes(request.Target, request.Source)
+	code1, code2, err := m.App.GetStationCodes(request.Target, request.Source)
 	if err != nil {
-		m.LogChanel <- fmt.Sprintf("RabbitMQ->GetSeats: Error in GetCodes - %s", err)
+		m.LogChanel <- fmt.Sprintf("RabbitMQ->GetInfoAboutTrains: Error in GetStationCodes - %s", err)
 		return nil, err
 	}
 
-	routes, err := m.App.GetSeats(entity.RouteArgs{
+	routes, err := m.App.GetInfoAboutTrains(entity.RouteArgs{
 		Dir:          request.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),

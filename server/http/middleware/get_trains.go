@@ -25,12 +25,12 @@ func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 		return
 	}
 
-	code1, code2, err := a.App.GetCodes(query.Target, query.Source)
+	code1, code2, err := a.App.GetStationCodes(query.Target, query.Source)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
 	}
 
-	routes, err := a.App.GetSeats(entity.RouteArgs{
+	routes, err := a.App.GetInfoAboutTrains(entity.RouteArgs{
 		Dir:          query.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
