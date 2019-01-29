@@ -11,6 +11,7 @@ import (
 
 // TODO: Create self APIClient for single user????
 // FIXME: Refactor variables name!!!
+// Codes can be hardcoded.?
 type APIClient struct {
 	// OK, im hope what this url don't changes.
 	PassRzdUrl string //http://pass.rzd.ru/timetable/public/ru
@@ -66,8 +67,7 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, error) {
 	}
 
 	body := resp.Body()
-	// need clear first 10 symbols coz answer from rzd api have "\n" 5 symbols to move cursor down.
-	err = json.Unmarshal(body[10:], &rid)
+	err = json.Unmarshal(body, &rid)
 	if err != nil {
 		return entity.Rid{},
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in unmarshal anwer from RZD Api - %s\n", err))

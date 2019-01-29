@@ -56,10 +56,11 @@ func (m *MongoUsers) ReadOne() (entity.User, error) {
 func (m *MongoUsers) ReadMany() ([]entity.User, error) {
 	users := []entity.User{}
 	user := entity.User{}
+	filter := bson.M{}
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
-	cur, err := m.Users.Find(ctx, nil) // FIXME: add filter
+	cur, err := m.Users.Find(ctx, filter) // FIXME: add filter
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadMany: Error in mgdb.Find - %s", err))
 	}

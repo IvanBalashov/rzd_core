@@ -10,7 +10,6 @@ import (
 func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	response := []Trains{}
 	request := AllTrainsRequest{}
-	seats := []Seats{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return nil, err
@@ -39,6 +38,7 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	})
 
 	for _, val := range routes {
+		seats := []Seats{}
 		for i := range val.Seats {
 			seats = append(seats, Seats{
 				Name:  val.Seats[i].SeatsName,
@@ -53,7 +53,6 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 			StartDate: val.Date0 + "_" + val.Time0,
 			Seats:     seats,
 		})
-		seats = []Seats{}
 	}
 
 	return response, nil

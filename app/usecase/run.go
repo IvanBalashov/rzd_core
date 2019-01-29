@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -16,16 +17,9 @@ func (a *App) Run(refreshTimeSec string) {
 			}
 			trains, err := a.Trains.ReadMany()
 			if err != nil {
-				panic(err)
+				log.Printf("%s\n", err)
 			}
 
-			for key, val := range trains {
-				fmt.Printf("%s - %s\n", key, val)
-			}
 		}
 	}
-}
-
-func checkTrain() {
-
 }

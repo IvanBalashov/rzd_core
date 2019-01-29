@@ -190,7 +190,7 @@ func main() {
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "26.01.2019",
+					Date:      "01.02.2019",
 				},
 			}
 			time.Sleep(time.Second)
@@ -201,6 +201,7 @@ func main() {
 			}
 		}
 	}
+	go app.Run("60")
 	// REST Server.
 	{
 		logs <- fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)

@@ -55,13 +55,14 @@ func (m *MongoTrains) ReadOne() (entity.Train, error) {
 func (m *MongoTrains) ReadMany() ([]entity.Train, error) {
 	trains := []entity.Train{}
 	train := entity.Train{}
+	filter := bson.M{}
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
-	cur, err := m.Trains.Find(ctx, nil) // FIXME: add filter
+	cur, err := m.Trains.Find(ctx, filter) // FIXME: add filter
 	if err != nil {
 		return nil,
-			errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->ReadMany: Error in mgdb.Find - %s", err))
+			errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->ReadMany: Error in mgdb.Find - %s %s", err, cur))
 	}
 	defer cur.Close(ctx)
 

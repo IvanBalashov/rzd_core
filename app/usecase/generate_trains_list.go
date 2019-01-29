@@ -47,7 +47,7 @@ func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 
 		data, _ := json.Marshal(newTrain)
 
-		compiledKey := bytes.NewBufferString(val.Number + "_" + val.Route0 + "_" + val.Route1).Bytes()
+		compiledKey := bytes.NewBufferString(val.Number + "_" + val.Route0 + "_" + val.Route1 + "_" + val.Date0 + "_" + val.Date1).Bytes()
 
 		hash := md5.New()
 		bytesKey := hash.Sum(compiledKey)

@@ -27,3 +27,7 @@ type SaveOneTrainRequest struct {
 	StartDate string  `json:"start_date"`
 	Seats     []Seats `json:"seats"`
 }
+
+type SaveOneTrainResponse struct {
+	Status string `json:"status"`
+}

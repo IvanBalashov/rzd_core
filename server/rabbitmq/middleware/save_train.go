@@ -5,9 +5,7 @@ import (
 )
 
 func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
-	//response := []Trains{}
-	request := SaveOneTrainRequest{}
-	//seats := []Seats{}
+	request := Trains{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return nil, err
@@ -18,10 +16,10 @@ func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) 
 		}
 	}
 
-	err := m.App.SaveInfoAboutTrain()
+	err := m.App.SaveInfoAboutTrain(request.TrainID)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	return SaveOneTrainResponse{Status: "OK"}, nil
 }
