@@ -20,18 +20,20 @@ Now app can read environment variables from `.env` file. For fast start use foll
 ```text
 cp .env_example .env
 ```
- 
-
-+-------------------------------+ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;+-------------------------------+  
-|&emsp;&emsp;&emsp;RZD CORE&emsp;&emsp;&emsp;| --------------------------- |&emsp;&emsp;&emsp;MongoDB &emsp;&emsp;&emsp;|  
-+-------------------------------+ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;+-------------------------------+
-&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;&emsp;\ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &nbsp;&nbsp;+-------------------------------+    
-&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;&emsp;&nbsp; \ ------------------------ |&emsp;&emsp;&emsp;Memcache &nbsp;&nbsp;&nbsp;&emsp;&emsp;|  
-+------------------------------+ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;+--------------------------------+  
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rabbit MQ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-+------------------------------+  
-&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|   
-&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|    
-+----------------------------- +    
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RZD BOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-+----------------------------- +  
+```text
++----------+
+| Rzd API  |
++----------+
+ | | | | |
++----------+           +----------+ 
+| Rzd Core | --------- | MongoDB  |
++----------+           +----------+
+ | | | | |  \
++----------+ \         +----------+
+| RabbitMQ |  \________| Memcache |
++----------+           +----------+
+ | | | | | 
++----------+
+|  TG BOT  |
++----------+
+```
