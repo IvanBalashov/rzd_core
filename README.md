@@ -22,10 +22,16 @@ cp .env_example .env
 ```
  
 
-+---------------------------------+<br>
-|                                 |<br>
-|                                 |<br>
-|          Main Bot App           |<br>
-|                                 |<br>
-|                                 |<br>
-+---------------------------------+<br>
++-------------------------------+ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;+-------------------------------+  
+|&emsp;&emsp;&emsp;RZD CORE&emsp;&emsp;&emsp;| --------------------------- |&emsp;&emsp;&emsp;MongoDB &emsp;&emsp;&emsp;|  
++-------------------------------+ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;+-------------------------------+
+&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;&emsp;\ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &nbsp;&nbsp;+-------------------------------+    
+&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;&emsp;&nbsp; \ ------------------------ |&emsp;&emsp;&emsp;Memcache &nbsp;&nbsp;&nbsp;&emsp;&emsp;|  
++------------------------------+ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;+--------------------------------+  
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rabbit MQ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
++------------------------------+  
+&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|   
+&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|&emsp;&emsp;|    
++----------------------------- +    
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RZD BOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
++----------------------------- +  
