@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"net/http"
 	"rzd/app/gateways/cache_gateway"
 	"rzd/app/gateways/rzd_gateway"
 	"rzd/app/gateways/trains_gateway"
@@ -14,7 +15,7 @@ type App struct {
 	Routes  rzd_gateway.RzdGateway
 	Cache   cache_gateway.CacheGateway
 	LogChan chan string
-	Rid     string
+	Cookies []*http.Cookie
 }
 
 func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway, cache cache_gateway.CacheGateway, logChan chan string) App {

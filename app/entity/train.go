@@ -3,6 +3,8 @@ package entity
 // TODO: think this shit don't needed.
 type Train struct {
 	ID       string
+	Code0    string
+	Code1    string
 	Type     string
 	Number   string
 	Brand    string

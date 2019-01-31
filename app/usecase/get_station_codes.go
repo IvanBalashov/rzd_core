@@ -6,7 +6,7 @@ type GoroutineAnswer struct {
 }
 
 func (a *App) GetStationCodes(target, source string) (int, int, error) {
-	var code1 = make(chan GoroutineAnswer)
+	var code = make(chan GoroutineAnswer)
 	var answers = map[string]int{}
 	go func() {
 		data, err := a.Routes.GetDirectionsCode(target)
@@ -17,7 +17,7 @@ func (a *App) GetStationCodes(target, source string) (int, int, error) {
 			Code:    data,
 			Station: "target",
 		}
-		code1 <- answer
+		code <- answer
 	}()
 	go func() {
 		data, err := a.Routes.GetDirectionsCode(source)
@@ -28,11 +28,11 @@ func (a *App) GetStationCodes(target, source string) (int, int, error) {
 			Code:    data,
 			Station: "source",
 		}
-		code1 <- answer
+		code <- answer
 	}()
 	for {
 		select {
-		case val, _ := <-code1:
+		case val := <-code:
 			if val.Station == "target" {
 				answers["target"] = val.Code
 			} else {

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"gopkg.in/resty.v1"
+	"net/http"
 	"rzd/app/entity"
 	"strings"
 )
@@ -31,8 +32,12 @@ func NewRestAPIClient(passUrl, rzdUrl string, code1, code2, code3 int) APIClient
 	}
 }
 
-func (a *APIClient) GetRoutes(args entity.RouteArgs) (entity.Route, error) {
+func (a *APIClient) GetRoutes(args entity.RouteArgs, cookies []*http.Cookie) (entity.Route, error) {
 	route := entity.Route{}
+
+	for key := range cookies {
+		resty.SetCookie(cookies[key])
+	}
 
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
@@ -53,7 +58,7 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs) (entity.Route, error) {
 	return route, nil
 }
 
-func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, error) {
+func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, error) {
 	rid := entity.Rid{}
 
 	resp, err := resty.R().
@@ -62,18 +67,20 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, error) {
 		SetQueryParam("layer_id", "5827").
 		Post(a.PassRzdUrl)
 	if err != nil {
-		return entity.Rid{},
+		return entity.Rid{}, nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in request to RZD Api - %s", err))
 	}
+
+	cookies := resp.Cookies()
 
 	body := resp.Body()
 	err = json.Unmarshal(body, &rid)
 	if err != nil {
-		return entity.Rid{},
+		return entity.Rid{}, nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in unmarshal anwer from RZD Api - %s\n", err))
 	}
 
-	return rid, nil
+	return rid, cookies, nil
 }
 
 //Coz all rzd rest api distributed on two entry points - pass.rzd.ru and rzd.ru.
@@ -102,4 +109,23 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 		}
 	}
 	return 0, nil
+}
+
+func (a *APIClient) GetInfoAboutOneTrain(train entity.Train, args entity.RouteArgs) (entity.Train, error) {
+	answer := entity.Train{}
+
+	resp, err := resty.R().
+		SetHeader("Accept", "application/json").
+		SetQueryParam("layer_id", "5827").
+		SetQueryParam("tnum0", train.Number).
+		SetQueryParams(args.ToMap()).
+		Get(a.PassRzdUrl)
+
+	err = json.Unmarshal(resp.Body(), &answer)
+	if err != nil {
+		return answer,
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetInfoAboutOneTrain: Error in request to RZD Api - %s", err))
+	}
+
+	return answer, nil
 }

@@ -58,6 +58,7 @@ func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 			MainRoute: val.Route0 + " - " + val.Route1,
 			Segment:   val.Station + " - " + val.Station1,
 			StartDate: val.Date0 + "_" + val.Time0,
+			EndTime:   val.Date1 + "_" + val.Time1,
 			Seats:     seats,
 		})
 		seats = []Seats{}

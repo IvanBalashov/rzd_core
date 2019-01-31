@@ -30,6 +30,8 @@ func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 
 		newTrain = entity.Train{
 			Number:   val.Number,
+			Code0:    route.Code0,
+			Code1:    route.Code1,
 			Type:     strconv.Itoa(val.Type),
 			Brand:    val.Brand,
 			Route0:   val.Route0,
@@ -47,7 +49,12 @@ func (a *App) GenerateTrainsList(route entity.Route) ([]entity.Train, error) {
 
 		data, _ := json.Marshal(newTrain)
 
-		compiledKey := bytes.NewBufferString(val.Number + "_" + val.Route0 + "_" + val.Route1 + "_" + val.Date0 + "_" + val.Date1).Bytes()
+		compiledKey := bytes.NewBufferString(val.Number +
+			"_" + val.Route0 +
+			"_" + val.Route1 +
+			"_" + val.Date0 +
+			"_" + val.Date1).
+			Bytes()
 
 		hash := md5.New()
 		bytesKey := hash.Sum(compiledKey)

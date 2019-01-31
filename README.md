@@ -21,3 +21,11 @@ Now app can read environment variables from `.env` file. For fast start use foll
 cp .env_example .env
 ```
  
+
++---------------------------------+<br>
+|                                 |<br>
+|                                 |<br>
+|          Main Bot App           |<br>
+|                                 |<br>
+|                                 |<br>
++---------------------------------+<br>

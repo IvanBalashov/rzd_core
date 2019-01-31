@@ -19,19 +19,25 @@ func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) 
 		Version:      args.Version,
 	}
 
-	rid, err := a.Routes.GetRid(ridArgs)
+	rid, cookies, err := a.Routes.GetRid(ridArgs)
 	if err != nil {
 		a.LogChan <- err.Error()
 		return nil, err
 	}
-	time.Sleep(750 * time.Millisecond)
+
+	a.Cookies = cookies
+
+	time.Sleep(450 * time.Millisecond)
 
 	args.Rid = strconv.FormatInt(rid.RID, 10)
-	route, err := a.Routes.GetRoutes(args)
+	route, err := a.Routes.GetRoutes(args, cookies)
 	if err != nil {
 		a.LogChan <- err.Error()
 		return nil, err
 	}
+
+	route.Code0 = args.Code0
+	route.Code1 = args.Code1
 
 	trains, err := a.GenerateTrainsList(route)
 	if err != nil {

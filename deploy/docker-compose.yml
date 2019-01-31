@@ -6,30 +6,38 @@ services:
     networks:
       - outside
     hostname: rabbitmq
+    environment:
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=512Mib
 
-  node1:
-    image: app
+  memcached:
+    image: memcached
     networks:
       - outside
-    hostname: node1
-    ports:
-      - 8080:8080
+    hostname: memcached
 
-  node2:
-    image: app
-    networks:
-      - outside
-    hostname: node2
-    ports:
-      - 8080:8080
+#  node1:
+#    image: app
+#    networks:
+#      - outside
+#    hostname: node1
+#    ports:
+#      - 8080:8080
 
-  node3:
-    image: app
-    networks:
-      - outside
-    hostname: node3
-    ports:
-      - 8080:8080
+#  node2:
+#    image: app
+#    networks:
+#      - outside
+#    hostname: node2
+#    ports:
+#      - 8080:8080
+
+# node3:
+#    image: app
+#    networks:
+#      - outside
+#    hostname: node3
+#    ports:
+#      - 8080:8080
 
 networks:
   outside:

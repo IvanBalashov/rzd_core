@@ -2,7 +2,9 @@ package entity
 
 type Route struct {
 	Result string `json:"result"`
-	Tp     []Tp   `json:"tp"`
+	Code0  string
+	Code1  string
+	Tp     []Tp `json:"tp"`
 }
 type Tp struct {
 	From        string `json:"from"`

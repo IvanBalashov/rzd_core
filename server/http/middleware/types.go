@@ -5,6 +5,7 @@ type Trains struct {
 	MainRoute string  `json:"main_route"`
 	Segment   string  `json:"segment"`
 	StartDate string  `json:"start_date"`
+	EndTime   string  `json:"travel_time"`
 	Seats     []Seats `json:"seats"`
 }
 

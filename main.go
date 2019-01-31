@@ -118,6 +118,9 @@ func main() {
 	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBUrl)
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
+	if err != nil {
+		logs <- fmt.Sprintf("Main: Can't create client of Mongodb - %s", err.Error())
+	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
@@ -201,7 +204,7 @@ func main() {
 			}
 		}
 	}
-	go app.Run("60")
+	go app.Run("60s")
 	// REST Server.
 	{
 		logs <- fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
