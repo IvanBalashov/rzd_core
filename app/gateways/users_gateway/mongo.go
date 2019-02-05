@@ -27,6 +27,17 @@ func NewMongoUsers(cli *mongo.Client) (MongoUsers, error) {
 
 func (m *MongoUsers) Create(user entity.User) error {
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+	filter := user
+	check := entity.User{}
+
+	err := m.Users.FindOne(ctx, filter).Decode(&check)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Gateway->Users_Gateway->Create: Error in mgdb.Findone - %s", err))
+	}
+
+	if check.UserTelegramID != "" {
+		return errors.New(fmt.Sprintf("Gateway->Users_Gateway->Create: Error - this user exist"))
+	}
 
 	result, err := m.Users.InsertOne(ctx, user)
 	if err != nil {

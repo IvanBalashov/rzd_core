@@ -26,8 +26,11 @@ func NewHandler(app *usecase.App) http.Handler {
 	api.GET("trains_list", eventLayer.GetAllTrains)
 
 	api.GET("users_count", eventLayer.UsersCount)
+	// FIXME: rewrite to post
+	api.GET("new_user", eventLayer.NewUser)
 
 	api.POST("save_one_train", eventLayer.GetAllTrains)
+
 
 	return handler
 }

@@ -151,6 +151,27 @@ func (a *App) GetStationCodes(target, source string) (int, int, error) {
 	return answers["target"], answers["source"], nil
 }
 
+func (a *App) SaveInfoAboutTrain(trainID string) (string, error) {
+	train := entity.Train{}
+
+	data, err := a.Cache.Get(trainID)
+	if err != nil {
+		return "", err
+	}
+
+	err = json.Unmarshal(data, &train)
+	if err != nil {
+		return "", err
+	}
+
+	trainID, err = a.Trains.Create(train)
+	if err != nil {
+		return "", err
+	}
+
+	return trainID, nil
+}
+
 func (a *App) Run(refreshTimeSec string) {
 	minutes, _ := time.ParseDuration(refreshTimeSec)
 	ticker := time.NewTicker(minutes)
@@ -174,27 +195,6 @@ func (a *App) Run(refreshTimeSec string) {
 			}
 		}
 	}
-}
-
-func (a *App) SaveInfoAboutTrain(trainID string) (string, error) {
-	train := entity.Train{}
-
-	data, err := a.Cache.Get(trainID)
-	if err != nil {
-		return "", err
-	}
-
-	err = json.Unmarshal(data, &train)
-	if err != nil {
-		return "", err
-	}
-
-	trainID, err = a.Trains.Create(train)
-	if err != nil {
-		return "", err
-	}
-
-	return trainID, nil
 }
 
 func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
@@ -235,7 +235,6 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 			}
 		} else {
 			a.LogChan <- "kek"
-
 		}
 	}
 
