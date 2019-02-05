@@ -333,10 +333,12 @@ func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
 }
 
 //5c5014e4267a8793d24e13d7
-func (a *App) CheckUsers(start, end int) (bool, error) {
+func (a *App) CheckUsers(start, end int) ([]entity.User, error) {
 	users, err := a.Users.ReadSection(start, end)
+	notifyedUsers := []entity.User{}
+
 	if err != nil {
-		return false, err
+		return notifyedUsers, err
 	}
 	for _, val := range users {
 		trains := val.TrainIDS
@@ -347,11 +349,12 @@ func (a *App) CheckUsers(start, end int) (bool, error) {
 				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: Can't get train")
 			}
 			if a.CheckAndRefreshTrainInfo(train) {
+				notifyedUsers = append(notifyedUsers, val)
 				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: all good in train - %s", train)
 			}
 		}
 	}
-	return true, nil
+	return notifyedUsers, nil
 }
 
 func (a *App) SendMessageToUser(user entity.User) {

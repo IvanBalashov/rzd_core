@@ -15,5 +15,5 @@ type Usecase interface {
 	UpdateUserTrainInfo(user entity.User) error
 	DeleteUser(user entity.User) error
 	GetUsersList() ([]entity.User, error)
-	CheckUsers(start, end int) (bool, error)
+	CheckUsers(start, end int) ([]entity.User, error)
 }

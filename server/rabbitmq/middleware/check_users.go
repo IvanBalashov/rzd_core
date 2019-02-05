@@ -13,9 +13,10 @@ func (e *EventLayer) CheckUsers(query interface{}) (interface{}, error) {
 			return nil, err
 		}
 	}
-	_, err := e.App.CheckUsers(request.Start, request.End)
+	users, err := e.App.CheckUsers(request.Start, request.End)
 	if err != nil {
 		return StatusResponse{"error"}, err
 	}
-	return StatusResponse{"ok"}, nil
+
+	return users, nil
 }
