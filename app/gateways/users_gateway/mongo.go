@@ -113,7 +113,8 @@ func (m *MongoUsers) ReadSection(start, end int) ([]entity.User, error) {
 
 func (m *MongoUsers) Update(user entity.User) error {
 	result := entity.User{}
-	filter := bson.M{} // FIXME: add filter
+	filter := user
+	filter.TrainIDS = []string{}
 
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 

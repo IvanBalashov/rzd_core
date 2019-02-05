@@ -176,25 +176,25 @@ func (a *App) Run(refreshTimeSec string) {
 	}
 }
 
-func (a *App) SaveInfoAboutTrain(trainID string) error {
+func (a *App) SaveInfoAboutTrain(trainID string) (string, error) {
 	train := entity.Train{}
 
 	data, err := a.Cache.Get(trainID)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	err = json.Unmarshal(data, &train)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	err = a.Trains.Create(train)
+	trainID, err = a.Trains.Create(train)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return trainID, nil
 }
 
 func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
@@ -316,6 +316,21 @@ func (a *App) GetUsersList() ([]entity.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
+	savedUser, err := a.Users.ReadOne()
+	if err != nil {
+		return err
+	}
+
+	savedUser.TrainIDS = append(savedUser.TrainIDS, trainID)
+	err = a.Users.Update(user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //5c5014e4267a8793d24e13d7

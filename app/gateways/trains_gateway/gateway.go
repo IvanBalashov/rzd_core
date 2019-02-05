@@ -5,7 +5,7 @@ import (
 )
 
 type TrainsGateway interface {
-	Create(train entity.Train) error
+	Create(train entity.Train) (string, error)
 	ReadOne(trainID string) (entity.Train, error)
 	ReadMany() ([]entity.Train, error)
 	Update(train entity.Train) error

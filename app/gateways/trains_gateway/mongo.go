@@ -23,19 +23,21 @@ func NewMongoTrains(cli *mongo.Client) (MongoTrains, error) {
 	return MongoTrains{CLI: *cli, Trains: *col}, nil
 }
 
-func (m *MongoTrains) Create(train entity.Train) error {
+func (m *MongoTrains) Create(train entity.Train) (string, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
 	result, err := m.Trains.InsertOne(ctx, train)
 	if err != nil {
-		return errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Error in mgdb.InsertOne - %s", err))
+		return "", errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Error in mgdb.InsertOne - %s", err))
 	}
 
 	if result.InsertedID == nil {
-		return errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Got empty result - %s", result.InsertedID))
+		return "", errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Got empty result - %s", result.InsertedID))
 	}
 
-	return nil
+	trainID := result.InsertedID.(string)
+
+	return trainID, nil
 }
 
 func (m *MongoTrains) ReadOne(trainID string) (entity.Train, error) {

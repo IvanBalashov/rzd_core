@@ -14,23 +14,25 @@ type SeatsArgs struct {
 	Date      string `form:"date" binding:"required"`
 }
 
-func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
+func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 	query := SeatsArgs{}
 	trains := []Trains{}
 	seats := []Seats{}
 
 	if err := ctx.ShouldBindQuery(&query); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
 		ctx.Abort()
 		return
 	}
 
-	code1, code2, err := a.App.GetStationCodes(query.Target, query.Source)
+	code1, code2, err := e.App.GetStationCodes(query.Target, query.Source)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
+		ctx.Abort()
+		return
 	}
 
-	routes, err := a.App.GetInfoAboutTrains(entity.RouteArgs{
+	routes, err := e.App.GetInfoAboutTrains(entity.RouteArgs{
 		Dir:          query.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
@@ -41,7 +43,9 @@ func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 		Version:      "v.2018",
 	})
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
+		ctx.Abort()
+		return
 	}
 
 	// Parsing answer here coz we need one answer for all "servres"
@@ -63,5 +67,5 @@ func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 		})
 		seats = []Seats{}
 	}
-	ctx.JSON(http.StatusOK, trains)
+	ctx.JSON(http.StatusOK, gin.H{"status": "ok", "trains": trains})
 }

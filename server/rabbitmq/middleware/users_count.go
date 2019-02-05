@@ -6,7 +6,7 @@ func (e *EventLayer) UsersCount() (interface{}, error) {
 		return nil, err
 	}
 
-	return UserLength{
+	return UserLengthResponse{
 		Length: len(users),
 		Status: "ok",
 	}, nil

@@ -68,7 +68,7 @@ type ResponseQueue struct {
 }
 
 func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) ResponseQueue {
-	declearedQueue, err := ch.QueueDeclare(name, dur, del, exc, now, args)
+	declaredQueue, err := ch.QueueDeclare(name, dur, del, exc, now, args)
 	if err != nil {
 		log.Printf("RabbitMQ->ResponseQueue: Error while queue declare - %s\n", err)
 		return ResponseQueue{}
@@ -83,7 +83,7 @@ func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, no
 			Exclusive:  exc,
 			NoWait:     now,
 		},
-		MQueue:  &declearedQueue,
+		MQueue:  &declaredQueue,
 		Channel: ch,
 	}
 }

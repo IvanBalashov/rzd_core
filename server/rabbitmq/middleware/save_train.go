@@ -2,24 +2,33 @@ package middleware
 
 import (
 	"encoding/json"
+	"rzd/app/entity"
 )
 
 func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
-	request := Trains{}
+	request := SaveOneTrainRequest{}
 
 	if data, err := json.Marshal(query); err != nil {
-		return nil, err
+		return StatusResponse{Status: "fail"}, err
 	} else {
 		err = json.Unmarshal(data, &request)
 		if err != nil {
-			return nil, err
+			return StatusResponse{Status: "fail"}, err
 		}
 	}
 
-	err := m.App.SaveInfoAboutTrain(request.TrainID)
+	trainID, err := m.App.SaveInfoAboutTrain(request.Train.TrainID)
 	if err != nil {
-		return nil, err
+		return StatusResponse{Status: "fail"}, err
 	}
 
-	return Status{Status: "OK"}, nil
+	err = m.App.SaveTrainInUser(entity.User{
+		UserTelegramID: request.User.UserID,
+		UserName:       request.User.UserName,
+	}, trainID)
+	if err != nil {
+		return StatusResponse{Status: "fail"}, err
+	}
+
+	return StatusResponse{Status: "ok"}, nil
 }

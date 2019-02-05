@@ -23,7 +23,11 @@ func NewHandler(app *usecase.App) http.Handler {
 
 	api.GET("health", eventLayer.Health)
 
-	api.GET("test", eventLayer.GetAllTrains)
+	api.GET("trains_list", eventLayer.GetAllTrains)
+
+	api.GET("users_count", eventLayer.UsersCount)
+
+	api.POST("save_one_train", eventLayer.GetAllTrains)
 
 	return handler
 }

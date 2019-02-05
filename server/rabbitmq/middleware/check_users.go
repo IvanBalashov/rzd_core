@@ -3,7 +3,7 @@ package middleware
 import "encoding/json"
 
 func (e *EventLayer) CheckUsers(query interface{}) (interface{}, error) {
-	request := CheckUsers{}
+	request := CheckUsersRequest{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return nil, err
@@ -15,7 +15,7 @@ func (e *EventLayer) CheckUsers(query interface{}) (interface{}, error) {
 	}
 	_, err := e.App.CheckUsers(request.Start, request.End)
 	if err != nil {
-		return Status{"error"}, err
+		return StatusResponse{"error"}, err
 	}
-	return Status{"ok"}, nil
+	return StatusResponse{"ok"}, nil
 }

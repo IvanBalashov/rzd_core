@@ -2,12 +2,12 @@ package middleware
 
 import "rzd/app/usecase"
 
-type AppLayer struct {
+type EventLayer struct {
 	App usecase.Usecase
 }
 
-func NewEventLayer(app usecase.Usecase) AppLayer {
-	return AppLayer{
+func NewEventLayer(app usecase.Usecase) EventLayer {
+	return EventLayer{
 		App: app,
 	}
 }
