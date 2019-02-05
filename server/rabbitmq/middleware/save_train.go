@@ -21,5 +21,5 @@ func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) 
 		return nil, err
 	}
 
-	return SaveOneTrainResponse{Status: "OK"}, nil
+	return Status{Status: "OK"}, nil
 }

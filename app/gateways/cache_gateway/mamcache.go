@@ -7,6 +7,8 @@ type Memcache struct {
 	Ttl int32
 }
 
+//TODO: rewrire errors
+
 func NewMemcache(client memcache.Client, ttl int32) Memcache {
 	return Memcache{CLI: client, Ttl: ttl}
 }

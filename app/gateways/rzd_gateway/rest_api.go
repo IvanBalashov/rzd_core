@@ -111,21 +111,26 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 	return 0, nil
 }
 
-func (a *APIClient) GetInfoAboutOneTrain(train entity.Train, args entity.RouteArgs) (entity.Train, error) {
-	answer := entity.Train{}
+func (a *APIClient) GetInfoAboutOneTrain(train entity.Train, cookies []*http.Cookie) (entity.Route, error) {
+	answer := entity.Route{}
+
+	for key := range cookies {
+		resty.SetCookie(cookies[key])
+	}
 
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
 		SetQueryParam("layer_id", "5827").
 		SetQueryParam("tnum0", train.Number).
-		SetQueryParams(args.ToMap()).
+		SetQueryParams(train.QueryArgs.ToMap()).
 		Get(a.PassRzdUrl)
 
+	// FIXME
 	err = json.Unmarshal(resp.Body(), &answer)
 	if err != nil {
-		return answer,
+		return entity.Route{},
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetInfoAboutOneTrain: Error in request to RZD Api - %s", err))
 	}
 
-	return answer, nil
+	return entity.Route{}, nil
 }

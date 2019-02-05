@@ -1,12 +1,15 @@
 package entity
 
 type User struct {
-	FullName string
-	Nick     string
-	TrainIDS []int64
-	Notify   bool
+	UserTelegramID string
+	FullName       string
+	Nick           string
+	TrainIDS       []string
+	Notify         bool
 }
 
-func (u *User) GetArgs() (string, string, []int64, bool) {
-	return u.FullName, u.Nick, u.TrainIDS, u.Notify
+//Rewire block for user
+//dk how much needed this method, writed for postgresQL.
+func (u *User) GetArgs() (string, string, string, []string, bool) {
+	return u.UserTelegramID, u.FullName, u.Nick, u.TrainIDS, u.Notify
 }

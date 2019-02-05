@@ -38,9 +38,9 @@ func (m *MongoTrains) Create(train entity.Train) error {
 	return nil
 }
 
-func (m *MongoTrains) ReadOne() (entity.Train, error) {
+func (m *MongoTrains) ReadOne(trainID string) (entity.Train, error) {
 	result := entity.Train{}
-	filter := bson.M{}
+	filter := bson.M{"_id": trainID}
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
 	err := m.Trains.FindOne(ctx, filter).Decode(&result)

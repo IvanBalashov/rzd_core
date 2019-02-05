@@ -103,8 +103,8 @@ func main() {
 
 	time.Sleep(100 * time.Millisecond)
 
-	logs <- fmt.Sprintf("Main: Starting app.")
-	logs <- fmt.Sprintf("Main: Init rzd.ru REST api.")
+	logs <- fmt.Sprintf("Main: Starting app")
+	logs <- fmt.Sprintf("Main: Init rzd.ru REST api")
 
 	CLI := rzd_gateway.NewRestAPIClient(
 		"https://pass.rzd.ru/timetable/public/ru",
@@ -113,38 +113,44 @@ func main() {
 		5764,
 		5804,
 	)
-	logs <- fmt.Sprintf("Main: Success.")
+	logs <- fmt.Sprintf("Main: Success")
 
 	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBUrl)
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
 	if err != nil {
 		logs <- fmt.Sprintf("Main: Can't create client of Mongodb - %s", err.Error())
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
 		logs <- fmt.Sprintf("Main: Can't connect to Mongodb - %s", err.Error())
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
 
 	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
 	if err != nil {
 		logs <- fmt.Sprintf("Main: Can't connect to train collections - %s", err.Error())
-		return
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
 	MDDBUsers, err := users_gateway.NewMongoUsers(client)
 	if err != nil {
 		logs <- fmt.Sprintf("Main: Can't connect to users collections - %s", err.Error())
-		return
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
-	logs <- fmt.Sprintf("Main: Success.")
+	logs <- fmt.Sprintf("Main: Success")
 
 	logs <- fmt.Sprintf("Main: Connecting to Memcache on addr - %s", config.MemcacheUrl)
 
 	cacheCLI := memcache.New(config.MemcacheUrl)
 	cache := cache_gateway.NewMemcache(*cacheCLI, 60)
 
-	logs <- fmt.Sprintf("Main: Success.")
+	logs <- fmt.Sprintf("Main: Success")
 
 	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, &cache, logs)
 
@@ -154,6 +160,8 @@ func main() {
 		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app, logs)
 		if err != nil {
 			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s", config.RabbitMQUrl)
+			time.Sleep(500 * time.Millisecond)
+			os.Exit(2)
 		} else {
 			// TODO: Remove after complete rabbitmq files.
 			// TODO: Think about call to another nodes about starting??
@@ -188,12 +196,12 @@ func main() {
 			go server.Serve(trainsRequest, trainsResponse)
 			msg := rabbitmq.MessageRabbitMQ{
 				ID:    1,
-				Event: "Trains_list",
+				Event: "trains_list",
 				Data: middleware.AllTrainsRequest{
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "01.02.2019",
+					Date:      "11.02.2019",
 				},
 			}
 			time.Sleep(time.Second)
@@ -211,7 +219,8 @@ func main() {
 		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
 		if err := server.ListenAndServe(); err != nil {
 			logs <- fmt.Sprintf("Main: Error while serving - \n\t%s", err.Error())
-			return
+			time.Sleep(500 * time.Millisecond)
+			os.Exit(2)
 		}
 	}
 }

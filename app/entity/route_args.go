@@ -5,8 +5,8 @@ type RouteArgs struct {
 	Tfl          string `json:"tfl"`
 	CheckSeats   string `json:"checkSeats"`
 	Code0        string `json:"code0"`
-	Dt0          string `json:"dt0"`
 	Code1        string `json:"code1"`
+	Dt0          string `json:"dt0"`
 	Dt1          string `json:"dt_1"`
 	WithOutSeats string `json:"withoutSeats"`
 	Version      string `json:"version"`

@@ -1,10 +1,7 @@
 package entity
 
-// TODO: think this shit don't needed.
 type Train struct {
 	ID       string
-	Code0    string
-	Code1    string
 	Type     string
 	Number   string
 	Brand    string
@@ -19,6 +16,8 @@ type Train struct {
 	Date1    string
 	Time1    string
 	Seats    []Seats
+	// But we still need generate new rid...
+	QueryArgs RouteArgs
 }
 
 type Seats struct {

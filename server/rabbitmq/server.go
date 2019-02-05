@@ -64,7 +64,7 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 			}
 
 			switch msg.Event {
-			case "Trains_list":
+			case "trains_list":
 				answer, err := r.EventLayer.GetAllTrains(msg.Data)
 				if err != nil {
 					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
@@ -72,22 +72,10 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 
 				resp = MessageRabbitMQ{
 					ID:    msg.ID,
-					Event: "Trains_list_answer",
+					Event: "trains_list_answer",
 					Data:  answer,
 				}
-
-				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %+v", resp)
-
-				data, err := json.Marshal(resp)
-				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while parse answer - %s", err.Error())
-				}
-
-				err = response.Send(data)
-				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
-				}
-			case "Save_one_train":
+			case "save_one_train":
 				answer, err := r.EventLayer.SaveInfoAboutTrain(msg.Data)
 				if err != nil {
 					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
@@ -95,24 +83,43 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 
 				resp = MessageRabbitMQ{
 					ID:    msg.ID,
-					Event: "Save_one_train_answer",
+					Event: "save_one_train_answer",
 					Data:  answer,
 				}
-
-				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %+v", resp)
-
-				data, err := json.Marshal(resp)
+			case "users_count":
+				answer, err := r.EventLayer.UsersCount()
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while parse answer - %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.UsersCount %s", err.Error())
 				}
 
-				err = response.Send(data)
-				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
+				resp = MessageRabbitMQ{
+					ID:    msg.ID,
+					Event: "users_count_answer",
+					Data:  answer,
 				}
-			case "Exit":
+			case "check_users":
+				answer, err := r.EventLayer.CheckUsers(msg.Data)
+				if err != nil {
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.CheckUsers %s", err.Error())
+				}
+				resp = MessageRabbitMQ{
+					ID:    msg.ID,
+					Event: "check_users_answer",
+					Data:  answer,
+				}
+			case "exit":
 				close(forever)
 				break
+			}
+			r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %+v", resp)
+			data, err := json.Marshal(resp)
+			if err != nil {
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while parse answer - %s", err.Error())
+			}
+
+			err = response.Send(data)
+			if err != nil {
+				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while sending message - %s", err.Error())
 			}
 		}
 	}()
