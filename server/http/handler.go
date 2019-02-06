@@ -31,7 +31,6 @@ func NewHandler(app *usecase.App) http.Handler {
 
 	api.POST("save_one_train", eventLayer.GetAllTrains)
 
-
 	return handler
 }
 

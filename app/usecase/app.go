@@ -198,7 +198,7 @@ func (a *App) Run(refreshTimeSec string) {
 }
 
 func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
-	// got rid
+	//RID
 	rid, cookies, err := a.Routes.GetRid(entity.RidArgs{
 		Dir:          train.QueryArgs.Dir,
 		Tfl:          train.QueryArgs.Tfl,
@@ -215,6 +215,7 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 		return false
 	}
 	train.QueryArgs.Rid = strconv.FormatInt(rid.RID, 10)
+
 	newRoute, err := a.Routes.GetInfoAboutOneTrain(train, cookies)
 	if err != nil {
 		a.LogChan <- fmt.Sprintf("App->CheckAndRefreshTrainInfo: Error while handling answer about one train %s", err.Error())
@@ -355,8 +356,4 @@ func (a *App) CheckUsers(start, end int) ([]entity.User, error) {
 		}
 	}
 	return notifyedUsers, nil
-}
-
-func (a *App) SendMessageToUser(user entity.User) {
-
 }

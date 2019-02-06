@@ -111,6 +111,7 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 	return 0, nil
 }
 
+//FIXME: NOT TESTED METHOD
 func (a *APIClient) GetInfoAboutOneTrain(train entity.Train, cookies []*http.Cookie) (entity.Route, error) {
 	answer := entity.Route{}
 

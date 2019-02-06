@@ -21,8 +21,8 @@ func (e *EventLayer) NewUser(ctx *gin.Context) {
 	}
 	user := entity.User{
 		UserTelegramID: userID,
-		UserName: userName,
-		Notify: true,
+		UserName:       userName,
+		Notify:         true,
 	}
 
 	err := e.App.AddUser(user)

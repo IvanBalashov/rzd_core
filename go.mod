@@ -1,7 +1,6 @@
 module rzd
 
 require (
-	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/Masterminds/squirrel v1.1.0
 	github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
@@ -18,21 +17,19 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/mongodb/mongo-go-driver v0.2.0
 	github.com/streadway/amqp v0.0.0-20181205114330-a314942b2fd9
-	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
+	github.com/tidwall/pretty v0.0.0-20180105212114-65a9db5fad51 // indirect
 	github.com/ugorji/go/codec v0.0.0-20181209151446-772ced7fd4c2 // indirect
+	github.com/vektra/mockery v0.0.0-20181123154057-e78b021dcbb5 // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc // indirect
-	golang.org/x/lint v0.0.0-20181217174547-8f45f776aaf1 // indirect
 	golang.org/x/net v0.0.0-20181114220301-adae6a3d119a // indirect
 	golang.org/x/sync v0.0.0-20181108010431-42b317875d0f // indirect
 	golang.org/x/sys v0.0.0-20181218192612-074acd46bca6 // indirect
-	golang.org/x/tools v0.0.0-20190130015043-a06a922acc1b // indirect
 	google.golang.org/appengine v1.3.0 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/resty.v1 v1.10.2
 	gopkg.in/yaml.v2 v2.2.2 // indirect
-	honnef.co/go/tools v0.0.0-20190128043916-71123fcbb8fe // indirect
 )
