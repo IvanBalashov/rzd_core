@@ -51,9 +51,8 @@ func (m *MongoUsers) Create(user entity.User) error {
 	return nil
 }
 
-func (m *MongoUsers) ReadOne() (entity.User, error) {
+func (m *MongoUsers) ReadOne(filter entity.User) (entity.User, error) {
 	result := entity.User{}
-	filter := bson.M{}
 
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 

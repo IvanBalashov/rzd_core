@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net/http"
 	"rzd/app/entity"
 	"rzd/app/gateways/cache_gateway"
 	"rzd/app/gateways/rzd_gateway"
@@ -24,7 +23,6 @@ type App struct {
 	Routes  rzd_gateway.RzdGateway
 	Cache   cache_gateway.CacheGateway
 	LogChan chan string
-	Cookies []*http.Cookie
 }
 
 func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGateway, routes rzd_gateway.RzdGateway, cache cache_gateway.CacheGateway, logChan chan string) App {
@@ -56,8 +54,6 @@ func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) 
 		return nil, err
 	}
 
-	a.Cookies = cookies
-
 	time.Sleep(450 * time.Millisecond)
 
 	args.Rid = strconv.FormatInt(rid.RID, 10)
@@ -81,7 +77,7 @@ func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]e
 
 	trains, err := getTrainsList(route, args)
 	if err != nil {
-		return nil, err
+		return trainsAnswer, err
 	}
 
 	for _, val := range trains {
@@ -319,7 +315,7 @@ func (a *App) GetUsersList() ([]entity.User, error) {
 }
 
 func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
-	savedUser, err := a.Users.ReadOne()
+	savedUser, err := a.Users.ReadOne(user)
 	if err != nil {
 		return err
 	}
@@ -351,7 +347,7 @@ func (a *App) CheckUsers(start, end int) ([]entity.User, error) {
 			}
 			if a.CheckAndRefreshTrainInfo(train) {
 				notifyedUsers = append(notifyedUsers, val)
-				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: all good in train - %s", train)
+				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: all good in train - %v", train)
 			}
 		}
 	}
