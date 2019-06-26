@@ -74,6 +74,7 @@ func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) 
 
 func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, error) {
 	trainsAnswer := []entity.Train{}
+	hash := md5.New()
 
 	trains, err := getTrainsList(route, args)
 	if err != nil {
@@ -81,21 +82,15 @@ func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]e
 	}
 
 	for _, val := range trains {
-		data, _ := json.Marshal(val)
-
-		compiledKey := bytes.NewBufferString(val.Number +
-			"_" + val.Route0 +
-			"_" + val.Route1 +
-			"_" + val.Date0 +
-			"_" + val.Date1).
-			Bytes()
-
-		hash := md5.New()
-		bytesKey := hash.Sum(compiledKey)
+		data, err := json.Marshal(val)
+		if err != nil {
+			return nil, err
+		}
+		formatKey := fmt.Sprintf("%s_%s", val.Number, val.Date0)
+		bytesKey := hash.Sum(bytes.NewBufferString(formatKey).Bytes())
 		key := bytes.NewBuffer(bytesKey).String()
 
-		//FIXME: fix this shit
-		err := a.Cache.Set(fmt.Sprintf("%x", key), data)
+		err = a.Cache.Set(fmt.Sprintf("%x", key), data)
 		if err != nil {
 			return nil, err
 		}
@@ -177,13 +172,16 @@ func (a *App) Run(refreshTimeSec string) {
 			if !ok {
 				return
 			}
+
 			trains, err := a.Trains.ReadMany()
 			if err != nil {
 				log.Printf("%s\n", err)
 			}
+
 			for _, val := range trains {
 				if a.CheckAndRefreshTrainInfo(val) {
-					if err := a.Trains.Update(val); err != nil {
+					err := a.Trains.Update(val)
+					if err != nil {
 						a.LogChan <- fmt.Sprintf("%s", err.Error())
 						continue
 					}
@@ -195,16 +193,7 @@ func (a *App) Run(refreshTimeSec string) {
 
 func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 	//RID
-	rid, cookies, err := a.Routes.GetRid(entity.RidArgs{
-		Dir:          train.QueryArgs.Dir,
-		Tfl:          train.QueryArgs.Tfl,
-		CheckSeats:   train.QueryArgs.CheckSeats,
-		Code0:        train.QueryArgs.Code0,
-		Code1:        train.QueryArgs.Code1,
-		Dt0:          train.QueryArgs.Dt0,
-		WithOutSeats: train.QueryArgs.WithOutSeats,
-		Version:      train.QueryArgs.Version,
-	})
+	rid, cookies, err := a.Routes.GetRid(trainToArgs(train))
 
 	if err != nil {
 		a.LogChan <- fmt.Sprintf("App->CheckAndRefreshTrainInfo: Error while requesting rid from RZD API%s", err.Error())
@@ -282,14 +271,15 @@ func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, e
 	return trains, nil
 }
 
-func (a *App) AddUser(user entity.User) error {
-	err := a.Users.Create(user)
+func (a *App) AddUser(user entity.User) (bool, error) {
+	ok, err := a.Users.Create(user)
 	if err != nil {
-		return err
+		return ok, err
 	}
-	return nil
+	return ok, nil
 }
 
+//???? nahyia
 func (a *App) UpdateUserTrainInfo(user entity.User) error {
 	err := a.Users.Update(user)
 	if err != nil {
@@ -314,12 +304,25 @@ func (a *App) GetUsersList() ([]entity.User, error) {
 	return users, nil
 }
 
+func (a *App) UsersCount() (int, error) {
+	users, err := a.Users.ReadMany()
+	if err != nil {
+		return 0, err
+	}
+	return len(users), nil
+}
+
 func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
 	savedUser, err := a.Users.ReadOne(user)
 	if err != nil {
 		return err
 	}
 
+	for _, val := range savedUser.TrainIDS {
+		if val == trainID {
+			return nil
+		}
+	}
 	savedUser.TrainIDS = append(savedUser.TrainIDS, trainID)
 	err = a.Users.Update(user)
 	if err != nil {
@@ -329,13 +332,12 @@ func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
 	return nil
 }
 
-//5c5014e4267a8793d24e13d7
 func (a *App) CheckUsers(start, end int) ([]entity.User, error) {
 	users, err := a.Users.ReadSection(start, end)
-	notifyedUsers := []entity.User{}
+	notifyUsers := []entity.User{}
 
 	if err != nil {
-		return notifyedUsers, err
+		return nil, err
 	}
 	for _, val := range users {
 		trains := val.TrainIDS
@@ -346,10 +348,10 @@ func (a *App) CheckUsers(start, end int) ([]entity.User, error) {
 				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: Can't get train")
 			}
 			if a.CheckAndRefreshTrainInfo(train) {
-				notifyedUsers = append(notifyedUsers, val)
+				notifyUsers = append(notifyUsers, val)
 				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: all good in train - %v", train)
 			}
 		}
 	}
-	return notifyedUsers, nil
+	return notifyUsers, nil
 }

@@ -1,19 +1,31 @@
-version: '1'
+version: '2.0'
 services:
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:latest
     networks:
       - outside
-    hostname: rabbitmq
+    hostname: rabbit
     environment:
       - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=512Mib
+    ports:
+      - 5672:5672
 
   memcached:
-    image: memcached
+    image: memcached:latest
     networks:
       - outside
     hostname: memcached
+    ports:
+      - 11211:11211
+
+  mongodb:
+    image: mongo:latest
+    networks:
+      - outside
+    hostname: mongo
+    ports:
+      - 27017:27017
 
 #  node1:
 #    image: app
@@ -38,8 +50,3 @@ services:
 #    hostname: node3
 #    ports:
 #      - 8080:8080
-
-networks:
-  outside:
-    external:
-      name: user-bridge

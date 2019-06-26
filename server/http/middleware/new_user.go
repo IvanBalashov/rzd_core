@@ -25,12 +25,14 @@ func (e *EventLayer) NewUser(ctx *gin.Context) {
 		Notify:         true,
 	}
 
-	err := e.App.AddUser(user)
+	ok, err := e.App.AddUser(user)
 	if err != nil {
+		if ok {
+			ctx.JSON(http.StatusOK, gin.H{"status": "user_exist"})
+			return
+		}
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
-		ctx.Abort()
 		return
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
+	ctx.JSON(http.StatusOK, gin.H{"status": "created"})
 }

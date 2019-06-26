@@ -18,6 +18,12 @@ type CheckUsersRequest struct {
 	End   int `json:"end"`
 }
 
+type NewUserRequest struct {
+	UserTelegramID string `json:"user_telegram_id"`
+	UserName       string `json:"user_name"`
+	Notify         bool   `json:"notify"`
+}
+
 // RESPONSES
 type StatusResponse struct {
 	Status string `json:"status"`
@@ -25,6 +31,10 @@ type StatusResponse struct {
 
 type UserLengthResponse struct {
 	Length int    `json:"length"`
+	Status string `json:"status"`
+}
+
+type NewUserResponse struct {
 	Status string `json:"status"`
 }
 

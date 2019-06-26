@@ -5,7 +5,7 @@ import (
 )
 
 type UsersGateway interface {
-	Create(user entity.User) error
+	Create(user entity.User) (bool, error)
 	ReadOne(filter entity.User) (entity.User, error)
 	ReadMany() ([]entity.User, error)
 	Update(user entity.User) error

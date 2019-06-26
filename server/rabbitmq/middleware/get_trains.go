@@ -7,9 +7,9 @@ import (
 	"strconv"
 )
 
-func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
-	response := []Trains{}
+func (e *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	request := AllTrainsRequest{}
+	response := []Trains{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return nil, err
@@ -20,13 +20,13 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 		}
 	}
 
-	code1, code2, err := m.App.GetStationCodes(request.Target, request.Source)
+	code1, code2, err := e.App.GetStationCodes(request.Target, request.Source)
 	if err != nil {
-		m.LogChanel <- fmt.Sprintf("RabbitMQ->GetInfoAboutTrains: Error in GetStationCodes - %s", err)
+		e.LogChanel <- fmt.Sprintf("RabbitMQ->GetInfoAboutTrains: Error in GetStationCodes - %s", err)
 		return nil, err
 	}
 
-	routes, err := m.App.GetInfoAboutTrains(entity.RouteArgs{
+	routes, err := e.App.GetInfoAboutTrains(entity.RouteArgs{
 		Dir:          request.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
@@ -48,10 +48,10 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 		}
 		response = append(response, Trains{
 			TrainID:   val.ID,
-			MainRoute: val.Route0 + " - " + val.Route0,
-			Segment:   val.Station + " - " + val.Station1,
-			StartDate: val.Date0 + "_" + val.Time0,
-			EndTime:   val.Date1 + "_" + val.Time1,
+			MainRoute: fmt.Sprintf("%s-%s", val.Route0, val.Route0),
+			Segment:   fmt.Sprintf("%s-%s", val.Station, val.Station1),
+			StartDate: fmt.Sprintf("%s_%s", val.Date0, val.Time0),
+			EndTime:   fmt.Sprintf("%s_%s", val.Date1, val.Time1),
 			Seats:     seats,
 		})
 	}

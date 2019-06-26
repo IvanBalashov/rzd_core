@@ -48,8 +48,7 @@ cp .env_example .env
 2) First free node get data from Queue.
     - Request to RZDApi  for getting trains on route.
     - Send answer to bot like {[]array_with_trains}.
-    - Waiting answer from bot about train to be saved.
-    - Got Request from bot about what train need to be saved.
+    - Get response from bot, what train need to save.
     - Save train and user info in MongoDB.
 3) 
 ```

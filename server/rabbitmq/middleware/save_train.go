@@ -5,8 +5,8 @@ import (
 	"rzd/app/entity"
 )
 
-func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
-	request := SaveOneTrainRequest{}
+func (e *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
+	request := &SaveOneTrainRequest{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return StatusResponse{Status: "fail"}, err
@@ -17,12 +17,12 @@ func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) 
 		}
 	}
 
-	trainID, err := m.App.SaveInfoAboutTrain(request.Train.TrainID)
+	trainID, err := e.App.SaveInfoAboutTrain(request.Train.TrainID)
 	if err != nil {
 		return StatusResponse{Status: "fail"}, err
 	}
 
-	err = m.App.SaveTrainInUser(entity.User{
+	err = e.App.SaveTrainInUser(entity.User{
 		UserTelegramID: request.User.UserID,
 		UserName:       request.User.UserName,
 	}, trainID)

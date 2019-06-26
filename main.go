@@ -64,12 +64,6 @@ func GenConfig() Config {
 	} else {
 		conf.HttpPort = val
 	}
-	if val, ok := os.LookupEnv("POSTGRES_URL"); !ok {
-		log.Printf("%s__Main->GenConfig: POSTGRES_URL env don't seted\n", appName)
-		os.Exit(2)
-	} else {
-		conf.PostgresUrl = val
-	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
 		log.Printf("%s__Main->GenConfig: RABBITMQ_URL env don't seted\n", appName)
 		os.Exit(2)
@@ -116,30 +110,30 @@ func main() {
 	logs <- fmt.Sprintf("Main: Success")
 
 	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBUrl)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, config.MongoDBUrl)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't create client of Mongodb - %s", err.Error())
+		logs <- fmt.Sprintf("Main: Can't create client of Mongodb - fail in connect to base \n\t\t err - %s", err.Error())
 		time.Sleep(500 * time.Millisecond)
 		os.Exit(2)
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't connect to Mongodb - %s", err.Error())
+		logs <- fmt.Sprintf("Main: Can't connect to Mongodb - fail to ping base \n\t\t err - %s", err.Error())
 		time.Sleep(500 * time.Millisecond)
 		os.Exit(2)
 	}
 
 	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't connect to train collections - %s", err.Error())
+		logs <- fmt.Sprintf("Main: Can't connect to train collections - MDDBTrains\n\t\t err -  %s", err.Error())
 		time.Sleep(500 * time.Millisecond)
 		os.Exit(2)
 	}
 	MDDBUsers, err := users_gateway.NewMongoUsers(client)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't connect to users collections - %s", err.Error())
+		logs <- fmt.Sprintf("Main: Can't connect to users collections - MDDBUsers\n\t\t err - %s", err.Error())
 		time.Sleep(500 * time.Millisecond)
 		os.Exit(2)
 	}
@@ -159,7 +153,7 @@ func main() {
 		logs <- fmt.Sprintf("Main: Connecting to rabbitMQ on addr - %s", config.RabbitMQUrl)
 		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app, logs)
 		if err != nil {
-			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s", config.RabbitMQUrl)
+			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s\n\t\t err - %s", config.RabbitMQUrl, err.Error())
 			time.Sleep(500 * time.Millisecond)
 			os.Exit(2)
 		} else {
@@ -201,7 +195,7 @@ func main() {
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "11.02.2019",
+					Date:      "27.05.2019",
 				},
 			}
 			time.Sleep(time.Second)
