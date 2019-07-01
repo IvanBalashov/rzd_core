@@ -95,8 +95,6 @@ func main() {
 	logger := reporting.NewLogger(logs, config.AppName)
 	logger.Start()
 
-	time.Sleep(100 * time.Millisecond)
-
 	logs <- fmt.Sprintf("Main: Starting app")
 	logs <- fmt.Sprintf("Main: Init rzd.ru REST api")
 
@@ -146,7 +144,7 @@ func main() {
 
 	logs <- fmt.Sprintf("Main: Success")
 
-	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, &cache, logs)
+	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, cache, logs)
 
 	// RabbitMQ Server
 	{

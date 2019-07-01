@@ -27,7 +27,7 @@ func NewMongoUsers(cli *mongo.Client) (MongoUsers, error) {
 
 func (m *MongoUsers) Create(user entity.User) (bool, error) {
 	filter := user
-	check := entity.User{}
+	check  := entity.User{}
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
 	err := m.Users.FindOne(ctx, filter).Decode(&check)
@@ -64,8 +64,8 @@ func (m *MongoUsers) ReadOne(filter entity.User) (entity.User, error) {
 }
 
 func (m *MongoUsers) ReadMany() ([]entity.User, error) {
-	users := []entity.User{}
-	user := entity.User{}
+	users  := []entity.User{}
+	user   := entity.User{}
 	filter := bson.M{}
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
@@ -90,18 +90,18 @@ func (m *MongoUsers) ReadMany() ([]entity.User, error) {
 }
 
 func (m *MongoUsers) ReadSection(start, end int) ([]entity.User, error) {
-	users := []entity.User{}
-	user := entity.User{}
+	users  := []entity.User{}
+	user   := entity.User{}
 	filter := bson.M{}
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	opts   := options.Find()
+	sort   := opts.SetSort(nil).SetLimit(10)
+	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second)
 
-	cur, err := m.Users.Find(ctx, filter) // FIXME: add filter
-	opts := options.Find()
-	sort := opts.SetSort(nil).SetLimit(10)
-	m.Users.Find(ctx, filter, sort)
+	cur, err := m.Users.Find(ctx, filter, sort) // FIXME: add filter
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadMany: Error in mgdb.Find - %s", err))
 	}
+
 	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
@@ -121,7 +121,6 @@ func (m *MongoUsers) ReadSection(start, end int) ([]entity.User, error) {
 func (m *MongoUsers) Update(user entity.User) error {
 	filter := user
 	filter.TrainIDS = []string{}
-
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
 	err := m.Users.FindOneAndUpdate(ctx, filter, user)
@@ -133,12 +132,10 @@ func (m *MongoUsers) Update(user entity.User) error {
 }
 
 func (m *MongoUsers) Delete(user entity.User) error {
-	result := entity.User{}
-	filter := bson.M{} // FIXME: add filter
-
+	filter := user
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
-	err := m.Users.FindOneAndDelete(ctx, filter).Decode(&result)
+	err := m.Users.FindOneAndDelete(ctx, filter)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadOne: Error in mgdb.FindOne - %s", err))
 	}

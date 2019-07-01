@@ -220,7 +220,7 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 				return false
 			}
 		} else {
-			a.LogChan <- "kek"
+			a.LogChan <- "App->CheckAndRefreshTrainInfo: don't find diff"
 		}
 	}
 

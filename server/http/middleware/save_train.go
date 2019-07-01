@@ -7,8 +7,8 @@ import (
 )
 
 func (e *EventLayer) SaveOneTrain(ctx *gin.Context) {
-	trainID := ctx.PostForm("train_id")
-	userID := ctx.PostForm("user_id")
+	trainID  := ctx.PostForm("train_id")
+	userID   := ctx.PostForm("user_id")
 	userName := ctx.PostForm("user_name")
 
 	trainID, err := e.App.SaveInfoAboutTrain(trainID)

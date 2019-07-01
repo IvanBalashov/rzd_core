@@ -1,6 +1,9 @@
 package reporting
 
-import "log"
+import (
+	"log"
+	"time"
+)
 
 type Logger struct {
 	LogChan chan string
@@ -29,4 +32,5 @@ func (l *Logger) Start() {
 			}
 		}
 	}()
+	time.Sleep(100 * time.Millisecond)
 }

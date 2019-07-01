@@ -47,11 +47,11 @@ func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
 	messages, err := r.Channel.Consume(
 		r.Queue.Name,     // queue
 		r.Queue.Exchange, // consumer
-		true,             // auto-ack
-		false,            // exclusive
-		false,            // no-local
-		false,            // no-wait
-		nil,              // args
+		true,     // auto-ack
+		r.Queue.Exclusive,// exclusive
+		false,    // no-local
+		r.Queue.NoWait,   // no-wait
+		nil,        // args
 	)
 	if err != nil {
 		log.Printf("RabbitMQ->RequestQueue: Error while consume messages - %s\n", err)

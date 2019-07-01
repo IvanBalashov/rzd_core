@@ -43,8 +43,8 @@ func NewServer(uri string, app usecase.Usecase, logChanel chan string) (RabbitSe
 }
 
 func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
-	msg := MessageRabbitMQ{}
-	resp := MessageRabbitMQ{}
+	msg     := MessageRabbitMQ{}
+	resp    := MessageRabbitMQ{}
 	forever := make(chan bool) // FIXME: add exit statement
 
 	requests, err := request.Read()

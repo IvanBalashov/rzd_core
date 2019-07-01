@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gopkg.in/resty.v1"
 	"net/http"
-	"rzd/app/entity"
 	"strings"
+
+	"rzd/app/entity"
+
+	"gopkg.in/resty.v1"
 )
 
 // TODO: Create self APIClient for single user????
@@ -68,7 +70,7 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, err
 		Post(a.PassRzdUrl)
 	if err != nil {
 		return entity.Rid{}, nil,
-			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in request to RZD Api - %s", err))
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRid: Error in request to RZD Api - %s", err))
 	}
 
 	cookies := resp.Cookies()
@@ -77,7 +79,7 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, err
 	err = json.Unmarshal(body, &rid)
 	if err != nil {
 		return entity.Rid{}, nil,
-			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->getRid: Error in unmarshal anwer from RZD Api - %s\n", err))
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRid: Error in unmarshal anwer from RZD Api - %s\n", err))
 	}
 
 	return rid, cookies, nil
@@ -86,6 +88,7 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, err
 //Coz all rzd rest api distributed on two entry points - pass.rzd.ru and rzd.ru.
 func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 	answer := []Codes{}
+
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
 		SetQueryParam("stationNamePart", strings.ToUpper(source[:4])).
@@ -103,11 +106,13 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 		return 0,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in unmarshal anwer from RZD Api - %s", err))
 	}
+
 	for i := range answer {
 		if strings.Contains(strings.ToLower(answer[i].Name), strings.ToLower(source)) {
 			return answer[i].Code, nil
 		}
 	}
+
 	return 0, nil
 }
 
