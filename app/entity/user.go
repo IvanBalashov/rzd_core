@@ -1,14 +1,8 @@
 package entity
 
 type User struct {
-	UserTelegramID string
-	UserName       string `json:"user_name"`
-	TrainIDS       []string
-	Notify         bool
-}
-
-//Rewire block for user
-//dk how much needed this method, writed for postgresQL.
-func (u *User) GetArgs() (string, string, []string, bool) {
-	return u.UserTelegramID, u.UserName, u.TrainIDS, u.Notify
+	UserTelegramID string   `json:"user_telegram_id"`
+	UserName       string   `json:"user_name"`
+	TrainIDS       []string `json:"train_ids"`
+	Notify         bool     `json:"notify"`
 }
