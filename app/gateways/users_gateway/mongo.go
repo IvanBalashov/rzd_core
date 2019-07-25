@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"rzd/app/entity"
+	"time"
+
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/mongodb/mongo-go-driver/mongo/options"
-	"rzd/app/entity"
-	"time"
 )
 
 /*
@@ -29,7 +30,6 @@ func (m *MongoUsers) Create(user *entity.User) (bool, error) {
 	filter := user
 	check := entity.User{}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
 	_ = m.Users.FindOne(ctx, filter).Decode(&check)
 
 	if check.UserTelegramID != "" {

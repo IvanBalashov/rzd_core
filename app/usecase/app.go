@@ -271,7 +271,7 @@ func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, e
 	return trains, nil
 }
 
-func (a *App) AddUser(user entity.User) (bool, error) {
+func (a *App) AddUser(user *entity.User) (bool, error) {
 	ok, err := a.Users.Create(user)
 	if err != nil {
 		return ok, err
@@ -280,7 +280,7 @@ func (a *App) AddUser(user entity.User) (bool, error) {
 }
 
 //???? nahyia
-func (a *App) UpdateUserTrainInfo(user entity.User) error {
+func (a *App) UpdateUserTrainInfo(user *entity.User) error {
 	err := a.Users.Update(user)
 	if err != nil {
 		return err
@@ -288,7 +288,7 @@ func (a *App) UpdateUserTrainInfo(user entity.User) error {
 	return nil
 }
 
-func (a *App) DeleteUser(user entity.User) error {
+func (a *App) DeleteUser(user *entity.User) error {
 	err := a.Users.Delete(user)
 	if err != nil {
 		return err
@@ -312,7 +312,7 @@ func (a *App) UsersCount() (int, error) {
 	return len(users), nil
 }
 
-func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
+func (a *App) SaveTrainInUser(user *entity.User, trainID string) error {
 	savedUser, err := a.Users.ReadOne(user)
 	if err != nil {
 		return err
@@ -332,9 +332,9 @@ func (a *App) SaveTrainInUser(user entity.User, trainID string) error {
 	return nil
 }
 
-func (a *App) CheckUsers(start, end int) ([]entity.User, error) {
+func (a *App) CheckUsers(start, end int64) ([]*entity.User, error) {
 	users, err := a.Users.ReadSection(start, end)
-	notifyUsers := []entity.User{}
+	notifyUsers := []*entity.User{}
 
 	if err != nil {
 		return nil, err

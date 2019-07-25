@@ -1,12 +1,13 @@
 package usecase
 
 import (
-	"gopkg.in/go-playground/assert.v1"
 	"log"
 	"net/http"
 	"rzd/app/entity"
 	"rzd/mocks"
 	"testing"
+
+	"gopkg.in/go-playground/assert.v1"
 )
 
 var logs = make(chan string)
@@ -113,13 +114,19 @@ func TestApp_GetUsersList(t *testing.T) {
 }
 
 func TestApp_AddUser(t *testing.T) {
-	user := entity.User{}
+	var user = &entity.User{}
+	var mockedUser = &entity.User{
+		UserTelegramID: "",
+		UserName:       "",
+		TrainIDS:       []string(nil),
+		Notify:         false,
+	}
 	usersMock := mocks.UsersGateway{}
 	app.Users = &usersMock
 
-	usersMock.On("Create", user).Return(nil)
+	usersMock.On("Create", mockedUser).Return(true, nil)
 
-	err := app.AddUser(user)
+	_, err := app.AddUser(user)
 	if err != nil {
 		t.Errorf("error in AddUser - %s\n", err)
 		t.FailNow()
@@ -127,11 +134,17 @@ func TestApp_AddUser(t *testing.T) {
 }
 
 func TestApp_DeleteUser(t *testing.T) {
-	user := entity.User{}
+	var user = &entity.User{}
+	var mockedUser = &entity.User{
+		UserTelegramID: "",
+		UserName:       "",
+		TrainIDS:       []string(nil),
+		Notify:         false,
+	}
 	usersMock := mocks.UsersGateway{}
 	app.Users = &usersMock
 
-	usersMock.On("Delete", user).Return(nil)
+	usersMock.On("Delete", mockedUser).Return(nil)
 
 	err := app.DeleteUser(user)
 	if err != nil {
@@ -141,12 +154,29 @@ func TestApp_DeleteUser(t *testing.T) {
 }
 
 func TestApp_SaveTrainInUser(t *testing.T) {
-	user := entity.User{}
+	user := &entity.User{}
 	usersMock := mocks.UsersGateway{}
 	app.Users = &usersMock
+	var mockedUser = &entity.User{
+		UserTelegramID: "",
+		UserName:       "",
+		TrainIDS:       []string(nil),
+		Notify:         false,
+	}
 
-	usersMock.On("ReadOne", entity.User{}).Return(entity.User{}, nil)
-	usersMock.On("Update", entity.User{}).Return( nil)
+	usersMock.On("ReadOne", &entity.User{
+		UserTelegramID: "",
+		UserName:       "",
+		TrainIDS:       []string(nil),
+		Notify:         false,
+	}).Return(mockedUser, nil)
+
+	usersMock.On("Update", &entity.User{
+		UserTelegramID: "",
+		UserName:       "",
+		TrainIDS:       []string{"123321"},
+		Notify:         false,
+	}).Return(nil)
 
 	err := app.SaveTrainInUser(user, "123321")
 	if err != nil {
@@ -172,9 +202,9 @@ func TestApp_CheckAndRefreshTrainInfo(t *testing.T) {
 	assert.Equal(t, result, expectedResult)
 }
 
-func TestApp_CheckUsers(t *testing.T)  {
-	start := 0
-	end := 10
+func TestApp_CheckUsers(t *testing.T) {
+	start := int64(0)
+	end := int64(10)
 	expectedUsers := []entity.User{}
 	usersMock := mocks.UsersGateway{}
 	app.Users = &usersMock

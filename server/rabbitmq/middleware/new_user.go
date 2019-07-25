@@ -16,7 +16,7 @@ func (e *EventLayer) NewUser(query interface{}) (interface{}, error) {
 		}
 	}
 
-	user := entity.User{
+	user := &entity.User{
 		UserTelegramID: request.UserTelegramID,
 		UserName:       request.UserName,
 		Notify:         request.Notify,

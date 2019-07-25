@@ -22,10 +22,11 @@ func (e *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) 
 		return StatusResponse{Status: "fail"}, err
 	}
 
-	err = e.App.SaveTrainInUser(entity.User{
+	user := &entity.User{
 		UserTelegramID: request.User.UserID,
 		UserName:       request.User.UserName,
-	}, trainID)
+	}
+	err = e.App.SaveTrainInUser(user, trainID)
 	if err != nil {
 		return StatusResponse{Status: "fail"}, err
 	}

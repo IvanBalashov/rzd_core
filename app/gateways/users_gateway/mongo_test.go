@@ -9,10 +9,11 @@ import (
 	"os"
 	"rzd/app/entity"
 	"testing"
+	"time"
 )
 
 func SetupConnection() (*MongoUsers, error) {
-	ctx := context.Background()
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	connUrl := os.Getenv("MONGODB_URL")
 	if connUrl == "" {
 		return nil, errors.New("Can't connect to mongo_db. MONGODB_URL not setted.")

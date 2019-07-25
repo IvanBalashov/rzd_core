@@ -18,10 +18,11 @@ func (e *EventLayer) SaveOneTrain(ctx *gin.Context) {
 		return
 	}
 
-	err = e.App.SaveTrainInUser(entity.User{
+	user := &entity.User{
 		UserTelegramID: userID,
 		UserName:       userName,
-	}, trainID)
+	}
+	err = e.App.SaveTrainInUser(user, trainID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err})
 		ctx.Abort()

@@ -11,25 +11,32 @@ type UsersGateway struct {
 }
 
 // Create provides a mock function with given fields: user
-func (_m *UsersGateway) Create(user entity.User) error {
+func (_m *UsersGateway) Create(user *entity.User) (bool, error) {
 	ret := _m.Called(user)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User) error); ok {
+	var r0 bool
+	if rf, ok := ret.Get(0).(func(*entity.User) bool); ok {
 		r0 = rf(user)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(bool)
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*entity.User) error); ok {
+		r1 = rf(user)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Delete provides a mock function with given fields: user
-func (_m *UsersGateway) Delete(user entity.User) error {
+func (_m *UsersGateway) Delete(user *entity.User) error {
 	ret := _m.Called(user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*entity.User) error); ok {
 		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)
@@ -62,18 +69,20 @@ func (_m *UsersGateway) ReadMany() ([]entity.User, error) {
 }
 
 // ReadOne provides a mock function with given fields: filter
-func (_m *UsersGateway) ReadOne(filter entity.User) (entity.User, error) {
+func (_m *UsersGateway) ReadOne(filter *entity.User) (*entity.User, error) {
 	ret := _m.Called(filter)
 
-	var r0 entity.User
-	if rf, ok := ret.Get(0).(func(entity.User) entity.User); ok {
+	var r0 *entity.User
+	if rf, ok := ret.Get(0).(func(*entity.User) *entity.User); ok {
 		r0 = rf(filter)
 	} else {
-		r0 = ret.Get(0).(entity.User)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.User)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.User) error); ok {
+	if rf, ok := ret.Get(1).(func(*entity.User) error); ok {
 		r1 = rf(filter)
 	} else {
 		r1 = ret.Error(1)
@@ -83,20 +92,20 @@ func (_m *UsersGateway) ReadOne(filter entity.User) (entity.User, error) {
 }
 
 // ReadSection provides a mock function with given fields: start, end
-func (_m *UsersGateway) ReadSection(start int, end int) ([]entity.User, error) {
+func (_m *UsersGateway) ReadSection(start int64, end int64) ([]*entity.User, error) {
 	ret := _m.Called(start, end)
 
-	var r0 []entity.User
-	if rf, ok := ret.Get(0).(func(int, int) []entity.User); ok {
+	var r0 []*entity.User
+	if rf, ok := ret.Get(0).(func(int64, int64) []*entity.User); ok {
 		r0 = rf(start, end)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entity.User)
+			r0 = ret.Get(0).([]*entity.User)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int, int) error); ok {
+	if rf, ok := ret.Get(1).(func(int64, int64) error); ok {
 		r1 = rf(start, end)
 	} else {
 		r1 = ret.Error(1)
@@ -106,11 +115,11 @@ func (_m *UsersGateway) ReadSection(start int, end int) ([]entity.User, error) {
 }
 
 // Update provides a mock function with given fields: user
-func (_m *UsersGateway) Update(user entity.User) error {
+func (_m *UsersGateway) Update(user *entity.User) error {
 	ret := _m.Called(user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*entity.User) error); ok {
 		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)

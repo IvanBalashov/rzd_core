@@ -14,8 +14,8 @@ type SaveOneTrainRequest struct {
 }
 
 type CheckUsersRequest struct {
-	Start int `json:"start"`
-	End   int `json:"end"`
+	Start int64 `json:"start"`
+	End   int64 `json:"end"`
 }
 
 type NewUserRequest struct {

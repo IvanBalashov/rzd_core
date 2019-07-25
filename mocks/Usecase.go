@@ -11,34 +11,41 @@ type Usecase struct {
 }
 
 // AddUser provides a mock function with given fields: user
-func (_m *Usecase) AddUser(user entity.User) error {
+func (_m *Usecase) AddUser(user *entity.User) (bool, error) {
 	ret := _m.Called(user)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User) error); ok {
+	var r0 bool
+	if rf, ok := ret.Get(0).(func(*entity.User) bool); ok {
 		r0 = rf(user)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(bool)
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*entity.User) error); ok {
+		r1 = rf(user)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // CheckUsers provides a mock function with given fields: start, end
-func (_m *Usecase) CheckUsers(start int, end int) ([]entity.User, error) {
+func (_m *Usecase) CheckUsers(start int64, end int64) ([]*entity.User, error) {
 	ret := _m.Called(start, end)
 
-	var r0 []entity.User
-	if rf, ok := ret.Get(0).(func(int, int) []entity.User); ok {
+	var r0 []*entity.User
+	if rf, ok := ret.Get(0).(func(int64, int64) []*entity.User); ok {
 		r0 = rf(start, end)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entity.User)
+			r0 = ret.Get(0).([]*entity.User)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int, int) error); ok {
+	if rf, ok := ret.Get(1).(func(int64, int64) error); ok {
 		r1 = rf(start, end)
 	} else {
 		r1 = ret.Error(1)
@@ -48,11 +55,11 @@ func (_m *Usecase) CheckUsers(start int, end int) ([]entity.User, error) {
 }
 
 // DeleteUser provides a mock function with given fields: user
-func (_m *Usecase) DeleteUser(user entity.User) error {
+func (_m *Usecase) DeleteUser(user *entity.User) error {
 	ret := _m.Called(user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*entity.User) error); ok {
 		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)
@@ -162,11 +169,11 @@ func (_m *Usecase) SaveInfoAboutTrain(trainID string) (string, error) {
 }
 
 // SaveTrainInUser provides a mock function with given fields: user, trainID
-func (_m *Usecase) SaveTrainInUser(user entity.User, trainID string) error {
+func (_m *Usecase) SaveTrainInUser(user *entity.User, trainID string) error {
 	ret := _m.Called(user, trainID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User, string) error); ok {
+	if rf, ok := ret.Get(0).(func(*entity.User, string) error); ok {
 		r0 = rf(user, trainID)
 	} else {
 		r0 = ret.Error(0)
@@ -176,15 +183,36 @@ func (_m *Usecase) SaveTrainInUser(user entity.User, trainID string) error {
 }
 
 // UpdateUserTrainInfo provides a mock function with given fields: user
-func (_m *Usecase) UpdateUserTrainInfo(user entity.User) error {
+func (_m *Usecase) UpdateUserTrainInfo(user *entity.User) error {
 	ret := _m.Called(user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*entity.User) error); ok {
 		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)
 	}
 
 	return r0
+}
+
+// UsersCount provides a mock function with given fields:
+func (_m *Usecase) UsersCount() (int, error) {
+	ret := _m.Called()
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }

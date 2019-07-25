@@ -10,11 +10,11 @@ type Usecase interface {
 	SaveInfoAboutTrain(trainID string) (string, error)
 	Run(refreshTimeSec string)
 	// User Block
-	AddUser(user entity.User) (bool, error)
-	SaveTrainInUser(user entity.User, trainID string) error
-	UpdateUserTrainInfo(user entity.User) error
-	DeleteUser(user entity.User) error
+	AddUser(user *entity.User) (bool, error)
+	SaveTrainInUser(user *entity.User, trainID string) error
+	UpdateUserTrainInfo(user *entity.User) error
+	DeleteUser(user *entity.User) error
 	GetUsersList() ([]entity.User, error)
 	UsersCount() (int, error)
-	CheckUsers(start, end int) ([]entity.User, error)
+	CheckUsers(start, end int64) ([]*entity.User, error)
 }

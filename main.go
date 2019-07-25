@@ -4,9 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/bradfitz/gomemcache/memcache"
-	"github.com/joho/godotenv"
-	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"os"
 	"rzd/app/gateways/cache_gateway"
@@ -19,16 +16,20 @@ import (
 	"rzd/server/rabbitmq"
 	"rzd/server/rabbitmq/middleware"
 	"time"
+
+	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/joho/godotenv"
+	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 type Config struct {
 	AppName     string
-	HttpHost    string
-	HttpPort    string
-	PostgresUrl string
-	RabbitMQUrl string
-	MongoDBUrl  string
-	MemcacheUrl string
+	HTTPHost    string
+	HTTPPort    string
+	PostgresURL string
+	RabbitMQURL string
+	MongoDBURL  string
+	MemcacheURL string
 }
 
 func init() {
@@ -56,31 +57,31 @@ func GenConfig() Config {
 		log.Printf("%s__Main->GenConfig: HTTP_HOST env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.HttpHost = val
+		conf.HTTPHost = val
 	}
 	if val, ok := os.LookupEnv("HTTP_PORT"); !ok {
 		log.Printf("%s__Main->GenConfig: HTTP_PORT env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.HttpPort = val
+		conf.HTTPPort = val
 	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
 		log.Printf("%s__Main->GenConfig: RABBITMQ_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.RabbitMQUrl = val
+		conf.RabbitMQURL = val
 	}
 	if val, ok := os.LookupEnv("MONGODB_URL"); !ok {
 		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.MongoDBUrl = val
+		conf.MongoDBURL = val
 	}
 	if val, ok := os.LookupEnv("MEMCACHE_URL"); !ok {
 		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.MemcacheUrl = val
+		conf.MemcacheURL = val
 	}
 
 	return conf
@@ -107,9 +108,9 @@ func main() {
 	)
 	logs <- fmt.Sprintf("Main: Success")
 
-	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBUrl)
+	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBURL)
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, config.MongoDBUrl)
+	client, err := mongo.Connect(ctx, config.MongoDBURL)
 	if err != nil {
 		logs <- fmt.Sprintf("Main: Can't create client of Mongodb - fail in connect to base \n\t\t err - %s", err.Error())
 		time.Sleep(500 * time.Millisecond)
@@ -137,10 +138,10 @@ func main() {
 	}
 	logs <- fmt.Sprintf("Main: Success")
 
-	logs <- fmt.Sprintf("Main: Connecting to Memcache on addr - %s", config.MemcacheUrl)
+	logs <- fmt.Sprintf("Main: Connecting to Memcache on addr - %s", config.MemcacheURL)
 
-	cacheCLI := memcache.New(config.MemcacheUrl)
-	cache := cache_gateway.NewMemcache(*cacheCLI, 60)
+	cacheCLI := memcache.New(config.MemcacheURL)
+	cache := cache_gateway.NewMemcache(cacheCLI, 60)
 
 	logs <- fmt.Sprintf("Main: Success")
 
@@ -148,10 +149,10 @@ func main() {
 
 	// RabbitMQ Server
 	{
-		logs <- fmt.Sprintf("Main: Connecting to rabbitMQ on addr - %s", config.RabbitMQUrl)
-		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app, logs)
+		logs <- fmt.Sprintf("Main: Connecting to rabbitMQ on addr - %s", config.RabbitMQURL)
+		server, err := rabbitmq.NewServer(config.RabbitMQURL, &app, logs)
 		if err != nil {
-			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s\n\t\t err - %s", config.RabbitMQUrl, err.Error())
+			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s\n\t\t err - %s", config.RabbitMQURL, err.Error())
 			time.Sleep(500 * time.Millisecond)
 			os.Exit(2)
 		} else {
@@ -207,8 +208,8 @@ func main() {
 	go app.Run("60s")
 	// REST Server.
 	{
-		logs <- fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
-		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
+		logs <- fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HTTPHost, config.HTTPPort)
+		server := http.NewServer(http.NewHandler(&app), config.HTTPHost, config.HTTPPort)
 		if err := server.ListenAndServe(); err != nil {
 			logs <- fmt.Sprintf("Main: Error while serving - \n\t%s", err.Error())
 			time.Sleep(500 * time.Millisecond)

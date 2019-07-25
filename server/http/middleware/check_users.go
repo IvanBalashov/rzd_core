@@ -34,7 +34,7 @@ func (e *EventLayer) CheckUsers(ctx *gin.Context) {
 		return
 	}
 
-	users, err := e.App.CheckUsers(int(intStart), int(intEnd))
+	users, err := e.App.CheckUsers(intStart, intEnd)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "err": err.Error()})
 	}
