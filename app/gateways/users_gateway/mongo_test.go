@@ -75,7 +75,7 @@ func TestMongoUsers_Create(t *testing.T) {
 			expectedOk: true,
 			cleanFlag:  false,
 			checkErr:   a.NoError,
-		},{
+		}, {
 			name: "existing user",
 			actualUser: &entity.User{
 				UserTelegramID: "test_1",
@@ -151,10 +151,10 @@ func TestMongoUsers_ReadOne(t *testing.T) {
 
 	a := assert.New(t)
 	testCases := []struct {
-		name       string
+		name         string
 		expectedUser *entity.User
-		cleanFlag  bool
-		checkErr   func(err error, msgAndArgs ...interface{}) bool
+		cleanFlag    bool
+		checkErr     func(err error, msgAndArgs ...interface{}) bool
 	}{
 		{
 			name: "success",
@@ -166,7 +166,7 @@ func TestMongoUsers_ReadOne(t *testing.T) {
 				},
 			},
 			cleanFlag: true,
-			checkErr: a.NoError,
+			checkErr:  a.NoError,
 		},
 	}
 

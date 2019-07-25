@@ -7,19 +7,9 @@ import (
 )
 
 func (e *EventLayer) NewUser(ctx *gin.Context) {
-	userID, ok := ctx.GetQuery("user_id")
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": "can't get post from user_id"})
-		ctx.Abort()
-		return
-	}
+	userID := ctx.PostForm("user_id")
 
-	userName, ok := ctx.GetQuery("user_name")
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": "can't get post from user_name"})
-		ctx.Abort()
-		return
-	}
+	userName := ctx.PostForm("user_name")
 
 	user := &entity.User{
 		UserTelegramID: userID,

@@ -1,6 +1,7 @@
 package rabbitmq
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/streadway/amqp"
@@ -43,8 +44,8 @@ func NewServer(uri string, app usecase.Usecase, logChanel chan string) (RabbitSe
 }
 
 func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
-	msg     := MessageRabbitMQ{}
-	resp    := MessageRabbitMQ{}
+	msg := MessageRabbitMQ{}
+	resp := MessageRabbitMQ{}
 	forever := make(chan bool) // FIXME: add exit statement
 
 	requests, err := request.Read()
@@ -111,7 +112,12 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 				close(forever)
 				break
 			}
-			r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %+v", resp)
+
+			dataS, err := json.Marshal(resp)
+			if err != nil {
+				return
+			}
+			r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Sending message - %s", bytes.NewBuffer(dataS).String())
 			data, err := json.Marshal(resp)
 			if err != nil {
 				r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Got error while parse answer - %s", err.Error())

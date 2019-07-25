@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"rzd/app/entity"
+	"rzd/server"
 	"strconv"
 )
 
@@ -16,8 +17,6 @@ type SeatsArgs struct {
 
 func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 	query := SeatsArgs{}
-	trains := []Trains{}
-	seats := []Seats{}
 
 	if err := ctx.ShouldBindQuery(&query); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
@@ -48,16 +47,17 @@ func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 		return
 	}
 
-	// Parsing answer here coz we need one answer for all "servres"
+	trains := []server.Trains{}
+	seats := map[string]server.Seats{}
 	for _, val := range routes {
-		for i := range val.Seats {
-			seats = append(seats, Seats{
-				Name:  val.Seats[i].SeatsName,
-				Count: val.Seats[i].SeatsCount,
-				Price: val.Seats[i].Price,
-			})
+		for k, v := range val.Seats {
+			seats[string(k)] = server.Seats{
+				Count: v.SeatsCount,
+				Price: v.Price,
+				Chosen: v.Chosen,
+			}
 		}
-		trains = append(trains, Trains{
+		trains = append(trains, server.Trains{
 			TrainID:   val.ID,
 			MainRoute: val.Route0 + " - " + val.Route1,
 			Segment:   val.Station + " - " + val.Station1,
@@ -65,7 +65,7 @@ func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 			EndTime:   val.Date1 + "_" + val.Time1,
 			Seats:     seats,
 		})
-		seats = []Seats{}
+		seats = map[string]server.Seats{}
 	}
 	ctx.JSON(http.StatusOK, gin.H{"status": "ok", "trains": trains})
 }

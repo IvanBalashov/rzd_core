@@ -15,6 +15,7 @@ import (
 	"rzd/server/http"
 	"rzd/server/rabbitmq"
 	"rzd/server/rabbitmq/middleware"
+	"strconv"
 	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -30,6 +31,7 @@ type Config struct {
 	RabbitMQURL string
 	MongoDBURL  string
 	MemcacheURL string
+	MemcacheTTL int64
 }
 
 func init() {
@@ -83,7 +85,12 @@ func GenConfig() Config {
 	} else {
 		conf.MemcacheURL = val
 	}
-
+	if val, ok := os.LookupEnv("MEMCACHE_TTL"); !ok {
+		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		os.Exit(2)
+	} else {
+		conf.MemcacheTTL, _ = strconv.ParseInt(val, 10, 64)
+	}
 	return conf
 }
 
@@ -141,7 +148,7 @@ func main() {
 	logs <- fmt.Sprintf("Main: Connecting to Memcache on addr - %s", config.MemcacheURL)
 
 	cacheCLI := memcache.New(config.MemcacheURL)
-	cache := cache_gateway.NewMemcache(cacheCLI, 60)
+	cache := cache_gateway.NewMemcache(cacheCLI, int32(config.MemcacheTTL))
 
 	logs <- fmt.Sprintf("Main: Success")
 

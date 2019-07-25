@@ -45,13 +45,13 @@ func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now
 func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
 	// TODO: Rewrite args for consume!!!!
 	messages, err := r.Channel.Consume(
-		r.Queue.Name,     // queue
-		r.Queue.Exchange, // consumer
-		true,     // auto-ack
-		r.Queue.Exclusive,// exclusive
-		false,    // no-local
-		r.Queue.NoWait,   // no-wait
-		nil,        // args
+		r.Queue.Name,      // queue
+		r.Queue.Exchange,  // consumer
+		true,              // auto-ack
+		r.Queue.Exclusive, // exclusive
+		false,             // no-local
+		r.Queue.NoWait,    // no-wait
+		nil,               // args
 	)
 	if err != nil {
 		log.Printf("RabbitMQ->RequestQueue: Error while consume messages - %s\n", err)

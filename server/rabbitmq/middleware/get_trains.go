@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"rzd/app/entity"
+	"rzd/server"
 	"strconv"
 )
 
 func (e *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	request := AllTrainsRequest{}
-	response := []Trains{}
+	response := []server.Trains{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return nil, err
@@ -38,17 +39,17 @@ func (e *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	})
 
 	for _, val := range routes {
-		seats := []Seats{}
-		for i := range val.Seats {
-			seats = append(seats, Seats{
-				Name:  val.Seats[i].SeatsName,
-				Count: val.Seats[i].SeatsCount,
-				Price: val.Seats[i].Price,
-			})
+		seats := map[string]server.Seats{}
+		for k, v := range val.Seats {
+			seats[string(k)] = server.Seats{
+				Count: v.SeatsCount,
+				Price: v.Price,
+				Chosen: v.Chosen,
+			}
 		}
-		response = append(response, Trains{
+		response = append(response, server.Trains{
 			TrainID:   val.ID,
-			MainRoute: fmt.Sprintf("%s-%s", val.Route0, val.Route0),
+			MainRoute: fmt.Sprintf("%s-%s", val.Route0, val.Route1),
 			Segment:   fmt.Sprintf("%s-%s", val.Station, val.Station1),
 			StartDate: fmt.Sprintf("%s_%s", val.Date0, val.Time0),
 			EndTime:   fmt.Sprintf("%s_%s", val.Date1, val.Time1),

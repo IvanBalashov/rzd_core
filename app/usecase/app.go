@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"bytes"
-	"crypto/md5"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -74,7 +72,6 @@ func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) 
 
 func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, error) {
 	trainsAnswer := []entity.Train{}
-	hash := md5.New()
 
 	trains, err := getTrainsList(route, args)
 	if err != nil {
@@ -87,14 +84,12 @@ func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]e
 			return nil, err
 		}
 		formatKey := fmt.Sprintf("%s_%s", val.Number, val.Date0)
-		bytesKey := hash.Sum(bytes.NewBufferString(formatKey).Bytes())
-		key := bytes.NewBuffer(bytesKey).String()
 
-		err = a.Cache.Set(fmt.Sprintf("%x", key), data)
+		err = a.Cache.Set(formatKey, data)
 		if err != nil {
 			return nil, err
 		}
-		val.ID = fmt.Sprintf("%x", key)
+		val.ID = formatKey
 		trainsAnswer = append(trainsAnswer, val)
 	}
 
@@ -214,7 +209,7 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 	}
 	for _, val := range trains {
 		if a.GetDiff(train, val) {
-			err := a.Trains.Update(train)
+			err := a.Trains.Update(val)
 			if err != nil {
 				a.LogChan <- fmt.Sprintf("App->CheckAndRefreshTrainInfo: Error while update train in db %s", err.Error())
 				return false
@@ -228,6 +223,13 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 }
 
 func (a *App) GetDiff(oldTrain entity.Train, newTrain entity.Train) bool {
+	for key, val := range oldTrain.Seats {
+		if newTrain.Seats[key].SeatsCount > val.SeatsCount && newTrain.Seats[key].Price == val.Price {
+			if val.Chosen == true {
+				return true
+			}
+		}
+	}
 	return false
 }
 
@@ -239,19 +241,38 @@ func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, e
 	}
 
 	for _, val := range route.Tp[0].List {
-		seats := []entity.Seats{}
-		for _, seatsInfo := range val.ServiceCategories {
-			seats = append(seats, entity.Seats{
-				SeatsCount: seatsInfo.FreeSeats,
-				Price:      seatsInfo.Price,
-				SeatsName:  seatsInfo.TypeLoc,
-			})
+		var seats = entity.Seats{
+			entity.CSeatsType: {
+				SeatsCount: 0,
+				Price:      "0",
+				Chosen:     false,
+			},
+			entity.SSeatsType: {
+				SeatsCount: 0,
+				Price:      "0",
+				Chosen:     false,
+			},
+			entity.SVSeatsType: {
+				SeatsCount: 0,
+				Price:      "0",
+				Chosen:     false,
+			},
+			entity.PSeatsType: {
+				SeatsCount: 0,
+				Price:      "0",
+				Chosen:     false,
+			},
 		}
 
-		newTrain := entity.Train{
+		for _, seatsInfo := range val.ServiceCategories {
+			seats[fromRzdToCore(seatsInfo.TypeLoc)] = entity.Seat{
+				SeatsCount: seatsInfo.FreeSeats,
+				Price:      seatsInfo.Price,
+			}
+		}
+
+		trains = append(trains, entity.Train{
 			Number:    val.Number,
-			Type:      strconv.Itoa(val.Type),
-			Brand:     val.Brand,
 			Route0:    val.Route0,
 			Route1:    val.Route1,
 			TrDate0:   val.TrDate0,
@@ -264,8 +285,7 @@ func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, e
 			Time1:     val.Time1,
 			Seats:     seats,
 			QueryArgs: args,
-		}
-		trains = append(trains, newTrain)
+		})
 	}
 
 	return trains, nil

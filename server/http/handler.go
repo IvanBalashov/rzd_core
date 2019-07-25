@@ -28,7 +28,7 @@ func NewHandler(app *usecase.App) http.Handler {
 
 	api.GET("users_count", eventLayer.UsersCount)
 	// FIXME: rewrite to post
-	api.GET("new_user", eventLayer.NewUser)
+	api.POST("new_user", eventLayer.NewUser)
 
 	api.POST("save_one_train", eventLayer.SaveOneTrain)
 
@@ -39,11 +39,11 @@ func Logger(logChan chan string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 		c.Next()
-		latency := strconv.FormatFloat(time.Since(t).Seconds() * 100, 'f', 10, 64)
-		status  := c.Writer.Status()
-		url     := c.Request.URL
-		host    := c.Request.Host
-		method  := c.Request.Method
-		logChan <- fmt.Sprintf("Http_Server: Method - %6v |Status - %3v |Latency - %3v sec|Host - %10v |Url - %40v ",method, status, latency[:6], host, url)
+		latency := strconv.FormatFloat(time.Since(t).Seconds()*100, 'f', 10, 64)
+		status := c.Writer.Status()
+		url := c.Request.URL
+		host := c.Request.Host
+		method := c.Request.Method
+		logChan <- fmt.Sprintf("Http_Server: Method - %6v |Status - %3v |Latency - %3v sec|Host - %10v |Url - %40v ", method, status, latency[:6], host, url)
 	}
 }
