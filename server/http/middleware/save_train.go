@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"rzd/app/entity"
 )
 
 func (e *EventLayer) SaveOneTrain(ctx *gin.Context) {
@@ -23,14 +22,12 @@ func (e *EventLayer) SaveOneTrain(ctx *gin.Context) {
 		userID = val
 	}
 
-	var userName string
-	if val := ctx.PostForm("user_name"); val == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": "empty user_name"})
-		ctx.Abort()
-	} else {
-		userName = val
-	}
 
+	/*TODO: t, e := e.App.GetTrainByTrainID(trainID)
+	  TODO: t.Seats[chosenType].Chosen = true
+	  TODO: e.App.SaveInfoAboutTrain swith to id, e := SaveTrain(t)
+	  TODO: e.App.SaveTrainIDToUser(userID, trainID)
+	*/
 	trainID, err := e.App.SaveInfoAboutTrain(trainID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err})
@@ -38,11 +35,7 @@ func (e *EventLayer) SaveOneTrain(ctx *gin.Context) {
 		return
 	}
 
-	user := &entity.User{
-		UserTelegramID: userID,
-		UserName:       userName,
-	}
-	err = e.App.SaveTrainInUser(user, trainID)
+	err = e.App.SaveTrainInUser(userID, trainID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err})
 		ctx.Abort()

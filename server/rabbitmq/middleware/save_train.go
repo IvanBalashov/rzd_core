@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"encoding/json"
-	"rzd/app/entity"
 )
 
 func (e *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
@@ -22,11 +21,7 @@ func (e *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) 
 		return StatusResponse{Status: "fail"}, err
 	}
 
-	user := &entity.User{
-		UserTelegramID: request.User.UserID,
-		UserName:       request.User.UserName,
-	}
-	err = e.App.SaveTrainInUser(user, trainID)
+	err = e.App.SaveTrainInUser(request.User.UserID, trainID)
 	if err != nil {
 		return StatusResponse{Status: "fail"}, err
 	}

@@ -12,19 +12,17 @@
             "state": "Trains",
             "list": [
                 {
-                    "number": "100Э",
-                    "number2": "100Э",
+                    "number": "100ЭЩ",
+                    "number2": "100ЭЩ",
                     "type": 0,
                     "typeEx": 0,
-                    "depth": 89,
-                    "new": false,
-                    "elReg": true,
+                    "elReg": false,
                     "deferredPayment": false,
-                    "varPrice": true,
+                    "varPrice": false,
                     "bEntire": false,
                     "trainName": "",
                     "brand": "",
-                    "carrier": "ФПК",
+                    "carrier": null,
                     "route0": "МОСКВА ЯР",
                     "route1": "ВЛАДИВОСТ",
                     "routeCode0": 2000002,
@@ -40,37 +38,7 @@
                     "timeInWay": "04:08",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
-                        {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 1,
-                            "price": "1819",
-                            "priceMax": null,
-                            "rzdBonusPoints": 544,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2У"
-                            ]
-                        }
-                    ],
-                    "test": "[Купе, Плац]",
-                    "testSize": 2,
-                    "carTypes": [
-                        {
-                            "type": "Купе",
-                            "itype": 4
-                        },
-                        {
-                            "type": "Плац",
-                            "itype": 1
-                        }
-                    ],
-                    "addCompLuggageNum": 8,
-                    "addCompLuggage": true,
-                    "addHandLuggage": true
+                    "serviceCategories": []
                 },
                 {
                     "number": "134Б",
@@ -85,7 +53,7 @@
                     "bEntire": false,
                     "trainName": "",
                     "brand": "",
-                    "carrier": "БЧ",
+                    "carrier": null,
                     "route0": "МИНСК ПАСС",
                     "route1": "АРХАНГЕЛ Г",
                     "routeCode0": 2100001,
@@ -101,34 +69,7 @@
                     "timeInWay": "05:26",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
-                        {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 30,
-                            "price": "1850",
-                            "priceMax": null,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2К"
-                            ]
-                        },
-                        {
-                            "typeCarLoc": "Плацкартный",
-                            "freeSeats": 8,
-                            "price": "1002",
-                            "priceMax": null,
-                            "typeCarNumCode": 1,
-                            "typeCarCharCode": "Плац",
-                            "catLabelLoc": "Плацкартный",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "3П"
-                            ]
-                        }
-                    ]
+                    "serviceCategories": []
                 },
                 {
                     "number": "102Я",
@@ -138,14 +79,14 @@
                     "typeEx": 0,
                     "depth": 89,
                     "new": false,
-                    "elReg": true,
+                    "elReg": false,
                     "deferredPayment": false,
                     "varPrice": false,
                     "bEntire": false,
                     "trainName": "",
                     "bFirm": true,
                     "brand": "Ярославль – Москва",
-                    "carrier": "ФПК",
+                    "carrier": null,
                     "route0": "МОСКВА ЯР",
                     "route1": "ЯРОСЛ ГЛАВ",
                     "routeCode0": 2000002,
@@ -161,58 +102,7 @@
                     "timeInWay": "03:22",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
-                        {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 5,
-                            "price": "3359",
-                            "priceMax": null,
-                            "rzdBonusPoints": 1005,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2К",
-                                "2Э"
-                            ]
-                        },
-                        {
-                            "typeCarLoc": "Купе",
-                            "disabledPerson": true,
-                            "freeSeats": 2,
-                            "price": "1584",
-                            "priceMax": null,
-                            "rzdBonusPoints": 1005,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2К",
-                                "2Э"
-                            ]
-                        },
-                        {
-                            "typeCarLoc": "Сидячий",
-                            "freeSeats": 221,
-                            "price": "921",
-                            "priceMax": null,
-                            "rzdBonusPoints": 275,
-                            "typeCarNumCode": 3,
-                            "typeCarCharCode": "Сид",
-                            "catLabelLoc": "Сидячий",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2Ж",
-                                "2С",
-                                "1Р"
-                            ]
-                        }
-                    ],
-                    "disabledType": true,
-                    "addCompLuggage": false,
-                    "addHandLuggage": true
+                    "serviceCategories": []
                 },
                 {
                     "number": "016М",
@@ -246,10 +136,10 @@
                     "serviceCategories": [
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 48,
-                            "price": "1730",
+                            "freeSeats": 52,
+                            "price": "1774",
                             "priceMax": "2404",
-                            "rzdBonusPoints": 517,
+                            "rzdBonusPoints": 531,
                             "typeCarNumCode": 4,
                             "typeCarCharCode": "Купе",
                             "catLabelLoc": "Купе",
@@ -262,7 +152,7 @@
                         },
                         {
                             "typeCarLoc": "Плацкартный",
-                            "freeSeats": 77,
+                            "freeSeats": 51,
                             "price": "1103",
                             "priceMax": null,
                             "rzdBonusPoints": 330,
@@ -278,7 +168,7 @@
                         },
                         {
                             "typeCarLoc": "СВ",
-                            "freeSeats": 5,
+                            "freeSeats": 2,
                             "price": "4130",
                             "priceMax": null,
                             "rzdBonusPoints": 1236,
@@ -347,7 +237,7 @@
                     "serviceCategories": [
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 45,
+                            "freeSeats": 32,
                             "price": "872",
                             "priceMax": "1457",
                             "rzdBonusPoints": 260,
@@ -362,7 +252,7 @@
                         },
                         {
                             "typeCarLoc": "Плацкартный",
-                            "freeSeats": 55,
+                            "freeSeats": 45,
                             "price": "1025",
                             "priceMax": null,
                             "rzdBonusPoints": 306,
@@ -378,7 +268,7 @@
                         },
                         {
                             "typeCarLoc": "СВ",
-                            "freeSeats": 13,
+                            "freeSeats": 11,
                             "price": "2934",
                             "priceMax": null,
                             "rzdBonusPoints": 878,
@@ -443,7 +333,7 @@
                     "serviceCategories": [
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 25,
+                            "freeSeats": 24,
                             "price": "1544",
                             "priceMax": null,
                             "rzdBonusPoints": 462,
@@ -459,7 +349,7 @@
                         },
                         {
                             "typeCarLoc": "Плацкартный",
-                            "freeSeats": 18,
+                            "freeSeats": 11,
                             "price": "1154",
                             "priceMax": null,
                             "rzdBonusPoints": 345,
@@ -496,14 +386,14 @@
                     "typeEx": 0,
                     "depth": 89,
                     "new": false,
-                    "elReg": true,
+                    "elReg": false,
                     "deferredPayment": false,
                     "varPrice": false,
                     "bEntire": false,
                     "trainName": "",
                     "bFirm": true,
                     "brand": "Ярославль – Москва",
-                    "carrier": "ФПК",
+                    "carrier": null,
                     "route0": "МОСКВА ЯР",
                     "route1": "ЯРОСЛ ГЛАВ",
                     "routeCode0": 2000002,
@@ -519,22 +409,7 @@
                     "timeInWay": "03:33",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
-                        {
-                            "typeCarLoc": "Сидячий",
-                            "freeSeats": 3,
-                            "price": "1520",
-                            "priceMax": null,
-                            "rzdBonusPoints": 455,
-                            "typeCarNumCode": 3,
-                            "typeCarCharCode": "Сид",
-                            "catLabelLoc": "Сидячий",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "1Р"
-                            ]
-                        }
-                    ],
+                    "serviceCategories": [],
                     "test": "[Купе, Сид]",
                     "testSize": 2,
                     "carTypes": [
@@ -546,9 +421,7 @@
                             "type": "Сид",
                             "itype": 3
                         }
-                    ],
-                    "addCompLuggage": false,
-                    "addHandLuggage": true
+                    ]
                 },
                 {
                     "number": "108Я",
@@ -557,13 +430,13 @@
                     "typeEx": 0,
                     "depth": 89,
                     "new": false,
-                    "elReg": true,
+                    "elReg": false,
                     "deferredPayment": false,
-                    "varPrice": true,
+                    "varPrice": false,
                     "bEntire": false,
                     "trainName": "",
                     "brand": "",
-                    "carrier": "ФПК",
+                    "carrier": null,
                     "route0": "МОСКВА ЯР",
                     "route1": "ВОЛОГДА 1",
                     "routeCode0": 2000002,
@@ -579,22 +452,7 @@
                     "timeInWay": "03:27",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
-                        {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 1,
-                            "price": "2323",
-                            "priceMax": null,
-                            "rzdBonusPoints": 695,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2К"
-                            ]
-                        }
-                    ],
+                    "serviceCategories": [],
                     "test": "[Купе, Сид, Плац]",
                     "testSize": 3,
                     "carTypes": [
@@ -610,10 +468,7 @@
                             "type": "Плац",
                             "itype": 1
                         }
-                    ],
-                    "addCompLuggageNum": 16,
-                    "addCompLuggage": true,
-                    "addHandLuggage": true
+                    ]
                 },
                 {
                     "number": "106Я",
@@ -724,17 +579,17 @@
                     "train_id": 0,
                     "serviceCategories": [
                         {
-                            "typeCarLoc": "СВ",
+                            "typeCarLoc": "Купе",
                             "freeSeats": 2,
-                            "price": "5643",
+                            "price": "2334",
                             "priceMax": null,
-                            "rzdBonusPoints": 1689,
-                            "typeCarNumCode": 6,
-                            "typeCarCharCode": "Люкс",
-                            "catLabelLoc": "СВ",
+                            "rzdBonusPoints": 698,
+                            "typeCarNumCode": 4,
+                            "typeCarCharCode": "Купе",
+                            "catLabelLoc": "Купе",
                             "compoundCategory": false,
                             "serviceClasses": [
-                                "1Э"
+                                "2Э"
                             ]
                         }
                     ],
@@ -754,7 +609,7 @@
                             "itype": 1
                         }
                     ],
-                    "addCompLuggageNum": 6,
+                    "addCompLuggageNum": 3,
                     "addCompLuggage": true,
                     "addHandLuggage": true
                 },
@@ -791,9 +646,9 @@
                     "serviceCategories": [
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 17,
-                            "price": "3408",
-                            "priceMax": "3704",
+                            "freeSeats": 10,
+                            "price": "3704",
+                            "priceMax": null,
                             "typeCarNumCode": 4,
                             "typeCarCharCode": "Купе",
                             "catLabelLoc": "комфорт",
@@ -805,7 +660,7 @@
                         },
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 5,
+                            "freeSeats": 2,
                             "price": "3704",
                             "priceMax": null,
                             "typeCarNumCode": 4,
@@ -813,13 +668,12 @@
                             "catLabelLoc": "Купе",
                             "compoundCategory": false,
                             "serviceClasses": [
-                                "2Т",
-                                "2Э"
+                                "2Т"
                             ]
                         },
                         {
                             "typeCarLoc": "СВ",
-                            "freeSeats": 4,
+                            "freeSeats": 3,
                             "price": "6068",
                             "priceMax": null,
                             "typeCarNumCode": 6,
@@ -851,7 +705,6 @@
                             "itype": 1
                         }
                     ],
-                    "nonRefundable": true,
                     "addCompLuggageNum": 8,
                     "addCompLuggage": true
                 },
@@ -949,10 +802,10 @@
                     "serviceCategories": [
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 6,
-                            "price": "1873",
+                            "freeSeats": 9,
+                            "price": "1851",
                             "priceMax": null,
-                            "rzdBonusPoints": 560,
+                            "rzdBonusPoints": 554,
                             "typeCarNumCode": 4,
                             "typeCarCharCode": "Купе",
                             "catLabelLoc": "Купе",
@@ -960,21 +813,6 @@
                             "serviceClasses": [
                                 "2Л",
                                 "2Э"
-                            ]
-                        },
-                        {
-                            "typeCarLoc": "Плацкартный",
-                            "freeSeats": 3,
-                            "price": "1103",
-                            "priceMax": null,
-                            "rzdBonusPoints": 330,
-                            "typeCarNumCode": 1,
-                            "typeCarCharCode": "Плац",
-                            "catLabelLoc": "Плацкартный",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "3У",
-                                "3Э"
                             ]
                         }
                     ],
@@ -1026,10 +864,10 @@
                     "serviceCategories": [
                         {
                             "typeCarLoc": "Купе",
-                            "freeSeats": 55,
-                            "price": "1584",
-                            "priceMax": "1964",
-                            "rzdBonusPoints": 474,
+                            "freeSeats": 36,
+                            "price": "1590",
+                            "priceMax": "2043",
+                            "rzdBonusPoints": 475,
                             "typeCarNumCode": 4,
                             "typeCarCharCode": "Купе",
                             "catLabelLoc": "Купе",
@@ -1040,17 +878,17 @@
                             ]
                         },
                         {
-                            "typeCarLoc": "Плацкартный",
+                            "typeCarLoc": "СВ",
                             "freeSeats": 2,
-                            "price": "1103",
+                            "price": "3231",
                             "priceMax": null,
-                            "rzdBonusPoints": 330,
-                            "typeCarNumCode": 1,
-                            "typeCarCharCode": "Плац",
-                            "catLabelLoc": "Плацкартный",
+                            "rzdBonusPoints": 967,
+                            "typeCarNumCode": 6,
+                            "typeCarCharCode": "Люкс",
+                            "catLabelLoc": "СВ",
                             "compoundCategory": false,
                             "serviceClasses": [
-                                "3Л"
+                                "1У"
                             ]
                         }
                     ],
@@ -1085,5 +923,5 @@
     "TransferSearchMode": "SEMI_AUTO",
     "flFPKRoundBonus": false,
     "discounts": {},
-    "timestamp": "25.07.2019 18:59:21.416"
+    "timestamp": "26.07.2019 08:13:12.485"
 }

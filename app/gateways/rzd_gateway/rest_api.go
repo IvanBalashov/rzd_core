@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -36,45 +35,33 @@ func NewRestAPIClient(passUrl, rzdUrl string, code1, code2, code3 int) APIClient
 }
 
 func (a *APIClient) GetRoutes(args entity.RouteArgs, cookies []*http.Cookie) (entity.Route, error) {
-	//TODO: DELETE THIS MOCK
-	/*	route := entity.Route{}
-
-		for key := range cookies {
-			resty.SetCookie(cookies[key])
-		}
-
-		resp, err := resty.R().
-			SetHeader("Accept", "application/json").
-			SetFormData(args.ToMap()).
-			SetQueryParam("layer_id", "5827").
-			Post(a.PassRzdUrl)
-		if err != nil {
-			return entity.Route{},
-				errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in request to RZD Api - %s", err))
-		}
-
-		err = json.Unmarshal(resp.Body(), &route)
-		if err != nil {
-			return entity.Route{},
-				errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in unmarshal anwer from RZD Api - %s", err))
-		}
-	*/
-
 	route := entity.Route{}
-	data, err := ioutil.ReadFile("./answers/trains")
-	if err != nil {
-		return entity.Route{}, err
+
+	for key := range cookies {
+		resty.SetCookie(cookies[key])
 	}
-	err = json.Unmarshal(data, &route)
+
+	resp, err := resty.R().
+		SetHeader("Accept", "application/json").
+		SetFormData(args.ToMap()).
+		SetQueryParam("layer_id", "5827").
+		Post(a.PassRzdUrl)
 	if err != nil {
-		return entity.Route{}, err
+		return entity.Route{},
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in request to RZD Api - %s", err))
 	}
+
+	err = json.Unmarshal(resp.Body(), &route)
+	if err != nil {
+		return entity.Route{},
+			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in unmarshal anwer from RZD Api - %s", err))
+	}
+
 	return route, nil
 }
 
 func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, error) {
-	//TODO DELETE THIS MOCK
-	/*rid := entity.Rid{}
+	rid := entity.Rid{}
 
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
@@ -94,24 +81,13 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, err
 		return entity.Rid{}, nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRid: Error in unmarshal anwer from RZD Api - %s\n", err))
 	}
-	*/
 
-	rid := entity.Rid{}
-	data, err := ioutil.ReadFile("./answers/rid")
-	if err != nil {
-		return entity.Rid{}, nil, err
-	}
-	err = json.Unmarshal(data, &rid)
-	if err != nil {
-		return entity.Rid{}, nil, err
-	}
-	return rid, nil, nil
+	return rid, cookies, nil
 }
 
 //Coz all rzd rest api distributed on two entry points - pass.rzd.ru and rzd.ru.
 func (a *APIClient) GetDirectionsCode(source string) (int, error) {
-	// TODO: DELETE THIS MOCK(HYIEK)
-	/*answer := []Codes{}
+	answer := []Codes{}
 
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
@@ -129,27 +105,6 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 	if err != nil {
 		return 0,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in unmarshal anwer from RZD Api - %s", err))
-	}
-	*/
-	var fileName string
-	answer := []Codes{}
-	switch source {
-	case "Москва":
-		fileName = "./answers/suggestion2"
-	case "Ярославль":
-		fileName = "./answers/suggestion1"
-	default:
-		fileName = ""
-	}
-
-	data, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		return 0, err
-	}
-
-	err = json.Unmarshal(data, &answer)
-	if err != nil {
-		return 0, err
 	}
 
 	for i := range answer {

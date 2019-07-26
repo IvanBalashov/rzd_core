@@ -3,15 +3,15 @@
     "event": "trains_list_answer",
     "data": [
         {
-            "train_id": "100Э_26.07.2019",
+            "train_id": "100ЭЩ_26.07.2019",
             "main_route": "МОСКВА ЯР-ВЛАДИВОСТ",
             "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ (ЯРОСЛАВЛЬ-МОСКОВСКИЙ)",
             "start_date": "26.07.2019_00:35",
             "travel_time": "26.07.2019_04:43",
             "seats": {
                 "Купе": {
-                    "count": 1,
-                    "price": "1819",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
@@ -39,13 +39,13 @@
             "travel_time": "26.07.2019_08:58",
             "seats": {
                 "Купе": {
-                    "count": 30,
-                    "price": "1850",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
-                    "count": 8,
-                    "price": "1002",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "СВ": {
@@ -68,8 +68,8 @@
             "travel_time": "26.07.2019_10:57",
             "seats": {
                 "Купе": {
-                    "count": 2,
-                    "price": "1584",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
@@ -83,8 +83,8 @@
                     "chosen": false
                 },
                 "Сидячий": {
-                    "count": 221,
-                    "price": "921",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 }
             }
@@ -97,18 +97,18 @@
             "travel_time": "26.07.2019_14:46",
             "seats": {
                 "Купе": {
-                    "count": 48,
-                    "price": "1730",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
-                    "count": 77,
-                    "price": "1103",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "СВ": {
-                    "count": 5,
-                    "price": "4130",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Сидячий": {
@@ -126,18 +126,18 @@
             "travel_time": "26.07.2019_16:58",
             "seats": {
                 "Купе": {
-                    "count": 45,
-                    "price": "872",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
-                    "count": 55,
-                    "price": "1025",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "СВ": {
-                    "count": 13,
-                    "price": "2934",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Сидячий": {
@@ -155,13 +155,13 @@
             "travel_time": "26.07.2019_17:50",
             "seats": {
                 "Купе": {
-                    "count": 25,
-                    "price": "1544",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
-                    "count": 18,
-                    "price": "1154",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "СВ": {
@@ -199,8 +199,8 @@
                     "chosen": false
                 },
                 "Сидячий": {
-                    "count": 3,
-                    "price": "1520",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 }
             }
@@ -213,8 +213,8 @@
             "travel_time": "26.07.2019_20:32",
             "seats": {
                 "Купе": {
-                    "count": 1,
-                    "price": "2323",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
@@ -310,8 +310,8 @@
                     "chosen": false
                 },
                 "СВ": {
-                    "count": 2,
-                    "price": "5643",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Сидячий": {
@@ -329,8 +329,8 @@
             "travel_time": "27.07.2019_01:03",
             "seats": {
                 "Купе": {
-                    "count": 5,
-                    "price": "3704",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
@@ -339,8 +339,8 @@
                     "chosen": false
                 },
                 "СВ": {
-                    "count": 4,
-                    "price": "6068",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Сидячий": {
@@ -358,8 +358,8 @@
             "travel_time": "27.07.2019_01:41",
             "seats": {
                 "Купе": {
-                    "count": 2,
-                    "price": "2937",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
@@ -387,13 +387,13 @@
             "travel_time": "27.07.2019_03:02",
             "seats": {
                 "Купе": {
-                    "count": 6,
-                    "price": "1873",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
-                    "count": 3,
-                    "price": "1103",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "СВ": {
@@ -416,13 +416,13 @@
             "travel_time": "27.07.2019_03:05",
             "seats": {
                 "Купе": {
-                    "count": 55,
-                    "price": "1584",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "Плацкартный": {
-                    "count": 2,
-                    "price": "1103",
+                    "count": 0,
+                    "price": "0",
                     "chosen": false
                 },
                 "СВ": {

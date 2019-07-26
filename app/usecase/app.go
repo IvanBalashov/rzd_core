@@ -332,7 +332,10 @@ func (a *App) UsersCount() (int, error) {
 	return len(users), nil
 }
 
-func (a *App) SaveTrainInUser(user *entity.User, trainID string) error {
+func (a *App) SaveTrainInUser(userID string, trainID string) error {
+	user := &entity.User{
+		UserTelegramID: userID,
+	}
 	savedUser, err := a.Users.ReadOne(user)
 	if err != nil {
 		return err
@@ -344,7 +347,7 @@ func (a *App) SaveTrainInUser(user *entity.User, trainID string) error {
 		}
 	}
 	savedUser.TrainIDS = append(savedUser.TrainIDS, trainID)
-	err = a.Users.Update(user)
+	err = a.Users.Update(savedUser)
 	if err != nil {
 		return err
 	}

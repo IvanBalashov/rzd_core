@@ -201,7 +201,7 @@ func main() {
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "27.05.2019",
+					Date:      "27.07.2019",
 				},
 			}
 			time.Sleep(time.Second)

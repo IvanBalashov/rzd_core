@@ -66,7 +66,7 @@ func (m *MongoTrains) ReadMany() ([]entity.Train, error) {
 	cur, err := m.Trains.Find(ctx, filter) // FIXME: add filter
 	if err != nil {
 		return nil,
-			errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->ReadMany: Error in mgdb.Find - %s %s", err, cur))
+			errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->ReadMany: Error in mgdb.Find - %s %v", err, cur))
 	}
 	defer cur.Close(ctx)
 
