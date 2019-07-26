@@ -1,12 +1,8 @@
 package entity
 
 type User struct {
-	FullName string
-	Nick     string
-	TrainIDS []int64
-	Notify   bool
-}
-
-func (u *User) GetArgs() (string, string, []int64, bool) {
-	return u.FullName, u.Nick, u.TrainIDS, u.Notify
+	UserTelegramID string   `json:"user_telegram_id"`
+	UserName       string   `json:"user_name"`
+	TrainIDS       []string `json:"train_ids"`
+	Notify         bool     `json:"notify"`
 }

@@ -2,43 +2,29 @@ package middleware
 
 import (
 	"encoding/json"
-	"fmt"
-	"rzd/app/entity"
-	"strconv"
 )
 
-func (m *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
-	response := []Trains{}
-	request := SaveOneTrainRequest{}
-	seats := []Seats{}
+func (e *EventLayer) SaveInfoAboutTrain(query interface{}) (interface{}, error) {
+	request := &SaveOneTrainRequest{}
 
 	if data, err := json.Marshal(query); err != nil {
-		return nil, err
+		return StatusResponse{Status: "fail"}, err
 	} else {
 		err = json.Unmarshal(data, &request)
 		if err != nil {
-			return nil, err
+			return StatusResponse{Status: "fail"}, err
 		}
 	}
 
-	routes, err := m.App.SaveInfoAboutTrain()
-
-	for _, val := range routes {
-		for i := range val.Seats {
-			seats = append(seats, Seats{
-				Name:  val.Seats[i].SeatsName,
-				Count: val.Seats[i].SeatsCount,
-				Price: val.Seats[i].Price,
-			})
-		}
-		response = append(response, Trains{
-			MainRoute: val.Route0 + " - " + val.Route0,
-			Segment:   val.Station + " - " + val.Station1,
-			StartDate: val.Date0 + "_" + val.Time0,
-			Seats:     seats,
-		})
-		seats = []Seats{}
+	trainID, err := e.App.SaveInfoAboutTrain(request.Train.TrainID)
+	if err != nil {
+		return StatusResponse{Status: "fail"}, err
 	}
 
-	return response, nil
+	err = e.App.SaveTrainInUser(request.User.UserID, trainID)
+	if err != nil {
+		return StatusResponse{Status: "fail"}, err
+	}
+
+	return StatusResponse{Status: "ok"}, nil
 }

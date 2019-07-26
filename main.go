@@ -4,10 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/joho/godotenv"
-	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"os"
+	"rzd/app/gateways/cache_gateway"
 	"rzd/app/gateways/rzd_gateway"
 	"rzd/app/gateways/trains_gateway"
 	"rzd/app/gateways/users_gateway"
@@ -16,16 +15,23 @@ import (
 	"rzd/server/http"
 	"rzd/server/rabbitmq"
 	"rzd/server/rabbitmq/middleware"
+	"strconv"
 	"time"
+
+	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/joho/godotenv"
+	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 type Config struct {
 	AppName     string
-	HttpHost    string
-	HttpPort    string
-	PostgresUrl string
-	RabbitMQUrl string
-	MongoDBUrl  string
+	HTTPHost    string
+	HTTPPort    string
+	PostgresURL string
+	RabbitMQURL string
+	MongoDBURL  string
+	MemcacheURL string
+	MemcacheTTL int64
 }
 
 func init() {
@@ -53,33 +59,38 @@ func GenConfig() Config {
 		log.Printf("%s__Main->GenConfig: HTTP_HOST env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.HttpHost = val
+		conf.HTTPHost = val
 	}
 	if val, ok := os.LookupEnv("HTTP_PORT"); !ok {
 		log.Printf("%s__Main->GenConfig: HTTP_PORT env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.HttpPort = val
-	}
-	if val, ok := os.LookupEnv("POSTGRES_URL"); !ok {
-		log.Printf("%s__Main->GenConfig: POSTGRES_URL env don't seted\n", appName)
-		os.Exit(2)
-	} else {
-		conf.PostgresUrl = val
+		conf.HTTPPort = val
 	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
 		log.Printf("%s__Main->GenConfig: RABBITMQ_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.RabbitMQUrl = val
+		conf.RabbitMQURL = val
 	}
 	if val, ok := os.LookupEnv("MONGODB_URL"); !ok {
 		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
-		conf.MongoDBUrl = val
+		conf.MongoDBURL = val
 	}
-
+	if val, ok := os.LookupEnv("MEMCACHE_URL"); !ok {
+		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		os.Exit(2)
+	} else {
+		conf.MemcacheURL = val
+	}
+	if val, ok := os.LookupEnv("MEMCACHE_TTL"); !ok {
+		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		os.Exit(2)
+	} else {
+		conf.MemcacheTTL, _ = strconv.ParseInt(val, 10, 64)
+	}
 	return conf
 }
 
@@ -92,10 +103,8 @@ func main() {
 	logger := reporting.NewLogger(logs, config.AppName)
 	logger.Start()
 
-	time.Sleep(100 * time.Millisecond)
-
-	logs <- fmt.Sprintf("Main: Starting app.")
-	logs <- fmt.Sprintf("Main: Init rzd.ru REST api.")
+	logs <- fmt.Sprintf("Main: Starting app")
+	logs <- fmt.Sprintf("Main: Init rzd.ru REST api")
 
 	CLI := rzd_gateway.NewRestAPIClient(
 		"https://pass.rzd.ru/timetable/public/ru",
@@ -104,37 +113,55 @@ func main() {
 		5764,
 		5804,
 	)
-	logs <- fmt.Sprintf("Main: Success.")
+	logs <- fmt.Sprintf("Main: Success")
 
-	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBUrl)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	client, err := mongo.Connect(ctx, config.MongoDBUrl)
+	logs <- fmt.Sprintf("Main: Connecting to MongoDB on addr - %s", config.MongoDBURL)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(ctx, config.MongoDBURL)
+	if err != nil {
+		logs <- fmt.Sprintf("Main: Can't create client of Mongodb - fail in connect to base \n\t\t err - %s", err.Error())
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
+	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't connect to Mongodb - %s", err.Error())
+		logs <- fmt.Sprintf("Main: Can't connect to Mongodb - fail to ping base \n\t\t err - %s", err.Error())
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
 
 	MDDBTrains, err := trains_gateway.NewMongoTrains(client)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't connect to train collections - %s", err.Error())
-		return
+		logs <- fmt.Sprintf("Main: Can't connect to train collections - MDDBTrains\n\t\t err -  %s", err.Error())
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
 	MDDBUsers, err := users_gateway.NewMongoUsers(client)
 	if err != nil {
-		logs <- fmt.Sprintf("Main: Can't connect to users collections - %s", err.Error())
-		return
+		logs <- fmt.Sprintf("Main: Can't connect to users collections - MDDBUsers\n\t\t err - %s", err.Error())
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(2)
 	}
-	logs <- fmt.Sprintf("Main: Success.")
+	logs <- fmt.Sprintf("Main: Success")
 
-	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, logs)
+	logs <- fmt.Sprintf("Main: Connecting to Memcache on addr - %s", config.MemcacheURL)
+
+	cacheCLI := memcache.New(config.MemcacheURL)
+	cache := cache_gateway.NewMemcache(cacheCLI, int32(config.MemcacheTTL))
+
+	logs <- fmt.Sprintf("Main: Success")
+
+	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, cache, logs)
 
 	// RabbitMQ Server
 	{
-		logs <- fmt.Sprintf("Main: Connecting to rabbitMQ on addr - %s", config.RabbitMQUrl)
-		server, err := rabbitmq.NewServer(config.RabbitMQUrl, &app, logs)
+		logs <- fmt.Sprintf("Main: Connecting to rabbitMQ on addr - %s", config.RabbitMQURL)
+		server, err := rabbitmq.NewServer(config.RabbitMQURL, &app, logs)
 		if err != nil {
-			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s", config.RabbitMQUrl)
+			logs <- fmt.Sprintf("Main: Can't connect to rabbitmq on addr - %s\n\t\t err - %s", config.RabbitMQURL, err.Error())
+			time.Sleep(500 * time.Millisecond)
+			os.Exit(2)
 		} else {
 			// TODO: Remove after complete rabbitmq files.
 			// TODO: Think about call to another nodes about starting??
@@ -169,12 +196,12 @@ func main() {
 			go server.Serve(trainsRequest, trainsResponse)
 			msg := rabbitmq.MessageRabbitMQ{
 				ID:    1,
-				Event: "Trains_list",
+				Event: "trains_list",
 				Data: middleware.AllTrainsRequest{
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "25.01.2019",
+					Date:      "27.07.2019",
 				},
 			}
 			time.Sleep(time.Second)
@@ -185,13 +212,15 @@ func main() {
 			}
 		}
 	}
+	go app.Run("60s")
 	// REST Server.
 	{
-		logs <- fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HttpHost, config.HttpPort)
-		server := http.NewServer(http.NewHandler(&app), config.HttpHost, config.HttpPort)
+		logs <- fmt.Sprintf("Main: Starting web server on addr - %s:%s", config.HTTPHost, config.HTTPPort)
+		server := http.NewServer(http.NewHandler(&app), config.HTTPHost, config.HTTPPort)
 		if err := server.ListenAndServe(); err != nil {
 			logs <- fmt.Sprintf("Main: Error while serving - \n\t%s", err.Error())
-			return
+			time.Sleep(500 * time.Millisecond)
+			os.Exit(2)
 		}
 	}
 }

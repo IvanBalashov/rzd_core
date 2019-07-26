@@ -45,13 +45,13 @@ func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now
 func (r *RequestQueue) Read() (<-chan amqp.Delivery, error) {
 	// TODO: Rewrite args for consume!!!!
 	messages, err := r.Channel.Consume(
-		r.Queue.Name,     // queue
-		r.Queue.Exchange, // consumer
-		true,             // auto-ack
-		false,            // exclusive
-		false,            // no-local
-		false,            // no-wait
-		nil,              // args
+		r.Queue.Name,      // queue
+		r.Queue.Exchange,  // consumer
+		true,              // auto-ack
+		r.Queue.Exclusive, // exclusive
+		false,             // no-local
+		r.Queue.NoWait,    // no-wait
+		nil,               // args
 	)
 	if err != nil {
 		log.Printf("RabbitMQ->RequestQueue: Error while consume messages - %s\n", err)
@@ -68,7 +68,7 @@ type ResponseQueue struct {
 }
 
 func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) ResponseQueue {
-	declearedQueue, err := ch.QueueDeclare(name, dur, del, exc, now, args)
+	declaredQueue, err := ch.QueueDeclare(name, dur, del, exc, now, args)
 	if err != nil {
 		log.Printf("RabbitMQ->ResponseQueue: Error while queue declare - %s\n", err)
 		return ResponseQueue{}
@@ -83,7 +83,7 @@ func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, no
 			Exclusive:  exc,
 			NoWait:     now,
 		},
-		MQueue:  &declearedQueue,
+		MQueue:  &declaredQueue,
 		Channel: ch,
 	}
 }

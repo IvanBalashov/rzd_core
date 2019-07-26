@@ -1,5 +1,5 @@
 # RZD_CORE
-This is core for rzd_bot in Telegram. Use this project for example Clean Arch.
+This is core for rzd_bot in Telegram. Use this project for example Clean Arch too.
 
 ### Main thinks
 I'm hope what i can end this project. Now this app have only web-server for control business logic. Main feature is use 
@@ -20,4 +20,35 @@ Now app can read environment variables from `.env` file. For fast start use foll
 ```text
 cp .env_example .env
 ```
- 
+
+### Main architecture
+```text
++----------+
+| Rzd API  |
++----------+
+     |
++----------+           +----------+ 
+| Rzd Core | --------- | MongoDB  |
++----------+           +----------+
+ | | | | |  \
++----------+ \         +----------+
+| RabbitMQ |  \________| Memcache |
++----------+           +----------+
+ | | | | | 
++----------+
+|  TG BOT  |
++----------+
+```
+
+### Data flow
+
+```text
+1) Bot Send in RabbitMQ message like
+{MessageID:[int], Event:[string], User: UserObj, TrainArgs: ArgsForSearch}.
+2) First free node get data from Queue.
+    - Request to RZDApi  for getting trains on route.
+    - Send answer to bot like {[]array_with_trains}.
+    - Get response from bot, what train need to save.
+    - Save train and user info in MongoDB.
+3) 
+```

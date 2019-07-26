@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
+	"rzd/app/entity"
+
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
-	"rzd/app/entity"
-	"time"
 )
 
 /*
@@ -23,24 +25,26 @@ func NewMongoTrains(cli *mongo.Client) (MongoTrains, error) {
 	return MongoTrains{CLI: *cli, Trains: *col}, nil
 }
 
-func (m *MongoTrains) Create(train entity.Train) error {
+func (m *MongoTrains) Create(train entity.Train) (string, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
 	result, err := m.Trains.InsertOne(ctx, train)
 	if err != nil {
-		return errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Error in mgdb.InsertOne - %s", err))
+		return "", errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Error in mgdb.InsertOne - %s", err))
 	}
 
 	if result.InsertedID == nil {
-		return errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Got empty result - %s", result.InsertedID))
+		return "", errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->Create: Got empty result - %s", result.InsertedID))
 	}
 
-	return nil
+	trainID := result.InsertedID.(string)
+
+	return trainID, nil
 }
 
-func (m *MongoTrains) ReadOne() (entity.Train, error) {
+func (m *MongoTrains) ReadOne(trainID string) (entity.Train, error) {
 	result := entity.Train{}
-	filter := bson.M{}
+	filter := bson.M{"_id": trainID}
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
 	err := m.Trains.FindOne(ctx, filter).Decode(&result)
@@ -52,16 +56,17 @@ func (m *MongoTrains) ReadOne() (entity.Train, error) {
 	return result, nil
 }
 
-func (m *MongoTrains) ReadMany(ids []int) ([]entity.Train, error) {
+func (m *MongoTrains) ReadMany() ([]entity.Train, error) {
 	trains := []entity.Train{}
 	train := entity.Train{}
+	filter := bson.M{}
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
-	cur, err := m.Trains.Find(ctx, nil) // FIXME: add filter
+	cur, err := m.Trains.Find(ctx, filter) // FIXME: add filter
 	if err != nil {
 		return nil,
-			errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->ReadMany: Error in mgdb.Find - %s", err))
+			errors.New(fmt.Sprintf("MDB:Gateways->Trains_Gateway->ReadMany: Error in mgdb.Find - %s %v", err, cur))
 	}
 	defer cur.Close(ctx)
 

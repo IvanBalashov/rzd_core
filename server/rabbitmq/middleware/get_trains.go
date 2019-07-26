@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"rzd/app/entity"
+	"rzd/server"
 	"strconv"
 )
 
-func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
-	response := []Trains{}
+func (e *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	request := AllTrainsRequest{}
-	seats := []Seats{}
+	response := []server.Trains{}
 
 	if data, err := json.Marshal(query); err != nil {
 		return nil, err
@@ -21,13 +21,13 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 		}
 	}
 
-	code1, code2, err := m.App.GetStationCodes(request.Target, request.Source)
+	code1, code2, err := e.App.GetStationCodes(request.Target, request.Source)
 	if err != nil {
-		m.LogChanel <- fmt.Sprintf("RabbitMQ->GetInfoAboutTrains: Error in GetStationCodes - %s", err)
+		e.LogChanel <- fmt.Sprintf("RabbitMQ->GetInfoAboutTrains: Error in GetStationCodes - %s", err)
 		return nil, err
 	}
 
-	routes, err := m.App.GetInfoAboutTrains(entity.RouteArgs{
+	routes, err := e.App.GetInfoAboutTrains(entity.RouteArgs{
 		Dir:          request.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
@@ -39,20 +39,22 @@ func (m *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 	})
 
 	for _, val := range routes {
-		for i := range val.Seats {
-			seats = append(seats, Seats{
-				Name:  val.Seats[i].SeatsName,
-				Count: val.Seats[i].SeatsCount,
-				Price: val.Seats[i].Price,
-			})
+		seats := map[string]server.Seats{}
+		for k, v := range val.Seats {
+			seats[string(k)] = server.Seats{
+				Count: v.SeatsCount,
+				Price: v.Price,
+				Chosen: v.Chosen,
+			}
 		}
-		response = append(response, Trains{
-			MainRoute: val.Route0 + " - " + val.Route0,
-			Segment:   val.Station + " - " + val.Station1,
-			StartDate: val.Date0 + "_" + val.Time0,
+		response = append(response, server.Trains{
+			TrainID:   val.ID,
+			MainRoute: fmt.Sprintf("%s-%s", val.Route0, val.Route1),
+			Segment:   fmt.Sprintf("%s-%s", val.Station, val.Station1),
+			StartDate: fmt.Sprintf("%s_%s", val.Date0, val.Time0),
+			EndTime:   fmt.Sprintf("%s_%s", val.Date1, val.Time1),
 			Seats:     seats,
 		})
-		seats = []Seats{}
 	}
 
 	return response, nil

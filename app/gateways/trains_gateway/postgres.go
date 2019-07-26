@@ -48,7 +48,7 @@ func (t *PgTrains) Create(train entity.Train) error {
 		return err
 	} else {
 		if count <= 0 {
-			return errors.New(fmt.Sprintf("PG:Gateways->Trains_Gateway->Create: Got %s rows affected\n", count))
+			return errors.New(fmt.Sprintf("PG:Gateways->Trains_Gateway->Create: Got %v rows affected\n", count))
 		}
 		return nil
 	}
@@ -101,7 +101,7 @@ func (t *PgTrains) Update(train entity.Train) error {
 		return err
 	} else {
 		if count <= 0 {
-			return errors.New(fmt.Sprintf("PG:Gateways->Trains_Gateway->Update: Got %s rows affected\n", count))
+			return errors.New(fmt.Sprintf("PG:Gateways->Trains_Gateway->Update: Got %v rows affected\n", count))
 		}
 		return nil
 	}
@@ -117,7 +117,7 @@ func (t *PgTrains) Delete(train entity.Train) error {
 		return err
 	} else {
 		if count <= 0 {
-			return errors.New(fmt.Sprintf("PG:Gateways->Trains_Gateway->Delete: Got %s rows affected\n", count))
+			return errors.New(fmt.Sprintf("PG:Gateways->Trains_Gateway->Delete: Got %v rows affected\n", count))
 		}
 		return nil
 	}

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"rzd/app/entity"
+	"rzd/server"
 	"strconv"
 )
 
@@ -14,23 +15,23 @@ type SeatsArgs struct {
 	Date      string `form:"date" binding:"required"`
 }
 
-func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
+func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 	query := SeatsArgs{}
-	trains := []Trains{}
-	seats := []Seats{}
 
 	if err := ctx.ShouldBindQuery(&query); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
 		ctx.Abort()
 		return
 	}
 
-	code1, code2, err := a.App.GetStationCodes(query.Target, query.Source)
+	code1, code2, err := e.App.GetStationCodes(query.Target, query.Source)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
+		ctx.Abort()
+		return
 	}
 
-	routes, err := a.App.GetInfoAboutTrains(entity.RouteArgs{
+	routes, err := e.App.GetInfoAboutTrains(entity.RouteArgs{
 		Dir:          query.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
@@ -41,25 +42,30 @@ func (a *AppLayer) GetAllTrains(ctx *gin.Context) {
 		Version:      "v.2018",
 	})
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
+		ctx.Abort()
+		return
 	}
 
-	// Parsing answer here coz we need one answer for all "servres"
+	trains := []server.Trains{}
+	seats := map[string]server.Seats{}
 	for _, val := range routes {
-		for i := range val.Seats {
-			seats = append(seats, Seats{
-				Name:  val.Seats[i].SeatsName,
-				Count: val.Seats[i].SeatsCount,
-				Price: val.Seats[i].Price,
-			})
+		for k, v := range val.Seats {
+			seats[string(k)] = server.Seats{
+				Count: v.SeatsCount,
+				Price: v.Price,
+				Chosen: v.Chosen,
+			}
 		}
-		trains = append(trains, Trains{
+		trains = append(trains, server.Trains{
+			TrainID:   val.ID,
 			MainRoute: val.Route0 + " - " + val.Route1,
 			Segment:   val.Station + " - " + val.Station1,
 			StartDate: val.Date0 + "_" + val.Time0,
+			EndTime:   val.Date1 + "_" + val.Time1,
 			Seats:     seats,
 		})
-		seats = []Seats{}
+		seats = map[string]server.Seats{}
 	}
-	ctx.JSON(http.StatusOK, trains)
+	ctx.JSON(http.StatusOK, gin.H{"status": "ok", "trains": trains})
 }

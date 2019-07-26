@@ -21,25 +21,30 @@ func NewService(reader *io.Reader) ServiceUsers {
 
 func (s *ServiceUsers) Create(user entity.User) error {
 	panic("Service:Gateways->Trains_Gateway->Create: Not implemented method")
+
 	return nil
 }
 
 func (s *ServiceUsers) ReadOne() (entity.User, error) {
 	panic("Service:Gateways->Trains_Gateway->ReadOne: Not implemented method")
+
 	return entity.User{}, nil
 }
 
 func (s *ServiceUsers) ReadMany(ids []int) ([]entity.User, error) {
 	panic("Service:Gateways->Trains_Gateway->ReadMany: Not implemented method")
+
 	return nil, nil
 }
 
 func (s *ServiceUsers) Update(user entity.User) error {
 	panic("Service:Gateways->Trains_Gateway->Update: Not implemented method")
+
 	return nil
 }
 
 func (s *ServiceUsers) Delete(user entity.User) error {
 	panic("Service:Gateways->Trains_Gateway->Delete: Not implemented method")
+
 	return nil
 }

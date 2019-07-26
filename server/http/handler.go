@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"rzd/app/usecase"
 	"rzd/server/http/middleware"
+	"strconv"
 	"time"
 )
 
@@ -23,7 +24,13 @@ func NewHandler(app *usecase.App) http.Handler {
 
 	api.GET("health", eventLayer.Health)
 
-	api.GET("test", eventLayer.GetAllTrains)
+	api.GET("trains_list", eventLayer.GetAllTrains)
+
+	api.GET("users_count", eventLayer.UsersCount)
+	// FIXME: rewrite to post
+	api.POST("new_user", eventLayer.NewUser)
+
+	api.POST("save_one_train", eventLayer.SaveOneTrain)
 
 	return handler
 }
@@ -32,10 +39,11 @@ func Logger(logChan chan string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 		c.Next()
-		latency := time.Since(t)
+		latency := strconv.FormatFloat(time.Since(t).Seconds()*100, 'f', 10, 64)
 		status := c.Writer.Status()
 		url := c.Request.URL
 		host := c.Request.Host
-		logChan <- fmt.Sprintf("Http_Server: Status - %3v |Latency - %6v |Host - %10v |Url - %40v ", status, latency, host, url)
+		method := c.Request.Method
+		logChan <- fmt.Sprintf("Http_Server: Method - %6v |Status - %3v |Latency - %3v sec|Host - %10v |Url - %40v ", method, status, latency[:6], host, url)
 	}
 }

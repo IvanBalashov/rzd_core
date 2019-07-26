@@ -1,0 +1,441 @@
+{
+    "id": 1,
+    "event": "trains_list_answer",
+    "data": [
+        {
+            "train_id": "100ЭЩ_26.07.2019",
+            "main_route": "МОСКВА ЯР-ВЛАДИВОСТ",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ (ЯРОСЛАВЛЬ-МОСКОВСКИЙ)",
+            "start_date": "26.07.2019_00:35",
+            "travel_time": "26.07.2019_04:43",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "134Б_26.07.2019",
+            "main_route": "МИНСК ПАСС-АРХАНГЕЛ Г",
+            "segment": "МОСКВА БЕЛОРУССКАЯ (БЕЛОРУССКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_03:32",
+            "travel_time": "26.07.2019_08:58",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "102Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ЯРОСЛ ГЛАВ",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_07:35",
+            "travel_time": "26.07.2019_10:57",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "016М_26.07.2019",
+            "main_route": "МОСКВА ЯР-АРХАНГЕЛ Г",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_10:05",
+            "travel_time": "26.07.2019_14:46",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "376Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ВОРКУТА",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_12:50",
+            "travel_time": "26.07.2019_16:58",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "070Ч_26.07.2019",
+            "main_route": "МОСКВА ЯР-ЧИТА 2",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_13:11",
+            "travel_time": "26.07.2019_17:50",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "104Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ЯРОСЛ ГЛАВ",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_14:45",
+            "travel_time": "26.07.2019_18:18",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "108Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ВОЛОГДА 1",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_17:05",
+            "travel_time": "26.07.2019_20:32",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "106Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ЯРОСЛ ГЛАВ",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_19:05",
+            "travel_time": "26.07.2019_22:27",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "116М_26.07.2019",
+            "main_route": "МОСКВА ЯР-СЕВЕРОДВ",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_20:20",
+            "travel_time": "27.07.2019_00:15",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "022Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ЛАБЫТНАНГИ",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_20:35",
+            "travel_time": "27.07.2019_00:25",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "126Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-ЧЕРЕПОВ 1",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_21:05",
+            "travel_time": "27.07.2019_01:03",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "042В_26.07.2019",
+            "main_route": "МОСКВА ЯР-ВОРКУТА",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_21:50",
+            "travel_time": "27.07.2019_01:41",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "068Ы_26.07.2019",
+            "main_route": "МОСКВА ЯР-АБАКАН",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+            "start_date": "26.07.2019_23:05",
+            "travel_time": "27.07.2019_03:02",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        },
+        {
+            "train_id": "148Я_26.07.2019",
+            "main_route": "МОСКВА ЯР-КОСТРОМА Н",
+            "segment": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)-ЯРОСЛАВЛЬ (ЯРОСЛАВЛЬ-МОСКОВСКИЙ)",
+            "start_date": "26.07.2019_23:20",
+            "travel_time": "27.07.2019_03:05",
+            "seats": {
+                "Купе": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Плацкартный": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "СВ": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                },
+                "Сидячий": {
+                    "count": 0,
+                    "price": "0",
+                    "chosen": false
+                }
+            }
+        }
+    ]
+}
