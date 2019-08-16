@@ -69,20 +69,20 @@ func (_m *Usecase) DeleteUser(user *entity.User) error {
 }
 
 // GetInfoAboutTrains provides a mock function with given fields: args
-func (_m *Usecase) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) {
+func (_m *Usecase) GetInfoAboutTrains(args *entity.RouteArgs) ([]*entity.Train, error) {
 	ret := _m.Called(args)
 
-	var r0 []entity.Train
-	if rf, ok := ret.Get(0).(func(entity.RouteArgs) []entity.Train); ok {
+	var r0 []*entity.Train
+	if rf, ok := ret.Get(0).(func(*entity.RouteArgs) []*entity.Train); ok {
 		r0 = rf(args)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entity.Train)
+			r0 = ret.Get(0).([]*entity.Train)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.RouteArgs) error); ok {
+	if rf, ok := ret.Get(1).(func(*entity.RouteArgs) error); ok {
 		r1 = rf(args)
 	} else {
 		r1 = ret.Error(1)
@@ -120,15 +120,15 @@ func (_m *Usecase) GetStationCodes(target string, source string) (int, int, erro
 }
 
 // GetUsersList provides a mock function with given fields:
-func (_m *Usecase) GetUsersList() ([]entity.User, error) {
+func (_m *Usecase) GetUsersList() ([]*entity.User, error) {
 	ret := _m.Called()
 
-	var r0 []entity.User
-	if rf, ok := ret.Get(0).(func() []entity.User); ok {
+	var r0 []*entity.User
+	if rf, ok := ret.Get(0).(func() []*entity.User); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entity.User)
+			r0 = ret.Get(0).([]*entity.User)
 		}
 	}
 
@@ -169,11 +169,11 @@ func (_m *Usecase) SaveInfoAboutTrain(trainID string) (string, error) {
 }
 
 // SaveTrainInUser provides a mock function with given fields: user, trainID
-func (_m *Usecase) SaveTrainInUser(user *entity.User, trainID string) error {
+func (_m *Usecase) SaveTrainInUser(user string, trainID string) error {
 	ret := _m.Called(user, trainID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entity.User, string) error); ok {
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
 		r0 = rf(user, trainID)
 	} else {
 		r0 = ret.Error(0)

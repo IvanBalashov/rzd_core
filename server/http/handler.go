@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"rzd/app/usecase"
-	"rzd/server/http/middleware"
+	"rzd/server/http/handlers"
 	"strconv"
 	"time"
 )
@@ -14,12 +14,12 @@ func init() {
 	gin.SetMode(gin.ReleaseMode)
 }
 
-// TODO: New middleware for gin logging.
+// TODO: New handlers for gin logging.
 func NewHandler(app *usecase.App) http.Handler {
 	handler := gin.New()
 	handler.Use(Logger(app.LogChan))
 
-	eventLayer := middleware.NewEventLayer(app)
+	eventLayer := handlers.NewEventLayer(app)
 	api := handler.Group("/api/v1")
 
 	api.GET("health", eventLayer.Health)

@@ -6,70 +6,77 @@
             "fromCode": 2000000,
             "where": "ЯРОСЛАВЛЬ(ВСЕ ВОКЗАЛЫ)",
             "whereCode": 2010000,
-            "date": "26.07.2019",
+            "date": "30.07.2019",
             "noSeats": false,
             "defShowTime": "local",
             "state": "Trains",
             "list": [
                 {
-                    "number": "100ЭЩ",
-                    "number2": "100ЭЩ",
+                    "number": "100Э",
+                    "number2": "100Э",
                     "type": 0,
                     "typeEx": 0,
-                    "elReg": false,
+                    "depth": 89,
+                    "new": false,
+                    "elReg": true,
                     "deferredPayment": false,
-                    "varPrice": false,
+                    "varPrice": true,
                     "bEntire": false,
                     "trainName": "",
                     "brand": "",
-                    "carrier": null,
+                    "carrier": "ФПК",
                     "route0": "МОСКВА ЯР",
                     "route1": "ВЛАДИВОСТ",
                     "routeCode0": 2000002,
                     "routeCode1": 2034130,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "00:35",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ (ЯРОСЛАВЛЬ-МОСКОВСКИЙ)",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "00:35",
-                    "date1": "26.07.2019",
+                    "date1": "30.07.2019",
                     "time1": "04:43",
                     "timeInWay": "04:08",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": []
-                },
-                {
-                    "number": "134Б",
-                    "number2": "134Б",
-                    "type": 0,
-                    "typeEx": 0,
-                    "depth": 59,
-                    "new": false,
-                    "elReg": false,
-                    "deferredPayment": false,
-                    "varPrice": false,
-                    "bEntire": false,
-                    "trainName": "",
-                    "brand": "",
-                    "carrier": null,
-                    "route0": "МИНСК ПАСС",
-                    "route1": "АРХАНГЕЛ Г",
-                    "routeCode0": 2100001,
-                    "routeCode1": 2010400,
-                    "trDate0": "25.07.2019",
-                    "trTime0": "16:23",
-                    "station0": "МОСКВА БЕЛОРУССКАЯ (БЕЛОРУССКИЙ ВОКЗАЛ)",
-                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
-                    "time0": "03:32",
-                    "date1": "26.07.2019",
-                    "time1": "08:58",
-                    "timeInWay": "05:26",
-                    "flMsk": 3,
-                    "train_id": 0,
-                    "serviceCategories": []
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 19,
+                            "pt": 345,
+                            "tariff": 1154,
+                            "servCls": "3Б"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 6,
+                            "pt": 494,
+                            "tariff": 1653,
+                            "servCls": "2У"
+                        }
+                    ],
+                    "test": "[Купе, Плац]",
+                    "testSize": 2,
+                    "carTypes": [
+                        {
+                            "type": "Купе",
+                            "itype": 4
+                        },
+                        {
+                            "type": "Плац",
+                            "itype": 1
+                        }
+                    ],
+                    "addCompLuggageNum": 7,
+                    "addCompLuggage": true,
+                    "addHandLuggage": true
                 },
                 {
                     "number": "102Я",
@@ -79,30 +86,66 @@
                     "typeEx": 0,
                     "depth": 89,
                     "new": false,
-                    "elReg": false,
+                    "elReg": true,
                     "deferredPayment": false,
                     "varPrice": false,
                     "bEntire": false,
                     "trainName": "",
                     "bFirm": true,
                     "brand": "Ярославль – Москва",
-                    "carrier": null,
+                    "carrier": "ФПК",
                     "route0": "МОСКВА ЯР",
                     "route1": "ЯРОСЛ ГЛАВ",
                     "routeCode0": 2000002,
                     "routeCode1": 2010001,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "07:35",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "07:35",
-                    "date1": "26.07.2019",
+                    "date1": "30.07.2019",
                     "time1": "10:57",
                     "timeInWay": "03:22",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": []
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 3,
+                            "type": "Сид",
+                            "typeLoc": "Сидячий",
+                            "freeSeats": 278,
+                            "pt": 275,
+                            "tariff": 921,
+                            "servCls": "1Р"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 2,
+                            "pt": 474,
+                            "tariff": 1584,
+                            "servCls": "2К"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 2,
+                            "pt": 474,
+                            "tariff": 1584,
+                            "servCls": "2К",
+                            "disabledPerson": true,
+                            "lastPlaces": true
+                        }
+                    ],
+                    "disabledType": true,
+                    "addCompLuggage": false,
+                    "addHandLuggage": true
                 },
                 {
                     "number": "016М",
@@ -122,63 +165,47 @@
                     "route1": "АРХАНГЕЛ Г",
                     "routeCode0": 2000002,
                     "routeCode1": 2010400,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "10:05",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "10:05",
-                    "date1": "26.07.2019",
+                    "date1": "30.07.2019",
                     "time1": "14:46",
                     "timeInWay": "04:41",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 52,
-                            "price": "1774",
-                            "priceMax": "2404",
-                            "rzdBonusPoints": 531,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2У",
-                                "2К",
-                                "2Л"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 165,
+                            "pt": 330,
+                            "tariff": 1103,
+                            "servCls": "3Д"
                         },
                         {
-                            "typeCarLoc": "Плацкартный",
-                            "freeSeats": 51,
-                            "price": "1103",
-                            "priceMax": null,
-                            "rzdBonusPoints": 330,
-                            "typeCarNumCode": 1,
-                            "typeCarCharCode": "Плац",
-                            "catLabelLoc": "Плацкартный",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "3Д",
-                                "3Л",
-                                "3Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 6,
+                            "type": "Люкс",
+                            "typeLoc": "СВ",
+                            "freeSeats": 10,
+                            "pt": 1044,
+                            "tariff": 3490,
+                            "servCls": "1У"
                         },
                         {
-                            "typeCarLoc": "СВ",
-                            "freeSeats": 2,
-                            "price": "4130",
-                            "priceMax": null,
-                            "rzdBonusPoints": 1236,
-                            "typeCarNumCode": 6,
-                            "typeCarCharCode": "Люкс",
-                            "catLabelLoc": "СВ",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "1У"
-                            ]
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 54,
+                            "pt": 455,
+                            "tariff": 1522,
+                            "servCls": "2К"
                         }
                     ],
                     "test": "[Люкс, Купе, Сид, Плац]",
@@ -223,62 +250,118 @@
                     "route1": "ВОРКУТА",
                     "routeCode0": 2000002,
                     "routeCode1": 2013706,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "12:50",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "12:50",
-                    "date1": "26.07.2019",
+                    "date1": "30.07.2019",
                     "time1": "16:58",
                     "timeInWay": "04:08",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 32,
-                            "price": "872",
-                            "priceMax": "1457",
-                            "rzdBonusPoints": 260,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2У",
-                                "2Л"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 69,
+                            "pt": 306,
+                            "tariff": 1025,
+                            "servCls": "3Л"
                         },
                         {
-                            "typeCarLoc": "Плацкартный",
-                            "freeSeats": 45,
-                            "price": "1025",
-                            "priceMax": null,
-                            "rzdBonusPoints": 306,
-                            "typeCarNumCode": 1,
-                            "typeCarCharCode": "Плац",
-                            "catLabelLoc": "Плацкартный",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "3У",
-                                "3Л",
-                                "3Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 6,
+                            "type": "Люкс",
+                            "typeLoc": "СВ",
+                            "freeSeats": 17,
+                            "pt": 878,
+                            "tariff": 2934,
+                            "servCls": "1У"
                         },
                         {
-                            "typeCarLoc": "СВ",
-                            "freeSeats": 11,
-                            "price": "2934",
-                            "priceMax": null,
-                            "rzdBonusPoints": 878,
-                            "typeCarNumCode": 6,
-                            "typeCarCharCode": "Люкс",
-                            "catLabelLoc": "СВ",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "1У"
-                            ]
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 26,
+                            "pt": 260,
+                            "tariff": 872,
+                            "servCls": "2Л"
+                        }
+                    ],
+                    "test": "[Купе, Сид, Плац]",
+                    "testSize": 3,
+                    "carTypes": [
+                        {
+                            "type": "Купе",
+                            "itype": 4
+                        },
+                        {
+                            "type": "Сид",
+                            "itype": 3
+                        },
+                        {
+                            "type": "Плац",
+                            "itype": 1
+                        }
+                    ],
+                    "addCompLuggageNum": 8,
+                    "addCompLuggage": true,
+                    "addHandLuggage": true
+                },
+                {
+                    "number": "234Ч",
+                    "number2": "234Ч",
+                    "type": 0,
+                    "typeEx": 0,
+                    "depth": 89,
+                    "new": false,
+                    "elReg": true,
+                    "deferredPayment": false,
+                    "varPrice": true,
+                    "bEntire": false,
+                    "trainName": "",
+                    "brand": "",
+                    "carrier": "ФПК",
+                    "route0": "МОСКВА ЯР",
+                    "route1": "АРХАНГЕЛ Г",
+                    "routeCode0": 2000002,
+                    "routeCode1": 2010400,
+                    "trDate0": "30.07.2019",
+                    "trTime0": "13:05",
+                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
+                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+                    "date0": "30.07.2019",
+                    "time0": "13:05",
+                    "date1": "30.07.2019",
+                    "time1": "17:16",
+                    "timeInWay": "04:11",
+                    "flMsk": 3,
+                    "train_id": 0,
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 127,
+                            "pt": 330,
+                            "tariff": 1103,
+                            "servCls": "3Л"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 8,
+                            "pt": 404,
+                            "tariff": 1352,
+                            "servCls": "2Л"
                         }
                     ],
                     "test": "[Купе, Сид, Плац]",
@@ -319,47 +402,337 @@
                     "route1": "ЧИТА 2",
                     "routeCode0": 2000002,
                     "routeCode1": 2050001,
-                    "trDate0": "26.07.2019",
-                    "trTime0": "13:11",
+                    "trDate0": "30.07.2019",
+                    "trTime0": "13:50",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
-                    "time0": "13:11",
-                    "date1": "26.07.2019",
+                    "date0": "30.07.2019",
+                    "time0": "13:50",
+                    "date1": "30.07.2019",
                     "time1": "17:50",
-                    "timeInWay": "04:39",
+                    "timeInWay": "04:00",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 24,
-                            "price": "1544",
-                            "priceMax": null,
-                            "rzdBonusPoints": 462,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2Т",
-                                "2Л",
-                                "2Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 77,
+                            "pt": 330,
+                            "tariff": 1103,
+                            "servCls": "3У"
                         },
                         {
-                            "typeCarLoc": "Плацкартный",
-                            "freeSeats": 11,
-                            "price": "1154",
-                            "priceMax": null,
-                            "rzdBonusPoints": 345,
-                            "typeCarNumCode": 1,
-                            "typeCarCharCode": "Плац",
-                            "catLabelLoc": "Плацкартный",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "3Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 31,
+                            "pt": 462,
+                            "tariff": 1544,
+                            "servCls": "2Л"
+                        }
+                    ],
+                    "test": "[Купе, Плац]",
+                    "testSize": 2,
+                    "carTypes": [
+                        {
+                            "type": "Купе",
+                            "itype": 4
+                        },
+                        {
+                            "type": "Плац",
+                            "itype": 1
+                        }
+                    ],
+                    "addCompLuggageNum": 7,
+                    "addCompLuggage": true,
+                    "addHandLuggage": true
+                },
+                {
+                    "number": "104Я",
+                    "hints": [],
+                    "number2": "104Я",
+                    "type": 0,
+                    "typeEx": 0,
+                    "depth": 89,
+                    "new": false,
+                    "elReg": true,
+                    "deferredPayment": false,
+                    "varPrice": false,
+                    "bEntire": false,
+                    "trainName": "",
+                    "bFirm": true,
+                    "brand": "Ярославль – Москва",
+                    "carrier": "ФПК",
+                    "route0": "МОСКВА ЯР",
+                    "route1": "ЯРОСЛ ГЛАВ",
+                    "routeCode0": 2000002,
+                    "routeCode1": 2010001,
+                    "trDate0": "30.07.2019",
+                    "trTime0": "14:45",
+                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
+                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+                    "date0": "30.07.2019",
+                    "time0": "14:45",
+                    "date1": "30.07.2019",
+                    "time1": "18:07",
+                    "timeInWay": "03:22",
+                    "flMsk": 3,
+                    "train_id": 0,
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 3,
+                            "type": "Сид",
+                            "typeLoc": "Сидячий",
+                            "freeSeats": 586,
+                            "pt": 275,
+                            "tariff": 921,
+                            "servCls": "1Р"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 2,
+                            "pt": 474,
+                            "tariff": 1584,
+                            "servCls": "2К"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 2,
+                            "pt": 474,
+                            "tariff": 1584,
+                            "servCls": "2К",
+                            "disabledPerson": true,
+                            "lastPlaces": true
+                        }
+                    ],
+                    "test": "[Купе, Сид]",
+                    "testSize": 2,
+                    "carTypes": [
+                        {
+                            "type": "Купе",
+                            "itype": 4
+                        },
+                        {
+                            "type": "Сид",
+                            "itype": 3
+                        }
+                    ],
+                    "disabledType": true,
+                    "addCompLuggage": false,
+                    "addHandLuggage": true
+                },
+                {
+                    "number": "108Я",
+                    "number2": "108Я",
+                    "type": 0,
+                    "typeEx": 0,
+                    "depth": 89,
+                    "new": false,
+                    "elReg": true,
+                    "deferredPayment": false,
+                    "varPrice": true,
+                    "bEntire": false,
+                    "trainName": "",
+                    "brand": "",
+                    "carrier": "ФПК",
+                    "route0": "МОСКВА ЯР",
+                    "route1": "ВОЛОГДА 1",
+                    "routeCode0": 2000002,
+                    "routeCode1": 2010030,
+                    "trDate0": "30.07.2019",
+                    "trTime0": "17:05",
+                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
+                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+                    "date0": "30.07.2019",
+                    "time0": "17:05",
+                    "date1": "30.07.2019",
+                    "time1": "20:32",
+                    "timeInWay": "03:27",
+                    "flMsk": 3,
+                    "train_id": 0,
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 211,
+                            "pt": 345,
+                            "tariff": 1154,
+                            "servCls": "3Д"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 7,
+                            "pt": 469,
+                            "tariff": 1569,
+                            "servCls": "2К"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 2,
+                            "pt": 469,
+                            "tariff": 1059,
+                            "servCls": "2К",
+                            "disabledPerson": true
+                        }
+                    ],
+                    "test": "[Купе, Сид, Плац]",
+                    "testSize": 3,
+                    "carTypes": [
+                        {
+                            "type": "Купе",
+                            "itype": 4
+                        },
+                        {
+                            "type": "Сид",
+                            "itype": 3
+                        },
+                        {
+                            "type": "Плац",
+                            "itype": 1
+                        }
+                    ],
+                    "disabledType": true,
+                    "addCompLuggageNum": 16,
+                    "addCompLuggage": true,
+                    "addHandLuggage": true
+                },
+                {
+                    "number": "106Я",
+                    "hints": [],
+                    "number2": "106Я",
+                    "type": 0,
+                    "typeEx": 0,
+                    "depth": 89,
+                    "new": false,
+                    "elReg": true,
+                    "deferredPayment": false,
+                    "varPrice": false,
+                    "bEntire": false,
+                    "trainName": "",
+                    "bFirm": true,
+                    "brand": "Ярославль – Москва",
+                    "carrier": "ФПК",
+                    "route0": "МОСКВА ЯР",
+                    "route1": "ЯРОСЛ ГЛАВ",
+                    "routeCode0": 2000002,
+                    "routeCode1": 2010001,
+                    "trDate0": "30.07.2019",
+                    "trTime0": "19:05",
+                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
+                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+                    "date0": "30.07.2019",
+                    "time0": "19:05",
+                    "date1": "30.07.2019",
+                    "time1": "22:27",
+                    "timeInWay": "03:22",
+                    "flMsk": 3,
+                    "train_id": 0,
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 3,
+                            "type": "Сид",
+                            "typeLoc": "Сидячий",
+                            "freeSeats": 611,
+                            "pt": 275,
+                            "tariff": 921,
+                            "servCls": "1Р"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 4,
+                            "pt": 1005,
+                            "tariff": 3359,
+                            "servCls": "2К"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 2,
+                            "pt": 1005,
+                            "tariff": 1584,
+                            "servCls": "2К",
+                            "disabledPerson": true
+                        }
+                    ],
+                    "disabledType": true,
+                    "addCompLuggage": false,
+                    "addHandLuggage": true
+                },
+                {
+                    "number": "116М",
+                    "number2": "116М",
+                    "type": 0,
+                    "typeEx": 0,
+                    "depth": 89,
+                    "new": false,
+                    "elReg": true,
+                    "deferredPayment": false,
+                    "varPrice": true,
+                    "bEntire": false,
+                    "trainName": "",
+                    "bFirm": true,
+                    "brand": "Поморье",
+                    "carrier": "ФПК",
+                    "route0": "МОСКВА ЯР",
+                    "route1": "СЕВЕРОДВ",
+                    "routeCode0": 2000002,
+                    "routeCode1": 2010320,
+                    "trDate0": "30.07.2019",
+                    "trTime0": "20:20",
+                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
+                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
+                    "date0": "30.07.2019",
+                    "time0": "20:20",
+                    "date1": "31.07.2019",
+                    "time1": "00:15",
+                    "timeInWay": "03:55",
+                    "flMsk": 3,
+                    "train_id": 0,
+                    "cars": [
+                        {
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 154,
+                            "pt": 345,
+                            "tariff": 1154,
+                            "servCls": "3Б"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 28,
+                            "pt": 682,
+                            "tariff": 2281,
+                            "servCls": "2Т"
                         }
                     ],
                     "test": "[Купе, Плац]",
@@ -379,177 +752,8 @@
                     "addHandLuggage": true
                 },
                 {
-                    "number": "104Я",
-                    "hints": [],
-                    "number2": "104Я",
-                    "type": 0,
-                    "typeEx": 0,
-                    "depth": 89,
-                    "new": false,
-                    "elReg": false,
-                    "deferredPayment": false,
-                    "varPrice": false,
-                    "bEntire": false,
-                    "trainName": "",
-                    "bFirm": true,
-                    "brand": "Ярославль – Москва",
-                    "carrier": null,
-                    "route0": "МОСКВА ЯР",
-                    "route1": "ЯРОСЛ ГЛАВ",
-                    "routeCode0": 2000002,
-                    "routeCode1": 2010001,
-                    "trDate0": "26.07.2019",
-                    "trTime0": "14:45",
-                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
-                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
-                    "time0": "14:45",
-                    "date1": "26.07.2019",
-                    "time1": "18:18",
-                    "timeInWay": "03:33",
-                    "flMsk": 3,
-                    "train_id": 0,
-                    "serviceCategories": [],
-                    "test": "[Купе, Сид]",
-                    "testSize": 2,
-                    "carTypes": [
-                        {
-                            "type": "Купе",
-                            "itype": 4
-                        },
-                        {
-                            "type": "Сид",
-                            "itype": 3
-                        }
-                    ]
-                },
-                {
-                    "number": "108Я",
-                    "number2": "108Я",
-                    "type": 0,
-                    "typeEx": 0,
-                    "depth": 89,
-                    "new": false,
-                    "elReg": false,
-                    "deferredPayment": false,
-                    "varPrice": false,
-                    "bEntire": false,
-                    "trainName": "",
-                    "brand": "",
-                    "carrier": null,
-                    "route0": "МОСКВА ЯР",
-                    "route1": "ВОЛОГДА 1",
-                    "routeCode0": 2000002,
-                    "routeCode1": 2010030,
-                    "trDate0": "26.07.2019",
-                    "trTime0": "17:05",
-                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
-                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
-                    "time0": "17:05",
-                    "date1": "26.07.2019",
-                    "time1": "20:32",
-                    "timeInWay": "03:27",
-                    "flMsk": 3,
-                    "train_id": 0,
-                    "serviceCategories": [],
-                    "test": "[Купе, Сид, Плац]",
-                    "testSize": 3,
-                    "carTypes": [
-                        {
-                            "type": "Купе",
-                            "itype": 4
-                        },
-                        {
-                            "type": "Сид",
-                            "itype": 3
-                        },
-                        {
-                            "type": "Плац",
-                            "itype": 1
-                        }
-                    ]
-                },
-                {
-                    "number": "106Я",
-                    "hints": [],
-                    "number2": "106Я",
-                    "type": 0,
-                    "typeEx": 0,
-                    "depth": 89,
-                    "new": false,
-                    "elReg": false,
-                    "deferredPayment": false,
-                    "varPrice": false,
-                    "bEntire": false,
-                    "trainName": "",
-                    "bFirm": true,
-                    "brand": "Ярославль – Москва",
-                    "carrier": null,
-                    "route0": "МОСКВА ЯР",
-                    "route1": "ЯРОСЛ ГЛАВ",
-                    "routeCode0": 2000002,
-                    "routeCode1": 2010001,
-                    "trDate0": "26.07.2019",
-                    "trTime0": "19:05",
-                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
-                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
-                    "time0": "19:05",
-                    "date1": "26.07.2019",
-                    "time1": "22:27",
-                    "timeInWay": "03:22",
-                    "flMsk": 3,
-                    "train_id": 0,
-                    "serviceCategories": []
-                },
-                {
-                    "number": "116М",
-                    "number2": "116М",
-                    "type": 0,
-                    "typeEx": 0,
-                    "depth": 89,
-                    "new": false,
-                    "elReg": false,
-                    "deferredPayment": false,
-                    "varPrice": false,
-                    "bEntire": false,
-                    "trainName": "",
-                    "bFirm": true,
-                    "brand": "Поморье",
-                    "carrier": null,
-                    "route0": "МОСКВА ЯР",
-                    "route1": "СЕВЕРОДВ",
-                    "routeCode0": 2000002,
-                    "routeCode1": 2010320,
-                    "trDate0": "26.07.2019",
-                    "trTime0": "20:20",
-                    "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
-                    "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
-                    "time0": "20:20",
-                    "date1": "27.07.2019",
-                    "time1": "00:15",
-                    "timeInWay": "03:55",
-                    "flMsk": 3,
-                    "train_id": 0,
-                    "serviceCategories": [],
-                    "test": "[Купе, Плац]",
-                    "testSize": 2,
-                    "carTypes": [
-                        {
-                            "type": "Купе",
-                            "itype": 4
-                        },
-                        {
-                            "type": "Плац",
-                            "itype": 1
-                        }
-                    ]
-                },
-                {
-                    "number": "022Я",
-                    "number2": "022Я",
+                    "number": "210Ч",
+                    "number2": "210Ч",
                     "type": 0,
                     "typeEx": 0,
                     "depth": 89,
@@ -559,38 +763,53 @@
                     "varPrice": true,
                     "bEntire": false,
                     "trainName": "",
-                    "bFirm": true,
-                    "brand": "Полярная стрела",
+                    "brand": "",
                     "carrier": "ФПК",
                     "route0": "МОСКВА ЯР",
                     "route1": "ЛАБЫТНАНГИ",
                     "routeCode0": 2000002,
                     "routeCode1": 2010180,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "20:35",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "20:35",
-                    "date1": "27.07.2019",
+                    "date1": "31.07.2019",
                     "time1": "00:25",
                     "timeInWay": "03:50",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 2,
-                            "price": "2334",
-                            "priceMax": null,
-                            "rzdBonusPoints": 698,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 4,
+                            "pt": 330,
+                            "tariff": 1103,
+                            "servCls": "3У"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 6,
+                            "type": "Люкс",
+                            "typeLoc": "СВ",
+                            "freeSeats": 7,
+                            "pt": 1001,
+                            "tariff": 3344,
+                            "servCls": "1Л"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 29,
+                            "pt": 298,
+                            "tariff": 996,
+                            "servCls": "2У"
                         }
                     ],
                     "test": "[Люкс, Купе, Плац]",
@@ -609,7 +828,7 @@
                             "itype": 1
                         }
                     ],
-                    "addCompLuggageNum": 3,
+                    "addCompLuggageNum": 4,
                     "addCompLuggage": true,
                     "addHandLuggage": true
                 },
@@ -632,57 +851,44 @@
                     "route1": "ЧЕРЕПОВ 1",
                     "routeCode0": 2000002,
                     "routeCode1": 2010290,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "21:05",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "21:05",
-                    "date1": "27.07.2019",
+                    "date1": "31.07.2019",
                     "time1": "01:03",
                     "timeInWay": "03:58",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 10,
-                            "price": "3704",
-                            "priceMax": null,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "комфорт",
-                            "compoundCategory": true,
-                            "serviceClasses": [
-                                "2Т",
-                                "2У"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 57,
+                            "tariff": 1657,
+                            "servCls": "3Б"
                         },
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 2,
-                            "price": "3704",
-                            "priceMax": null,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2Т"
-                            ]
+                            "carDataType": 1,
+                            "itype": 6,
+                            "type": "Люкс",
+                            "typeLoc": "СВ",
+                            "freeSeats": 7,
+                            "tariff": 5262,
+                            "servCls": "1Э"
                         },
                         {
-                            "typeCarLoc": "СВ",
-                            "freeSeats": 3,
-                            "price": "6068",
-                            "priceMax": null,
-                            "typeCarNumCode": 6,
-                            "typeCarCharCode": "Люкс",
-                            "catLabelLoc": "СВ",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "1Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 53,
+                            "tariff": 2482,
+                            "servCls": "2Т"
                         }
                     ],
                     "test": "[Люкс, Купе, Сид, Плац]",
@@ -705,6 +911,7 @@
                             "itype": 1
                         }
                     ],
+                    "nonRefundable": true,
                     "addCompLuggageNum": 8,
                     "addCompLuggage": true
                 },
@@ -717,41 +924,55 @@
                     "new": false,
                     "elReg": true,
                     "deferredPayment": false,
-                    "varPrice": false,
+                    "varPrice": true,
                     "bEntire": false,
                     "trainName": "",
                     "bFirm": true,
                     "brand": "Москва – Воркута",
-                    "carrier": "ФПК",
+                    "carrier": "ТКС, ФПК",
                     "route0": "МОСКВА ЯР",
                     "route1": "ВОРКУТА",
                     "routeCode0": 2000002,
                     "routeCode1": 2013706,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "21:50",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "21:50",
-                    "date1": "27.07.2019",
+                    "date1": "31.07.2019",
                     "time1": "01:41",
                     "timeInWay": "03:51",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 79,
+                            "tariff": 1614,
+                            "servCls": "3Б"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 42,
+                            "tariff": 1843,
+                            "servCls": "2К"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
                             "freeSeats": 2,
-                            "price": "2937",
-                            "priceMax": null,
-                            "rzdBonusPoints": 879,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2К"
-                            ]
+                            "tariff": 1584,
+                            "servCls": "2К",
+                            "disabledPerson": true
                         }
                     ],
                     "test": "[Купе, Плац]",
@@ -766,9 +987,9 @@
                             "itype": 1
                         }
                     ],
-                    "addCompLuggageNum": 8,
-                    "addCompLuggage": true,
-                    "addHandLuggage": true
+                    "disabledType": true,
+                    "addCompLuggageNum": 3,
+                    "addCompLuggage": true
                 },
                 {
                     "number": "068Ы",
@@ -788,32 +1009,37 @@
                     "route1": "АБАКАН",
                     "routeCode0": 2000002,
                     "routeCode1": 2038230,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "23:05",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ-ГЛАВНЫЙ",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "23:05",
-                    "date1": "27.07.2019",
+                    "date1": "31.07.2019",
                     "time1": "03:02",
                     "timeInWay": "03:57",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 9,
-                            "price": "1851",
-                            "priceMax": null,
-                            "rzdBonusPoints": 554,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2Л",
-                                "2Э"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 26,
+                            "pt": 330,
+                            "tariff": 1103,
+                            "servCls": "3У"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 20,
+                            "pt": 508,
+                            "tariff": 1697,
+                            "servCls": "2Л"
                         }
                     ],
                     "test": "[Купе, Плац]",
@@ -828,7 +1054,7 @@
                             "itype": 1
                         }
                     ],
-                    "addCompLuggageNum": 3,
+                    "addCompLuggageNum": 2,
                     "addCompLuggage": true,
                     "addHandLuggage": true
                 },
@@ -850,46 +1076,57 @@
                     "route1": "КОСТРОМА Н",
                     "routeCode0": 2000002,
                     "routeCode1": 2010090,
-                    "trDate0": "26.07.2019",
+                    "trDate0": "30.07.2019",
                     "trTime0": "23:20",
                     "station0": "МОСКВА ЯРОСЛАВСКАЯ (ЯРОСЛАВСКИЙ ВОКЗАЛ)",
                     "station1": "ЯРОСЛАВЛЬ (ЯРОСЛАВЛЬ-МОСКОВСКИЙ)",
-                    "date0": "26.07.2019",
+                    "date0": "30.07.2019",
                     "time0": "23:20",
-                    "date1": "27.07.2019",
+                    "date1": "31.07.2019",
                     "time1": "03:05",
                     "timeInWay": "03:45",
                     "flMsk": 3,
                     "train_id": 0,
-                    "serviceCategories": [
+                    "cars": [
                         {
-                            "typeCarLoc": "Купе",
-                            "freeSeats": 36,
-                            "price": "1590",
-                            "priceMax": "2043",
-                            "rzdBonusPoints": 475,
-                            "typeCarNumCode": 4,
-                            "typeCarCharCode": "Купе",
-                            "catLabelLoc": "Купе",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "2У",
-                                "2Л"
-                            ]
+                            "carDataType": 1,
+                            "itype": 1,
+                            "type": "Плац",
+                            "typeLoc": "Плацкартный",
+                            "freeSeats": 127,
+                            "pt": 330,
+                            "tariff": 1103,
+                            "servCls": "3Л"
                         },
                         {
-                            "typeCarLoc": "СВ",
-                            "freeSeats": 2,
-                            "price": "3231",
-                            "priceMax": null,
-                            "rzdBonusPoints": 967,
-                            "typeCarNumCode": 6,
-                            "typeCarCharCode": "Люкс",
-                            "catLabelLoc": "СВ",
-                            "compoundCategory": false,
-                            "serviceClasses": [
-                                "1У"
-                            ]
+                            "carDataType": 1,
+                            "itype": 6,
+                            "type": "Люкс",
+                            "typeLoc": "СВ",
+                            "freeSeats": 6,
+                            "pt": 878,
+                            "tariff": 2934,
+                            "servCls": "1У"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 3,
+                            "type": "Сид",
+                            "typeLoc": "Сидячий",
+                            "freeSeats": 32,
+                            "pt": 183,
+                            "tariff": 614,
+                            "servCls": "3С"
+                        },
+                        {
+                            "carDataType": 1,
+                            "itype": 4,
+                            "type": "Купе",
+                            "typeLoc": "Купе",
+                            "freeSeats": 106,
+                            "pt": 380,
+                            "tariff": 1271,
+                            "servCls": "2Л"
                         }
                     ],
                     "test": "[Люкс, Купе, Сид, Плац]",
@@ -912,7 +1149,7 @@
                             "itype": 1
                         }
                     ],
-                    "addCompLuggageNum": 6,
+                    "addCompLuggageNum": 8,
                     "addCompLuggage": true,
                     "addHandLuggage": true
                 }
@@ -923,5 +1160,5 @@
     "TransferSearchMode": "SEMI_AUTO",
     "flFPKRoundBonus": false,
     "discounts": {},
-    "timestamp": "26.07.2019 08:13:12.485"
+    "timestamp": "29.07.2019 05:58:07.246"
 }

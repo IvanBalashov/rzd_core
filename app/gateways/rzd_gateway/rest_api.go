@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -34,10 +35,10 @@ func NewRestAPIClient(passUrl, rzdUrl string, code1, code2, code3 int) APIClient
 	}
 }
 
-func (a *APIClient) GetRoutes(args entity.RouteArgs, cookies []*http.Cookie) (entity.Route, error) {
-	route := entity.Route{}
+func (a *APIClient) GetRoutes(args *entity.RouteArgs, cookies []*http.Cookie) (*entity.Route, error) {
+	route := &entity.Route{}
 
-	for key := range cookies {
+/*	for key := range cookies {
 		resty.SetCookie(cookies[key])
 	}
 
@@ -51,34 +52,45 @@ func (a *APIClient) GetRoutes(args entity.RouteArgs, cookies []*http.Cookie) (en
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in request to RZD Api - %s", err))
 	}
 
-	err = json.Unmarshal(resp.Body(), &route)
+	body := resp.Body()
+	*/
+	body, err := ioutil.ReadFile("./answers/trains")
 	if err != nil {
-		return entity.Route{},
+		return nil, err
+	}
+	err = json.Unmarshal(body, route)
+	if err != nil {
+		return nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRoutes: Error in unmarshal anwer from RZD Api - %s", err))
 	}
 
 	return route, nil
 }
 
-func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, error) {
-	rid := entity.Rid{}
-
+func (a *APIClient) GetRid(args *entity.RidArgs) (*entity.Rid, []*http.Cookie, error) {
+	rid := &entity.Rid{}
+	cookies := make([]*http.Cookie, 0)
+/*
 	resp, err := resty.R().
 		SetHeader("Accept", "application/json").
 		SetFormData(args.ToMap()).
 		SetQueryParam("layer_id", "5827").
 		Post(a.PassRzdUrl)
 	if err != nil {
-		return entity.Rid{}, nil,
+		return nil, nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRid: Error in request to RZD Api - %s", err))
 	}
 
 	cookies := resp.Cookies()
 
-	body := resp.Body()
-	err = json.Unmarshal(body, &rid)
+	body := resp.Body()*/
+	body, err := ioutil.ReadFile("./answers/rid")
 	if err != nil {
-		return entity.Rid{}, nil,
+		return nil, nil, err
+	}
+	err = json.Unmarshal(body, rid)
+	if err != nil {
+		return nil, nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetRid: Error in unmarshal anwer from RZD Api - %s\n", err))
 	}
 
@@ -89,7 +101,7 @@ func (a *APIClient) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, err
 func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 	answer := []Codes{}
 
-	resp, err := resty.R().
+	/*resp, err := resty.R().
 		SetHeader("Accept", "application/json").
 		SetQueryParam("stationNamePart", strings.ToUpper(source[:4])).
 		SetQueryParam("lang", "ru").
@@ -101,7 +113,21 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in request to RZD Api - %s", err))
 	}
 
-	err = json.Unmarshal(resp.Body(), &answer)
+	body := resp.Body() */
+	filename := ""
+	switch source {
+	case "Москва":
+		filename = "./answers/suggestion2"
+	case "Ярославль":
+		filename = "./answers/suggestion1"
+	default:
+		filename = ""
+	}
+	body, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return 0, err
+	}
+	err = json.Unmarshal(body, &answer)
 	if err != nil {
 		return 0,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetDirectionsCode: Error in unmarshal anwer from RZD Api - %s", err))
@@ -117,8 +143,8 @@ func (a *APIClient) GetDirectionsCode(source string) (int, error) {
 }
 
 //FIXME: NOT TESTED METHOD
-func (a *APIClient) GetInfoAboutOneTrain(train entity.Train, cookies []*http.Cookie) (entity.Route, error) {
-	answer := entity.Route{}
+func (a *APIClient) GetInfoAboutOneTrain(train *entity.Train, cookies []*http.Cookie) (*entity.Route, error) {
+	answer := &entity.Route{}
 
 	for key := range cookies {
 		resty.SetCookie(cookies[key])
@@ -132,11 +158,11 @@ func (a *APIClient) GetInfoAboutOneTrain(train entity.Train, cookies []*http.Coo
 		Get(a.PassRzdUrl)
 
 	// FIXME
-	err = json.Unmarshal(resp.Body(), &answer)
+	err = json.Unmarshal(resp.Body(), answer)
 	if err != nil {
-		return entity.Route{},
+		return nil,
 			errors.New(fmt.Sprintf("Gateways->Rzd_Gateway->GetInfoAboutOneTrain: Error in request to RZD Api - %s", err))
 	}
 
-	return entity.Route{}, nil
+	return answer, nil
 }

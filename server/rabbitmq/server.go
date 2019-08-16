@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/streadway/amqp"
 	"rzd/app/usecase"
-	"rzd/server/rabbitmq/middleware"
+	"rzd/server/rabbitmq/handlers"
 )
 
 type MessageRabbitMQ struct {
@@ -16,7 +16,7 @@ type MessageRabbitMQ struct {
 }
 
 type RabbitServer struct {
-	EventLayer middleware.EventLayer
+	EventLayer handlers.EventLayer
 	Connection *amqp.Connection
 	Chanel     *amqp.Channel
 	LogChanel  chan string
@@ -24,22 +24,22 @@ type RabbitServer struct {
 
 //Create new connection and chanel to rabbitmq.
 // FIXME: Don't forgot close channel.
-func NewServer(uri string, app usecase.Usecase, logChanel chan string) (RabbitServer, error) {
+func NewServer(uri string, app usecase.Usecase, logChanel chan string) (*RabbitServer, error) {
 	connection, err := amqp.Dial(uri)
 	if err != nil {
-		return RabbitServer{}, err
+		return nil, err
 	}
 
 	ch, err := connection.Channel()
 	if err != nil {
-		return RabbitServer{}, err
+		return nil, err
 	}
 
-	return RabbitServer{
+	return &RabbitServer{
 		Connection: connection,
 		LogChanel:  logChanel,
 		Chanel:     ch,
-		EventLayer: middleware.NewEventLayer(app, logChanel),
+		EventLayer: handlers.NewEventLayer(app, logChanel),
 	}, nil
 }
 
@@ -68,7 +68,7 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 			case "trains_list":
 				answer, err := r.EventLayer.GetAllTrains(msg.Data)
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in handlers.GetInfoAboutTrains %s", err.Error())
 				}
 
 				resp = MessageRabbitMQ{
@@ -79,7 +79,7 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 			case "save_one_train":
 				answer, err := r.EventLayer.SaveInfoAboutTrain(msg.Data)
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.GetInfoAboutTrains %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in handlers.GetInfoAboutTrains %s", err.Error())
 				}
 
 				resp = MessageRabbitMQ{
@@ -90,7 +90,7 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 			case "users_count":
 				answer, err := r.EventLayer.UsersCount()
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.UsersCount %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in handlers.UsersCount %s", err.Error())
 				}
 
 				resp = MessageRabbitMQ{
@@ -101,7 +101,7 @@ func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
 			case "check_users":
 				answer, err := r.EventLayer.CheckUsers(msg.Data)
 				if err != nil {
-					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in middleware.CheckUsers %s", err.Error())
+					r.LogChanel <- fmt.Sprintf("RabbitMQ->Server: Error in handlers.CheckUsers %s", err.Error())
 				}
 				resp = MessageRabbitMQ{
 					ID:    msg.ID,

@@ -1,29 +1,27 @@
 package entity
 
 type Train struct {
-	ID       string
-	//Type     string // TODO: think this don't needed
-	Number   string
-	//Brand    string // TODO: think this don't needed
-	Route0   string // TODO: think this don't needed
-	Route1   string // TODO: think this don't needed
-	TrDate0  string
-	TrTime0  string
-	Station  string
-	Station1 string
-	Date0    string // TODO: think this don't needed
-	Time0    string
-	Date1    string // TODO: think this don't needed
-	Time1    string // TODO: think this don't needed
-	Seats    map[SeatsType]Seat
+	ID       string             `json:"id"`
+	Number   string             `json:"number"`
+	Route0   string             `json:"route_0"`
+	Route1   string             `json:"route_1"`
+	TrDate0  string             `json:"tr_date_0"`
+	TrTime0  string             `json:"tr_time_0"`
+	Station  string             `json:"station"`
+	Station1 string             `json:"station_1"`
+	Date0    string             `json:"date_0"`
+	Time0    string             `json:"time_0"`
+	Date1    string             `json:"date_1"`
+	Time1    string             `json:"time_1"`
+	Seats    map[SeatsType]Seat `json:"seats"`
 	// But we still need generate new rid...
-	QueryArgs RouteArgs
+	QueryArgs RouteArgs `json:"query_args"`
 }
 
 type Seat struct {
-	SeatsCount int
-	Price      string
-	Chosen     bool
+	SeatsCount int  `json:"seats_count"`
+	Price      int  `json:"price"`
+	Chosen     bool `json:"chosen"`
 }
 
 type SeatsType string

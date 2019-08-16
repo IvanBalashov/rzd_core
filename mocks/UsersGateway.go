@@ -46,15 +46,15 @@ func (_m *UsersGateway) Delete(user *entity.User) error {
 }
 
 // ReadMany provides a mock function with given fields:
-func (_m *UsersGateway) ReadMany() ([]entity.User, error) {
+func (_m *UsersGateway) ReadMany() ([]*entity.User, error) {
 	ret := _m.Called()
 
-	var r0 []entity.User
-	if rf, ok := ret.Get(0).(func() []entity.User); ok {
+	var r0 []*entity.User
+	if rf, ok := ret.Get(0).(func() []*entity.User); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entity.User)
+			r0 = ret.Get(0).([]*entity.User)
 		}
 	}
 

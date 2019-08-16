@@ -95,7 +95,7 @@ func TestMongoUsers_Create(t *testing.T) {
 			actualOk, err := users.Create(tc.actualUser)
 			tc.checkErr(err)
 
-			assert.Equal(t, tc.expectedOk, actualOk)
+			a.Equal(tc.expectedOk, actualOk)
 
 			cleanFunc(t, tc.cleanFlag, users.Users, tc.actualUser)
 		})

@@ -5,9 +5,10 @@ import (
 )
 
 type TrainsGateway interface {
-	Create(train entity.Train) (string, error)
-	ReadOne(trainID string) (entity.Train, error)
-	ReadMany() ([]entity.Train, error)
-	Update(train entity.Train) error
-	Delete(train entity.Train) error
+	Create(user *entity.Train) (string, error)
+	Delete(user *entity.Train) error
+	Update(user *entity.Train) error
+	ReadOne(filter *entity.Train) (*entity.Train, error)
+	ReadMany() ([]*entity.Train, error)
+	ReadSection(start, end int64) ([]*entity.Train, error)
 }

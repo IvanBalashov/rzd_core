@@ -10,20 +10,20 @@ type TrainsGateway struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: train
-func (_m *TrainsGateway) Create(train entity.Train) (string, error) {
-	ret := _m.Called(train)
+// Create provides a mock function with given fields: user
+func (_m *TrainsGateway) Create(user *entity.Train) (string, error) {
+	ret := _m.Called(user)
 
 	var r0 string
-	if rf, ok := ret.Get(0).(func(entity.Train) string); ok {
-		r0 = rf(train)
+	if rf, ok := ret.Get(0).(func(*entity.Train) string); ok {
+		r0 = rf(user)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.Train) error); ok {
-		r1 = rf(train)
+	if rf, ok := ret.Get(1).(func(*entity.Train) error); ok {
+		r1 = rf(user)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -31,13 +31,13 @@ func (_m *TrainsGateway) Create(train entity.Train) (string, error) {
 	return r0, r1
 }
 
-// Delete provides a mock function with given fields: train
-func (_m *TrainsGateway) Delete(train entity.Train) error {
-	ret := _m.Called(train)
+// Delete provides a mock function with given fields: user
+func (_m *TrainsGateway) Delete(user *entity.Train) error {
+	ret := _m.Called(user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.Train) error); ok {
-		r0 = rf(train)
+	if rf, ok := ret.Get(0).(func(*entity.Train) error); ok {
+		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -46,15 +46,15 @@ func (_m *TrainsGateway) Delete(train entity.Train) error {
 }
 
 // ReadMany provides a mock function with given fields:
-func (_m *TrainsGateway) ReadMany() ([]entity.Train, error) {
+func (_m *TrainsGateway) ReadMany() ([]*entity.Train, error) {
 	ret := _m.Called()
 
-	var r0 []entity.Train
-	if rf, ok := ret.Get(0).(func() []entity.Train); ok {
+	var r0 []*entity.Train
+	if rf, ok := ret.Get(0).(func() []*entity.Train); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entity.Train)
+			r0 = ret.Get(0).([]*entity.Train)
 		}
 	}
 
@@ -68,20 +68,22 @@ func (_m *TrainsGateway) ReadMany() ([]entity.Train, error) {
 	return r0, r1
 }
 
-// ReadOne provides a mock function with given fields: trainID
-func (_m *TrainsGateway) ReadOne(trainID string) (entity.Train, error) {
-	ret := _m.Called(trainID)
+// ReadOne provides a mock function with given fields: filter
+func (_m *TrainsGateway) ReadOne(filter *entity.Train) (*entity.Train, error) {
+	ret := _m.Called(filter)
 
-	var r0 entity.Train
-	if rf, ok := ret.Get(0).(func(string) entity.Train); ok {
-		r0 = rf(trainID)
+	var r0 *entity.Train
+	if rf, ok := ret.Get(0).(func(*entity.Train) *entity.Train); ok {
+		r0 = rf(filter)
 	} else {
-		r0 = ret.Get(0).(entity.Train)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.Train)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(trainID)
+	if rf, ok := ret.Get(1).(func(*entity.Train) error); ok {
+		r1 = rf(filter)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -89,13 +91,36 @@ func (_m *TrainsGateway) ReadOne(trainID string) (entity.Train, error) {
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: train
-func (_m *TrainsGateway) Update(train entity.Train) error {
-	ret := _m.Called(train)
+// ReadSection provides a mock function with given fields: start, end
+func (_m *TrainsGateway) ReadSection(start int64, end int64) ([]*entity.Train, error) {
+	ret := _m.Called(start, end)
+
+	var r0 []*entity.Train
+	if rf, ok := ret.Get(0).(func(int64, int64) []*entity.Train); ok {
+		r0 = rf(start, end)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*entity.Train)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int64, int64) error); ok {
+		r1 = rf(start, end)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Update provides a mock function with given fields: user
+func (_m *TrainsGateway) Update(user *entity.Train) error {
+	ret := _m.Called(user)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(entity.Train) error); ok {
-		r0 = rf(train)
+	if rf, ok := ret.Get(0).(func(*entity.Train) error); ok {
+		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)
 	}

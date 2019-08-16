@@ -2,8 +2,8 @@ package usecase
 
 import "rzd/app/entity"
 
-func trainToArgs(t entity.Train) entity.RidArgs {
-	return entity.RidArgs{
+func trainToArgs(t *entity.Train) *entity.RidArgs {
+	return &entity.RidArgs{
 		Dir:          t.QueryArgs.Dir,
 		Tfl:          t.QueryArgs.Tfl,
 		CheckSeats:   t.QueryArgs.CheckSeats,

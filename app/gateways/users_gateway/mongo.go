@@ -60,9 +60,9 @@ func (m *MongoUsers) ReadOne(filter *entity.User) (*entity.User, error) {
 	return &result, nil
 }
 
-func (m *MongoUsers) ReadMany() ([]entity.User, error) {
-	users := []entity.User{}
-	user := entity.User{}
+func (m *MongoUsers) ReadMany() ([]*entity.User, error) {
+	users := []*entity.User{}
+	user := &entity.User{}
 	filter := bson.M{}
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
@@ -73,7 +73,7 @@ func (m *MongoUsers) ReadMany() ([]entity.User, error) {
 	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
-		err := cur.Decode(&user)
+		err := cur.Decode(user)
 		if err != nil {
 			return nil, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadMany: Error in cursour.Decode - %s", err))
 		}

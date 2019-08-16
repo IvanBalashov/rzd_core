@@ -44,7 +44,7 @@ func TestAPIClient_GetDirectionsCode(t *testing.T) {
 func TestAPIClient_GetRid(t *testing.T) {
 	expectedRid := entity.Rid{}
 	expectedCookies := []*http.Cookie{}
-	testingArgs := entity.RidArgs{
+	testingArgs := &entity.RidArgs{
 		Dir:          "0",
 		Tfl:          "1",
 		Code0:        "2000000",
@@ -78,7 +78,7 @@ func TestAPIClient_GetRid(t *testing.T) {
 }
 
 func TestAPIClient_GetRoutes(t *testing.T) {
-	testingArgs := entity.RouteArgs{
+	testingArgs := &entity.RouteArgs{
 		Dir:          "0",
 		Tfl:          "1",
 		Code0:        "2000000",

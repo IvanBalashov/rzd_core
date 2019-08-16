@@ -1,4 +1,4 @@
-package middleware
+package handlers
 
 import (
 	"github.com/gin-gonic/gin"
@@ -31,7 +31,7 @@ func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 		return
 	}
 
-	routes, err := e.App.GetInfoAboutTrains(entity.RouteArgs{
+	routes, err := e.App.GetInfoAboutTrains(&entity.RouteArgs{
 		Dir:          query.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),

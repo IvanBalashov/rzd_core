@@ -1,4 +1,4 @@
-package middleware
+package handlers
 
 func (e *EventLayer) UsersCount() (interface{}, error) {
 	users, err := e.App.UsersCount()

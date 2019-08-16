@@ -42,8 +42,8 @@ func TestApp_GetStationCodes(t *testing.T) {
 }
 
 func TestApp_GetInfoAboutTrains(t *testing.T) {
-	args := entity.RouteArgs{}
-	expectedTrains := []entity.Train{}
+	args := &entity.RouteArgs{}
+	expectedTrains := []*entity.Train{}
 	rzdMock := mocks.RzdGateway{}
 	cache := mocks.CacheGateway{}
 
@@ -51,8 +51,8 @@ func TestApp_GetInfoAboutTrains(t *testing.T) {
 	app.Routes = &rzdMock
 
 	cache.On("Set", "", []byte{}).Return(nil)
-	rzdMock.On("GetRid", entity.RidArgs{}).Return(entity.Rid{}, []*http.Cookie{}, nil)
-	rzdMock.On("GetRoutes", entity.RouteArgs{Rid: "0"}, []*http.Cookie{}).Return(entity.Route{
+	rzdMock.On("GetRid", &entity.RidArgs{}).Return(&entity.Rid{}, []*http.Cookie{}, nil)
+	rzdMock.On("GetRoutes", &entity.RouteArgs{Rid: "0"}, []*http.Cookie{}).Return(&entity.Route{
 		Result: "OK",
 		Tp: []entity.Tp{
 			0: {
@@ -77,7 +77,7 @@ func TestApp_GetInfoAboutTrains(t *testing.T) {
 }
 
 func TestApp_GenerateTrainsList(t *testing.T) {
-	route := entity.Route{
+	route := &entity.Route{
 		Result: "OK",
 		Tp: []entity.Tp{
 			0: {
@@ -85,8 +85,8 @@ func TestApp_GenerateTrainsList(t *testing.T) {
 			},
 		},
 	}
-	args := entity.RouteArgs{}
-	expectedTrains := []entity.Train{}
+	args := &entity.RouteArgs{}
+	expectedTrains := []*entity.Train{}
 
 	trains, err := app.GenerateTrainsList(route, args)
 	if err != nil {
@@ -98,11 +98,11 @@ func TestApp_GenerateTrainsList(t *testing.T) {
 }
 
 func TestApp_GetUsersList(t *testing.T) {
-	expectedUsers := []entity.User{}
+	expectedUsers := []*entity.User{}
 	usersMock := mocks.UsersGateway{}
 	app.Users = &usersMock
 
-	usersMock.On("ReadMany").Return([]entity.User{}, nil)
+	usersMock.On("ReadMany").Return([]*entity.User{}, nil)
 
 	users, err := app.GetUsersList()
 	if err != nil {
@@ -192,14 +192,14 @@ func TestApp_SaveTrainInUser(t *testing.T) {
 }
 
 func TestApp_CheckAndRefreshTrainInfo(t *testing.T) {
-	train := entity.Train{}
+	train := &entity.Train{}
 	expectedResult := false
 	rzdMock := mocks.RzdGateway{}
 
-	rzdMock.On("GetRid", entity.RidArgs{}).Return(entity.Rid{RID: 0}, []*http.Cookie{}, nil)
-	rzdMock.On("GetInfoAboutOneTrain", entity.Train{
+	rzdMock.On("GetRid", &entity.RidArgs{}).Return(&entity.Rid{RID: 0}, []*http.Cookie{}, nil)
+	rzdMock.On("GetInfoAboutOneTrain", &entity.Train{
 		QueryArgs: entity.RouteArgs{Rid: "0"},
-	}, []*http.Cookie{}).Return(entity.Route{}, nil)
+	}, []*http.Cookie{}).Return(&entity.Route{}, nil)
 	app.Routes = &rzdMock
 
 	result := app.CheckAndRefreshTrainInfo(train)

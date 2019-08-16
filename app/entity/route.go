@@ -30,11 +30,11 @@ type List struct {
 	Time0             string              `json:"time0"`
 	Date1             string              `json:"date1"`
 	Time1             string              `json:"time1"`
-	ServiceCategories []ServiceCategories `json:"serviceCategories"`
+	ServiceCategories []ServiceCategories `json:"cars"`
 }
 
 type ServiceCategories struct {
-	TypeLoc   string `json:"typeCarLoc"`
+	TypeLoc   string `json:"typeLoc"`
 	FreeSeats int    `json:"freeSeats"`
-	Price     string `json:"price"`
+	Price     int `json:"tariff"`
 }

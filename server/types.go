@@ -10,9 +10,9 @@ type Trains struct {
 }
 
 type Seats struct {
-	Count int    `json:"count"`
-	Price string `json:"price"`
-	Chosen bool  `json:"chosen"`
+	Count  int  `json:"count"`
+	Price  int  `json:"price"`
+	Chosen bool `json:"chosen"`
 }
 
 type User struct {

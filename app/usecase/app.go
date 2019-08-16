@@ -34,8 +34,8 @@ func NewApp(trains trains_gateway.TrainsGateway, users users_gateway.UsersGatewa
 }
 
 // im think what need move here request for get rid and codes for trains.
-func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) {
-	ridArgs := entity.RidArgs{
+func (a *App) GetInfoAboutTrains(args *entity.RouteArgs) ([]*entity.Train, error) {
+	ridArgs := &entity.RidArgs{
 		Dir:          args.Dir,
 		Tfl:          args.Tfl,
 		CheckSeats:   args.CheckSeats,
@@ -52,7 +52,7 @@ func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) 
 		return nil, err
 	}
 
-	time.Sleep(450 * time.Millisecond)
+	time.Sleep(1000 * time.Millisecond)
 
 	args.Rid = strconv.FormatInt(rid.RID, 10)
 	route, err := a.Routes.GetRoutes(args, cookies)
@@ -70,13 +70,13 @@ func (a *App) GetInfoAboutTrains(args entity.RouteArgs) ([]entity.Train, error) 
 	return trains, nil
 }
 
-func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, error) {
-	trainsAnswer := []entity.Train{}
-
+func (a *App) GenerateTrainsList(route *entity.Route, args *entity.RouteArgs) ([]*entity.Train, error) {
 	trains, err := getTrainsList(route, args)
 	if err != nil {
-		return trainsAnswer, err
+		return nil, err
 	}
+
+	trainsAnswer := make([]*entity.Train, len(trains))
 
 	for _, val := range trains {
 		data, err := json.Marshal(val)
@@ -97,7 +97,7 @@ func (a *App) GenerateTrainsList(route entity.Route, args entity.RouteArgs) ([]e
 }
 
 func (a *App) GetStationCodes(target, source string) (int, int, error) {
-	var code = make(chan GoroutineAnswer)
+	var code = make(chan GoroutineAnswer, 2)
 	var answers = map[string]int{}
 	go func() {
 		data, err := a.Routes.GetDirectionsCode(target)
@@ -138,14 +138,14 @@ func (a *App) GetStationCodes(target, source string) (int, int, error) {
 }
 
 func (a *App) SaveInfoAboutTrain(trainID string) (string, error) {
-	train := entity.Train{}
+	train := &entity.Train{}
 
 	data, err := a.Cache.Get(trainID)
 	if err != nil {
 		return "", err
 	}
 
-	err = json.Unmarshal(data, &train)
+	err = json.Unmarshal(data, train)
 	if err != nil {
 		return "", err
 	}
@@ -186,7 +186,7 @@ func (a *App) Run(refreshTimeSec string) {
 	}
 }
 
-func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
+func (a *App) CheckAndRefreshTrainInfo(train *entity.Train) bool {
 	//RID
 	rid, cookies, err := a.Routes.GetRid(trainToArgs(train))
 
@@ -202,7 +202,7 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 		return false
 	}
 
-	trains, err := getTrainsList(newRoute, train.QueryArgs)
+	trains, err := getTrainsList(newRoute, &train.QueryArgs)
 	if err != nil {
 		a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: Got empty route array")
 		return false
@@ -222,7 +222,7 @@ func (a *App) CheckAndRefreshTrainInfo(train entity.Train) bool {
 	return true
 }
 
-func (a *App) GetDiff(oldTrain entity.Train, newTrain entity.Train) bool {
+func (a *App) GetDiff(oldTrain *entity.Train, newTrain *entity.Train) bool {
 	for key, val := range oldTrain.Seats {
 		if newTrain.Seats[key].SeatsCount > val.SeatsCount && newTrain.Seats[key].Price == val.Price {
 			if val.Chosen == true {
@@ -233,33 +233,32 @@ func (a *App) GetDiff(oldTrain entity.Train, newTrain entity.Train) bool {
 	return false
 }
 
-func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, error) {
-	trains := []entity.Train{}
-
+func getTrainsList(route *entity.Route, args *entity.RouteArgs) ([]*entity.Train, error) {
 	if len(route.Tp) == 0 {
 		return nil, errors.New(fmt.Sprintf("App->GenerateTrainsList: Got empty route array"))
 	}
 
+	trains := make([]*entity.Train, len(route.Tp[0].List))
 	for _, val := range route.Tp[0].List {
 		var seats = entity.Seats{
 			entity.CSeatsType: {
 				SeatsCount: 0,
-				Price:      "0",
+				Price:      0,
 				Chosen:     false,
 			},
 			entity.SSeatsType: {
 				SeatsCount: 0,
-				Price:      "0",
+				Price:      0,
 				Chosen:     false,
 			},
 			entity.SVSeatsType: {
 				SeatsCount: 0,
-				Price:      "0",
+				Price:      0,
 				Chosen:     false,
 			},
 			entity.PSeatsType: {
 				SeatsCount: 0,
-				Price:      "0",
+				Price:      0,
 				Chosen:     false,
 			},
 		}
@@ -271,7 +270,7 @@ func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, e
 			}
 		}
 
-		trains = append(trains, entity.Train{
+		trains = append(trains, &entity.Train{
 			Number:    val.Number,
 			Route0:    val.Route0,
 			Route1:    val.Route1,
@@ -284,7 +283,7 @@ func getTrainsList(route entity.Route, args entity.RouteArgs) ([]entity.Train, e
 			Date1:     val.Date1,
 			Time1:     val.Time1,
 			Seats:     seats,
-			QueryArgs: args,
+			QueryArgs: *args,
 		})
 	}
 
@@ -316,7 +315,7 @@ func (a *App) DeleteUser(user *entity.User) error {
 	return nil
 }
 
-func (a *App) GetUsersList() ([]entity.User, error) {
+func (a *App) GetUsersList() ([]*entity.User, error) {
 	users, err := a.Users.ReadMany()
 	if err != nil {
 		return nil, err
@@ -365,7 +364,9 @@ func (a *App) CheckUsers(start, end int64) ([]*entity.User, error) {
 	for _, val := range users {
 		trains := val.TrainIDS
 		for i := range trains {
-			train, err := a.Trains.ReadOne(trains[i])
+			// TODO: fixme
+			fmt.Printf("%v\n",i)
+			train, err := a.Trains.ReadOne(&entity.Train{})
 			if err != nil {
 				a.LogChan <- err.Error()
 				a.LogChan <- fmt.Sprintf("App->GenerateTrainsList: Can't get train")

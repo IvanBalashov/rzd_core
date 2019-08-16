@@ -14,7 +14,7 @@ import (
 	"rzd/reporting"
 	"rzd/server/http"
 	"rzd/server/rabbitmq"
-	"rzd/server/rabbitmq/middleware"
+	"rzd/server/rabbitmq/handlers"
 	"strconv"
 	"time"
 
@@ -38,55 +38,55 @@ func init() {
 	log.SetFlags(log.LstdFlags)
 }
 
-func GenConfig() Config {
+func ReadConf() Config {
 	err := godotenv.Load()
 	var appName string
 
 	if err != nil {
-		log.Printf("%s__Main->GenConfig: Error while load .env file - %s\n", os.Getenv("APP_NAME"), err.Error())
+		log.Printf("%s__Main->ReadConf: Error while load .env file - %s\n", os.Getenv("APP_NAME"), err.Error())
 	} else {
-		log.Printf("%s__Main->GenConfig: File .env loaded\n", os.Getenv("APP_NAME"))
+		log.Printf("%s__Main->ReadConf: File .env loaded\n", os.Getenv("APP_NAME"))
 	}
 	var conf = Config{}
 	if val, ok := os.LookupEnv("APP_NAME"); !ok {
-		log.Printf("(Can't get app name)__Main->GenConfig: APP_NAME env don't seted\n")
+		log.Printf("(Can't get app name)__Main->ReadConf: APP_NAME env don't seted\n")
 		os.Exit(2)
 	} else {
 		conf.AppName = val
 		appName = val
 	}
 	if val, ok := os.LookupEnv("HTTP_HOST"); !ok {
-		log.Printf("%s__Main->GenConfig: HTTP_HOST env don't seted\n", appName)
+		log.Printf("%s__Main->ReadConf: HTTP_HOST env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.HTTPHost = val
 	}
 	if val, ok := os.LookupEnv("HTTP_PORT"); !ok {
-		log.Printf("%s__Main->GenConfig: HTTP_PORT env don't seted\n", appName)
+		log.Printf("%s__Main->ReadConf: HTTP_PORT env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.HTTPPort = val
 	}
 	if val, ok := os.LookupEnv("RABBITMQ_URL"); !ok {
-		log.Printf("%s__Main->GenConfig: RABBITMQ_URL env don't seted\n", appName)
+		log.Printf("%s__Main->ReadConf: RABBITMQ_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.RabbitMQURL = val
 	}
 	if val, ok := os.LookupEnv("MONGODB_URL"); !ok {
-		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		log.Printf("%s__Main->ReadConf: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.MongoDBURL = val
 	}
 	if val, ok := os.LookupEnv("MEMCACHE_URL"); !ok {
-		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		log.Printf("%s__Main->ReadConf: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.MemcacheURL = val
 	}
 	if val, ok := os.LookupEnv("MEMCACHE_TTL"); !ok {
-		log.Printf("%s__Main->GenConfig: MONGODB_URL env don't seted\n", appName)
+		log.Printf("%s__Main->ReadConf: MONGODB_URL env don't seted\n", appName)
 		os.Exit(2)
 	} else {
 		conf.MemcacheTTL, _ = strconv.ParseInt(val, 10, 64)
@@ -95,7 +95,7 @@ func GenConfig() Config {
 }
 
 func main() {
-	config := GenConfig()
+	config := ReadConf()
 
 	logs := make(chan string)
 	defer close(logs)
@@ -197,11 +197,11 @@ func main() {
 			msg := rabbitmq.MessageRabbitMQ{
 				ID:    1,
 				Event: "trains_list",
-				Data: middleware.AllTrainsRequest{
+				Data: handlers.AllTrainsRequest{
 					Direction: "0",
 					Target:    "Москва",
 					Source:    "Ярославль",
-					Date:      "27.07.2019",
+					Date:      "30.07.2019",
 				},
 			}
 			time.Sleep(time.Second)

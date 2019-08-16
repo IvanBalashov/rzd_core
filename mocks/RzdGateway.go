@@ -33,18 +33,20 @@ func (_m *RzdGateway) GetDirectionsCode(source string) (int, error) {
 }
 
 // GetInfoAboutOneTrain provides a mock function with given fields: train, cookie
-func (_m *RzdGateway) GetInfoAboutOneTrain(train entity.Train, cookie []*http.Cookie) (entity.Route, error) {
+func (_m *RzdGateway) GetInfoAboutOneTrain(train *entity.Train, cookie []*http.Cookie) (*entity.Route, error) {
 	ret := _m.Called(train, cookie)
 
-	var r0 entity.Route
-	if rf, ok := ret.Get(0).(func(entity.Train, []*http.Cookie) entity.Route); ok {
+	var r0 *entity.Route
+	if rf, ok := ret.Get(0).(func(*entity.Train, []*http.Cookie) *entity.Route); ok {
 		r0 = rf(train, cookie)
 	} else {
-		r0 = ret.Get(0).(entity.Route)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.Route)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.Train, []*http.Cookie) error); ok {
+	if rf, ok := ret.Get(1).(func(*entity.Train, []*http.Cookie) error); ok {
 		r1 = rf(train, cookie)
 	} else {
 		r1 = ret.Error(1)
@@ -54,18 +56,20 @@ func (_m *RzdGateway) GetInfoAboutOneTrain(train entity.Train, cookie []*http.Co
 }
 
 // GetRid provides a mock function with given fields: args
-func (_m *RzdGateway) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, error) {
+func (_m *RzdGateway) GetRid(args *entity.RidArgs) (*entity.Rid, []*http.Cookie, error) {
 	ret := _m.Called(args)
 
-	var r0 entity.Rid
-	if rf, ok := ret.Get(0).(func(entity.RidArgs) entity.Rid); ok {
+	var r0 *entity.Rid
+	if rf, ok := ret.Get(0).(func(*entity.RidArgs) *entity.Rid); ok {
 		r0 = rf(args)
 	} else {
-		r0 = ret.Get(0).(entity.Rid)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.Rid)
+		}
 	}
 
 	var r1 []*http.Cookie
-	if rf, ok := ret.Get(1).(func(entity.RidArgs) []*http.Cookie); ok {
+	if rf, ok := ret.Get(1).(func(*entity.RidArgs) []*http.Cookie); ok {
 		r1 = rf(args)
 	} else {
 		if ret.Get(1) != nil {
@@ -74,7 +78,7 @@ func (_m *RzdGateway) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, e
 	}
 
 	var r2 error
-	if rf, ok := ret.Get(2).(func(entity.RidArgs) error); ok {
+	if rf, ok := ret.Get(2).(func(*entity.RidArgs) error); ok {
 		r2 = rf(args)
 	} else {
 		r2 = ret.Error(2)
@@ -84,18 +88,20 @@ func (_m *RzdGateway) GetRid(args entity.RidArgs) (entity.Rid, []*http.Cookie, e
 }
 
 // GetRoutes provides a mock function with given fields: args, cookie
-func (_m *RzdGateway) GetRoutes(args entity.RouteArgs, cookie []*http.Cookie) (entity.Route, error) {
+func (_m *RzdGateway) GetRoutes(args *entity.RouteArgs, cookie []*http.Cookie) (*entity.Route, error) {
 	ret := _m.Called(args, cookie)
 
-	var r0 entity.Route
-	if rf, ok := ret.Get(0).(func(entity.RouteArgs, []*http.Cookie) entity.Route); ok {
+	var r0 *entity.Route
+	if rf, ok := ret.Get(0).(func(*entity.RouteArgs, []*http.Cookie) *entity.Route); ok {
 		r0 = rf(args, cookie)
 	} else {
-		r0 = ret.Get(0).(entity.Route)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.Route)
+		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(entity.RouteArgs, []*http.Cookie) error); ok {
+	if rf, ok := ret.Get(1).(func(*entity.RouteArgs, []*http.Cookie) error); ok {
 		r1 = rf(args, cookie)
 	} else {
 		r1 = ret.Error(1)

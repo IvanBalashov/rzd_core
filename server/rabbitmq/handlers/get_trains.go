@@ -1,4 +1,4 @@
-package middleware
+package handlers
 
 import (
 	"encoding/json"
@@ -27,7 +27,7 @@ func (e *EventLayer) GetAllTrains(query interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	routes, err := e.App.GetInfoAboutTrains(entity.RouteArgs{
+	routes, err := e.App.GetInfoAboutTrains(&entity.RouteArgs{
 		Dir:          request.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
