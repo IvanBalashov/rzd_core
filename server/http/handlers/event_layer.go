@@ -6,8 +6,8 @@ type EventLayer struct {
 	App usecase.Usecase
 }
 
-func NewEventLayer(app usecase.Usecase) EventLayer {
-	return EventLayer{
+func NewEventLayer(app usecase.Usecase) *EventLayer {
+	return &EventLayer{
 		App: app,
 	}
 }

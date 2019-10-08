@@ -19,16 +19,3 @@ type RidArgs struct {
 	WithOutSeats string `json:"withoutSeats"`
 	Version      string `json:"version"`
 }
-
-func (r *RidArgs) ToMap() map[string]string {
-	return map[string]string{
-		"dir":          r.Dir,
-		"tfl":          r.Tfl,
-		"code0":        r.Code0,
-		"code1":        r.Code1,
-		"dt0":          r.Dt0,
-		"checkSeats":   r.CheckSeats,
-		"withoutSeats": r.WithOutSeats,
-		"version":      r.Version,
-	}
-}

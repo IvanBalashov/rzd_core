@@ -7,8 +7,8 @@ type EventLayer struct {
 	LogChanel chan string
 }
 
-func NewEventLayer(app usecase.Usecase, logChan chan string) EventLayer {
-	return EventLayer{
+func NewEventLayer(app usecase.Usecase, logChan chan string) *EventLayer {
+	return &EventLayer{
 		App:       app,
 		LogChanel: logChan,
 	}

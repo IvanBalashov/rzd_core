@@ -21,16 +21,20 @@ type MongoUsers struct {
 	Users *mongo.Collection
 }
 
-func NewMongoUsers(cli *mongo.Client) (MongoUsers, error) {
+func NewMongoUsers(cli *mongo.Client) (*MongoUsers, error) {
 	col := cli.Database("rzd").Collection("users")
-	return MongoUsers{CLI: cli, Users: col}, nil
+
+	return &MongoUsers{
+		CLI: cli,
+		Users: col,
+	}, nil
 }
 
 func (m *MongoUsers) Create(user *entity.User) (bool, error) {
 	filter := user
-	check := entity.User{}
+	check := &entity.User{}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	_ = m.Users.FindOne(ctx, filter).Decode(&check)
+	m.Users.FindOne(ctx, filter).Decode(check)
 
 	if check.UserTelegramID != "" {
 		return true, errors.New(fmt.Sprintf("Gateway->Users_Gateway->Create: Error - this user exist"))
@@ -49,15 +53,15 @@ func (m *MongoUsers) Create(user *entity.User) (bool, error) {
 }
 
 func (m *MongoUsers) ReadOne(filter *entity.User) (*entity.User, error) {
-	result := entity.User{}
+	result := &entity.User{}
 	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
 
-	err := m.Users.FindOne(ctx, filter).Decode(&result)
+	err := m.Users.FindOne(ctx, filter).Decode(result)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Gateway->Users_Gateway->ReadOne: Error in mgdb.FindOne - %s", err))
 	}
 
-	return &result, nil
+	return result, nil
 }
 
 func (m *MongoUsers) ReadMany() ([]*entity.User, error) {

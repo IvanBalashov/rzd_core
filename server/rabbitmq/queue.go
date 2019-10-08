@@ -21,14 +21,14 @@ type RequestQueue struct {
 	Channel *amqp.Channel
 }
 
-func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) RequestQueue {
+func NewRequestQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) *RequestQueue {
 	q, err := ch.QueueDeclare(name, dur, del, exc, now, args)
 	if err != nil {
 		log.Printf("RabbitMQ->RequestQueue: Error while queue declare - %s\n", err)
-		return RequestQueue{}
+		return nil
 	}
 
-	return RequestQueue{
+	return &RequestQueue{
 		Queue: Queue{
 			Name:       name,
 			Exchange:   exchange,
@@ -67,14 +67,14 @@ type ResponseQueue struct {
 	Channel *amqp.Channel
 }
 
-func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) ResponseQueue {
+func NewResponseQueue(ch *amqp.Channel, name, exchange string, dur, del, exc, now bool, args map[string]interface{}) *ResponseQueue {
 	declaredQueue, err := ch.QueueDeclare(name, dur, del, exc, now, args)
 	if err != nil {
 		log.Printf("RabbitMQ->ResponseQueue: Error while queue declare - %s\n", err)
-		return ResponseQueue{}
+		return nil
 	}
 
-	return ResponseQueue{
+	return &ResponseQueue{
 		Queue: Queue{
 			Name:       name,
 			Exchange:   exchange,

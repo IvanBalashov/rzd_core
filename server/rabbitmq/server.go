@@ -16,7 +16,7 @@ type MessageRabbitMQ struct {
 }
 
 type RabbitServer struct {
-	EventLayer handlers.EventLayer
+	EventLayer *handlers.EventLayer
 	Connection *amqp.Connection
 	Chanel     *amqp.Channel
 	LogChanel  chan string
@@ -43,7 +43,7 @@ func NewServer(uri string, app usecase.Usecase, logChanel chan string) (*RabbitS
 	}, nil
 }
 
-func (r *RabbitServer) Serve(request RequestQueue, response ResponseQueue) {
+func (r *RabbitServer) Serve(request *RequestQueue, response *ResponseQueue) {
 	msg := MessageRabbitMQ{}
 	resp := MessageRabbitMQ{}
 	forever := make(chan bool) // FIXME: add exit statement

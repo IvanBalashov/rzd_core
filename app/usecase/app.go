@@ -76,7 +76,7 @@ func (a *App) GenerateTrainsList(route *entity.Route, args *entity.RouteArgs) ([
 		return nil, err
 	}
 
-	trainsAnswer := make([]*entity.Train, len(trains))
+	trainsAnswer := []*entity.Train{}
 
 	for _, val := range trains {
 		data, err := json.Marshal(val)
@@ -238,7 +238,7 @@ func getTrainsList(route *entity.Route, args *entity.RouteArgs) ([]*entity.Train
 		return nil, errors.New(fmt.Sprintf("App->GenerateTrainsList: Got empty route array"))
 	}
 
-	trains := make([]*entity.Train, len(route.Tp[0].List))
+	trains := []*entity.Train{}
 	for _, val := range route.Tp[0].List {
 		var seats = entity.Seats{
 			entity.CSeatsType: {

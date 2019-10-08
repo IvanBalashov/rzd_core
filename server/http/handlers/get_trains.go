@@ -16,9 +16,9 @@ type SeatsArgs struct {
 }
 
 func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
-	query := SeatsArgs{}
+	query := &SeatsArgs{}
 
-	if err := ctx.ShouldBindQuery(&query); err != nil {
+	if err := ctx.ShouldBindQuery(query); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
 		ctx.Abort()
 		return
@@ -31,7 +31,7 @@ func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 		return
 	}
 
-	routes, err := e.App.GetInfoAboutTrains(&entity.RouteArgs{
+	getTrainsReq := &entity.RouteArgs{
 		Dir:          query.Direction,
 		Tfl:          "1",
 		Code0:        strconv.Itoa(code1),
@@ -40,7 +40,8 @@ func (e *EventLayer) GetAllTrains(ctx *gin.Context) {
 		CheckSeats:   "0",
 		WithOutSeats: "y",
 		Version:      "v.2018",
-	})
+	}
+	routes, err := e.App.GetInfoAboutTrains(getTrainsReq)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": err.Error()})
 		ctx.Abort()

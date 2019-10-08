@@ -25,8 +25,8 @@ type APIClient struct {
 	Code3      int    //?layer_id=5804
 }
 
-func NewRestAPIClient(passUrl, rzdUrl string, code1, code2, code3 int) APIClient {
-	return APIClient{
+func NewRestAPIClient(passUrl, rzdUrl string, code1, code2, code3 int) *APIClient {
+	return &APIClient{
 		PassRzdUrl: passUrl,
 		RzdUrl:     rzdUrl,
 		Code1:      code1,

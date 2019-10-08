@@ -152,7 +152,7 @@ func main() {
 
 	logs <- fmt.Sprintf("Main: Success")
 
-	app := usecase.NewApp(&MDDBTrains, &MDDBUsers, &CLI, cache, logs)
+	app := usecase.NewApp(MDDBTrains, MDDBUsers, CLI, cache, logs)
 
 	// RabbitMQ Server
 	{

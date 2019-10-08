@@ -22,9 +22,12 @@ type MongoTrains struct {
 	Trains *mongo.Collection
 }
 
-func NewMongoTrains(cli *mongo.Client) (MongoTrains, error) {
+func NewMongoTrains(cli *mongo.Client) (*MongoTrains, error) {
 	col := cli.Database("rzd").Collection("trains")
-	return MongoTrains{CLI: cli, Trains: col}, nil
+	return &MongoTrains{
+		CLI: cli,
+		Trains: col,
+	}, nil
 }
 
 func (m *MongoTrains) Create(train *entity.Train) (string, error) {

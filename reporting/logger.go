@@ -10,8 +10,8 @@ type Logger struct {
 	AppName string
 }
 
-func NewLogger(log chan string, name string) Logger {
-	return Logger{
+func NewLogger(log chan string, name string) *Logger {
+	return &Logger{
 		LogChan: log,
 		AppName: name,
 	}
